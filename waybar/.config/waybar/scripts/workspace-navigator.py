@@ -53,6 +53,10 @@ def navigate_workspace(direction):
         subprocess.run(['hyprctl', 'dispatch', 'workspace', str(target_workspace)], 
                       check=True)
         
+        # Auto-launch app if needed for special workspaces
+        subprocess.run(['/home/athoms/dotfiles/waybar/.config/waybar/scripts/workspace-auto-launcher.py'], 
+                      capture_output=True)
+        
     except ValueError:
         # Current workspace not in list, go to first one
         subprocess.run(['hyprctl', 'dispatch', 'workspace', str(all_workspaces[0])], 
