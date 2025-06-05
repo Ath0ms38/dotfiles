@@ -2,54 +2,52 @@
     "custom/special-discord": {
         "format": " {}",
         "return-type": "json",
-        "exec": "~/.config/waybar/scripts/special-workspace.py discord",
-        "on-click": "~/.config/waybar/scripts/launch-or-focus.py discord",
+        "exec": "~/.config/waybar/scripts/special-workspace-status.py discord",
+        "on-click": "~/.config/waybar/scripts/fix-special-workspaces.py discord",
         "interval": 2
     },
     
     "custom/special-vscode": {
         "format": "󰨞 {}",
         "return-type": "json", 
-        "exec": "~/.config/waybar/scripts/special-workspace.py vscode",
-        "on-click": "~/.config/waybar/scripts/launch-or-focus.py vscode",
+        "exec": "~/.config/waybar/scripts/special-workspace-status.py vscode",
+        "on-click": "~/.config/waybar/scripts/fix-special-workspaces.py vscode",
         "interval": 2
     },
     
     "custom/special-minecraft": {
         "format": "󰍳 {}",
         "return-type": "json",
-        "exec": "~/.config/waybar/scripts/special-workspace.py minecraft",
-        "on-click": "~/.config/waybar/scripts/launch-or-focus.py minecraft",
+        "exec": "~/.config/waybar/scripts/special-workspace-status.py minecraft",
+        "on-click": "~/.config/waybar/scripts/fix-special-workspaces.py minecraft",
         "interval": 2
     },
     
-    "custom/media-player": {
-        "format": "{icon} {text}",
+    "custom/media": {
+        "format": "{}",
         "return-type": "json",
-        "exec": "~/.config/waybar/scripts/media-player.py",
+        "exec": "~/.config/waybar/scripts/media-info.py",
         "on-click": "playerctl play-pause",
         "on-click-right": "playerctl next",
         "on-click-middle": "playerctl previous",
         "interval": 2
     },
     
-    "custom/volume-control": {
-        "format": "{icon} {text}",
+    "custom/audio": {
+        "format": "🔊 {}",
         "return-type": "json",
-        "exec": "~/.config/waybar/scripts/volume-control.py",
-        "on-click": "pavucontrol",
-        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
-        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%",
-        "interval": 1
+        "exec": "~/.config/waybar/scripts/audio-info.py",
+        "on-click": "~/.config/fabric/volume_popup.py",
+        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+        "interval": 2
     },
     
-    "custom/wifi-bluetooth": {
-        "format": "{}",
+    "custom/system-info": {
+        "format": "💻 {}",
         "return-type": "json",
-        "exec": "~/.config/waybar/scripts/wifi-bluetooth.py",
-        "on-click": "nm-connection-editor",
-        "on-click-right": "blueman-manager",
+        "exec": "~/.config/waybar/scripts/system-stats.py",
+        "on-click": "~/.config/fabric/system_popup.py",
         "interval": 5
     },
     
@@ -66,13 +64,5 @@
         "on-click": "swaync-client -t -sw",
         "on-click-right": "swaync-client -d -sw",
         "escape": true
-    },
-    
-    "custom/calendar-french": {
-        "format": "{}",
-        "return-type": "json",
-        "exec": "~/.config/waybar/scripts/calendar-french.py",
-        "on-click": "gnome-calendar",
-        "interval": 60
     }
 }

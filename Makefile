@@ -8,6 +8,7 @@ install:
 	stow --target=$(HOME) --restow hyprland
 	stow --target=$(HOME) --restow swaync
 	chmod +x ~/.config/waybar/scripts/*
+	chmod +x ~/.config/fabric/*
 	@echo "Dotfiles installed successfully!"
 
 uninstall:

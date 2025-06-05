@@ -1,332 +1,277 @@
-# Complete Waybar Configuration for Hyprland
+# ✨ Beautiful Modern Waybar Setup for Hyprland
 
-A comprehensive, modular Waybar setup with Python integration, special workspace management, and custom theming using the Judge Gray, Whiskey, Glacier, and Wedgewood color palette.
+A stunning, glassmorphism-inspired waybar configuration with modern animations, popup widgets, and intelligent special workspace management.
 
-## Features
+## 🎨 Design Features
 
-### 🎨 **Cohesive Color Theming**
-- **Judge Gray** (#4d3e2a) - Primary background
-- **Whiskey** (#d7a46a) - Accent highlights  
-- **Glacier** (#7bb4c8) - Text and secondary elements
-- **Wedgewood** (#5084ae) - Borders and active states
+### **Glassmorphism Aesthetic**
+- **Transparent background** with blur effects
+- **Rounded corners** and smooth animations
+- **Gradient borders** with dynamic glow effects
+- **Cyberpunk-inspired color palette**: Dark blues, cyan accents, purple highlights
 
-### 🖥️ **Special Workspace Management**
-- **Discord**: `Super + D` - Toggle special workspace
-- **VSCode**: `Super + Shift + C` - Toggle special workspace  
-- **Minecraft**: `Super + M` - Toggle special workspace
-- **Firefox**: `Super + B` - Normal launch (not special workspace)
+### **Smart Visual States**
+- **Hover effects** with smooth transforms and glows
+- **Active state animations** with pulsing effects
+- **Battery charging** animations
+- **Media playing** pulse indicators
+- **System status** color coding (green/yellow/red)
 
-### 🎵 **Media Integration**
-- Real-time media player display with artist/title
-- Media controls (play/pause/next/previous)
-- Integration with playerctl for all media players
+### **Modern Icons**
+- **Nerd Font icons** for clean, consistent appearance
+- **Context-aware icons** that change based on status
+- **Proper spacing** and visual hierarchy
 
-### 🔊 **System Monitoring**
-- Volume control with visual feedback and scroll wheel support
-- Battery status with charging animations
-- WiFi/Bluetooth status with device counts
-- System tray integration
+## 🚀 Special Workspace System
 
-### 🇫🇷 **French Localization**
-- French calendar display with proper locale handling
-- Paris timezone configuration
+### **Intelligent Management**
+- **Auto-detection** of running applications
+- **Smart launching** - opens app if not running, focuses if running
+- **Visual indicators** showing workspace status
+- **Seamless toggling** between show/hide states
 
-### 📱 **Notification Center**
-- SwayNotificationCenter integration with custom theming
-- Do Not Disturb functionality
-- Persistent notification history
+### **Keybindings**
+- `Super + D` → Discord special workspace
+- `Super + Shift + C` → VSCode special workspace  
+- `Super + M` → Minecraft special workspace
+- `Super + B` → Firefox (normal launch)
 
-## Directory Structure
+### **Visual States**
+- **Empty**: No indicator (app not running)
+- **Exists**: Colored background (app running, workspace hidden)
+- **Active**: Glowing animation (workspace visible and focused)
 
-```
-~/.dotfiles/
-├── waybar/
-│   └── .config/
-│       └── waybar/
-│           ├── config.jsonc           # Main configuration
-│           ├── style.css              # Themed styling
-│           ├── modules/               # Modular configurations
-│           │   ├── workspaces.jsonc   # Workspace management
-│           │   ├── media.jsonc        # Media controls
-│           │   ├── system.jsonc       # System widgets
-│           │   └── custom.jsonc       # Custom widgets
-│           └── scripts/               # Python scripts
-│               ├── special-workspace.py
-│               ├── launch-or-focus.py
-│               ├── media-player.py
-│               ├── volume-control.py
-│               ├── wifi-bluetooth.py
-│               └── calendar-french.py
-├── hyprland/
-│   └── .config/
-│       └── hypr/
-│           ├── hyprland.conf
-│           └── conf/
-│               ├── programs.conf      # Updated with waybar/swaync
-│               ├── keybindings.conf   # Updated special workspace binds
-│               └── rules.conf         # Added workspace rules
-├── swaync/
-│   └── .config/
-│       └── swaync/
-│           ├── config.json
-│           └── style.css
-├── Makefile                           # Easy management
-└── README.md
-```
+## 📱 Popup Widgets
 
-## Prerequisites
+Instead of opening applications, clicking widgets shows beautiful popup notifications:
 
-### Required Packages
+### **Audio Control**
+- **Volume bar** with visual representation
+- **Mute status** indicator
+- **Scroll wheel** volume adjustment
+- **Click** for popup with detailed info
+
+### **System Information**
+- **CPU usage** with color-coded alerts
+- **Memory** and **disk usage**
+- **Temperature monitoring** (if available)
+- **Detailed tooltips** with full stats
+
+### **Battery Status**
+- **Charging animations** when plugged in
+- **Time remaining** estimates
+- **Warning colors** for low battery
+- **Click** for detailed battery info popup
+
+### **Network Information**
+- **WiFi signal strength** display
+- **Connection status** indicators
+- **Click** to open network manager
+- **Hover** for detailed connection info
+
+### **Calendar**
+- **French localization** with proper formatting
+- **Click** for date/time popup
+- **Week number** display
+
+## 🎵 Media Integration
+
+### **Smart Media Player**
+- **Auto-detection** of any playing media
+- **Artist and title** display with truncation
+- **Playback controls** via clicks
+- **Visual playing indicator** with animations
+
+### **Controls**
+- **Left Click**: Play/pause
+- **Right Click**: Next track  
+- **Middle Click**: Previous track
+- **Scroll**: Volume control (on audio widget)
+
+## 💫 Advanced Features
+
+### **Performance Optimized**
+- **Efficient Python scripts** with minimal resource usage
+- **Smart update intervals** (1-5 seconds depending on widget)
+- **Error handling** with graceful fallbacks
+
+### **Modular Design**
+- **Single configuration file** with all modules
+- **Easy customization** via CSS variables
+- **Extensible script system**
+
+### **Responsive Layout**
+- **Auto-sizing** based on content
+- **Consistent spacing** and alignment
+- **Screen-aware** positioning
+
+## 🛠️ Installation
+
+### **Prerequisites**
 ```bash
 # Core packages
 sudo pacman -S waybar swaync playerctl pavucontrol
-sudo pacman -S python python-pip
-sudo pacman -S stow git
+sudo pacman -S python python-pip python-psutil
+sudo pacman -S ttf-jetbrains-mono-nerd
 
-# Optional but recommended
-sudo pacman -S nm-connection-editor blueman-manager gnome-calendar
+# Optional utilities
+sudo pacman -S nm-connection-editor brightnessctl
 ```
 
-### Python Environment Setup
+### **Install Configuration**
 ```bash
-# Install pyenv (if not already installed)
-curl https://pyenv.run | bash
-
-# Install Python 3.11
-pyenv install 3.11.7
-pyenv global 3.11.7
-
-# Create virtual environment for waybar scripts
-cd ~/.config/waybar
-python -m venv waybar-env
-source waybar-env/bin/activate
-
-# Install required packages
-pip install psutil python-dbus-next requests
-```
-
-## Installation
-
-### Using GNU Stow (Recommended)
-```bash
-# Install all configurations (done)
+# From your dotfiles directory
 make install
 
-# The configurations are now installed, but waybar needs Hyprland/Wayland to run
-# You need to restart Hyprland to activate the new configuration
-```
-
-**Important:** Waybar can only run under Wayland/Hyprland, not in X11 or regular terminals.
-
-## Activation
-
-The configuration has been successfully installed! To activate:
-
-1. **Restart Hyprland** to load the new configuration:
-   ```bash
-   # Log out and log back into Hyprland, or reload config
-   hyprctl reload
-   ```
-
-2. **The new setup will automatically start:**
-   - Waybar will replace hyprpanel
-   - SwayNotificationCenter will provide notifications
-   - Special workspace keybindings will be active
-
-3. **Test the features:**
-   - `Super + D` to test Discord workspace
-   - `Super + Shift + C` to test VSCode workspace  
-   - `Super + M` to test Minecraft workspace
-   - Media controls should work with any playing media
-   - Volume control via scroll wheel on volume widget
-
-### Manual Installation
-```bash
-# Copy configurations manually
-cp -r waybar/.config/waybar ~/.config/
-cp -r swaync/.config/swaync ~/.config/
-cp -r hyprland/.config/hypr ~/.config/
-
-# Make scripts executable
+# Or manual installation
+stow --target=$HOME waybar hyprland swaync
 chmod +x ~/.config/waybar/scripts/*.py
 ```
 
-## Key Bindings
-
-### Special Workspaces
-- `Super + D` - Toggle Discord special workspace
-- `Super + Shift + C` - Toggle VSCode special workspace
-- `Super + M` - Toggle Minecraft special workspace
-- `Super + B` - Launch Firefox normally
-
-### System
-- `Super + Shift + M` - Exit Hyprland (changed from Super + M)
-- `Super + C` - Close active window
-- `Super + Q` - Open terminal
-- `Super + R` - Open application launcher
-
-### Media Controls (Function Keys)
-- `XF86AudioPlay/Pause` - Play/pause media
-- `XF86AudioNext/Prev` - Next/previous track
-- `XF86AudioRaiseVolume/LowerVolume` - Volume control
-- `XF86AudioMute` - Toggle mute
-
-## Widget Interactions
-
-### Special Workspace Indicators
-- **Empty**: No indicator shown
-- **Exists**: `○` (open circle) - App running but not focused
-- **Active**: `●` (filled circle) - App running and focused
-- **Click**: Launch app or toggle workspace visibility
-
-### Media Player
-- **Left Click**: Play/pause
-- **Right Click**: Next track
-- **Middle Click**: Previous track
-- **Hover**: Shows full song info
-
-### Volume Control
-- **Left Click**: Open pavucontrol
-- **Right Click**: Toggle mute
-- **Scroll Up/Down**: Adjust volume ±2%
-
-### Network Status
-- **Left Click**: Open network manager
-- **Right Click**: Open Bluetooth manager
-- **Icons**: WiFi and Bluetooth status with connection info
-
-### Notification Center
-- **Left Click**: Toggle notification panel
-- **Right Click**: Toggle Do Not Disturb
-
-## Python Scripts
-
-### special-workspace.py
-Monitors workspace status and returns JSON for waybar display:
-- Tracks if special workspaces exist and are active
-- Returns appropriate CSS classes for styling
-
-### launch-or-focus.py
-Smart app launcher that:
-- Finds existing app windows
-- Moves them to special workspaces
-- Launches apps if not running
-- Focuses special workspaces
-
-### media-player.py
-Media information display:
-- Integrates with playerctl
-- Shows artist, title, and playback status
-- Handles multiple media players
-
-### volume-control.py
-Audio system integration:
-- Uses wpctl for PipeWire/PulseAudio
-- Shows volume percentage and mute status
-- Dynamic icon based on volume level
-
-### wifi-bluetooth.py
-Network status monitoring:
-- WiFi connection status and name
-- Bluetooth power and connected device count
-- Combined status display
-
-### calendar-french.py
-French localized time/date:
-- Shows current time in HH:MM:SS format
-- Tooltip with full French date
-- Handles locale fallbacks gracefully
-
-## Troubleshooting
-
-### Scripts Not Working
+### **Activate**
 ```bash
-# Check script permissions
-ls -la ~/.config/waybar/scripts/
+# Kill existing waybar
+pkill waybar
 
-# Make executable if needed
-chmod +x ~/.config/waybar/scripts/*.py
+# Start new beautiful waybar
+waybar &
 
-# Test individual scripts
-~/.config/waybar/scripts/media-player.py
-```
-
-### Python Environment Issues
-```bash
-# Check Python path in scripts
-which python3
-
-# Verify virtual environment (if using)
-source ~/.config/waybar/waybar-env/bin/activate
-pip list
-```
-
-### Waybar Not Starting
-```bash
-# Check configuration syntax
-waybar --config ~/.config/waybar/config.jsonc --style ~/.config/waybar/style.css
-
-# Check logs
-journalctl --user -f -u waybar
-```
-
-### Special Workspaces Not Working
-```bash
-# Check Hyprland configuration
-hyprctl workspaces
-hyprctl clients
-
-# Verify window rules
-hyprctl windowrules
-```
-
-## Customization
-
-### Adding New Special Workspaces
-1. Add workspace definition to `hyprland/.config/hypr/conf/rules.conf`
-2. Add window rule for the application
-3. Add keybinding to `hyprland/.config/hypr/conf/keybindings.conf`
-4. Update `waybar/.config/waybar/modules/custom.jsonc`
-5. Add app info to Python scripts
-
-### Modifying Colors
-Edit the CSS variables in `waybar/.config/waybar/style.css`:
-```css
-* {
-    --judge-gray: #4d3e2a;
-    --whiskey: #d7a46a;
-    --glacier: #7bb4c8;
-    --wedgewood: #5084ae;
-}
-```
-
-### Adding New Widgets
-1. Create widget configuration in appropriate module file
-2. Add to main config.jsonc modules list
-3. Add styling to style.css
-4. Create Python script if needed
-
-## Updates and Maintenance
-
-### Updating Configuration
-```bash
-cd ~/.dotfiles
-git pull
-make install
-```
-
-### Restarting Services
-```bash
-# Restart waybar
-make restart-waybar
-
-# Restart swaync
-pkill swaync && swaync &
-
-# Reload Hyprland config
+# Or restart Hyprland to auto-start
 hyprctl reload
 ```
 
-## License
+## 🎨 Customization
 
-This configuration is provided as-is under the MIT License. Feel free to modify and distribute according to your needs.
+### **Color Palette**
+The setup uses a carefully chosen cyberpunk-inspired palette:
+
+```css
+/* Main colors */
+background: rgba(13, 17, 23, 0.85)     /* Dark blue-black */
+primary: rgba(139, 233, 253, 0.3)      /* Cyan accent */
+secondary: rgba(187, 154, 247, 0.2)    /* Purple highlight */
+text: #e6edf3                          /* Light blue-white */
+```
+
+### **App-Specific Colors**
+- **Discord**: Purple theme (`#5865f2`)
+- **VSCode**: Blue theme (`#0078d7`)  
+- **Minecraft**: Green theme (`#50c878`)
+
+### **Modify Colors**
+Edit `waybar/.config/waybar/style.css` to change:
+- **Background opacity**: Change `rgba()` alpha values
+- **Accent colors**: Update color values in hover states
+- **Animation speeds**: Adjust `transition` durations
+
+### **Add New Special Workspaces**
+1. **Update scripts**: Add app info to `special-workspace-*.py`
+2. **Add configuration**: Include new widget in `config.jsonc`
+3. **Add styling**: Create CSS rules for the new app
+4. **Add keybinding**: Update `keybindings.conf`
+
+## 🔧 Troubleshooting
+
+### **Scripts Not Working**
+```bash
+# Test individual scripts
+~/.config/waybar/scripts/special-workspace-status.py discord
+~/.config/waybar/scripts/media-info.py
+
+# Check permissions
+ls -la ~/.config/waybar/scripts/
+```
+
+### **Waybar Won't Start**
+```bash
+# Test with debug output
+waybar --log-level debug
+
+# Check for syntax errors
+waybar --config ~/.config/waybar/config.jsonc --style ~/.config/waybar/style.css
+```
+
+### **Special Workspaces Issues**
+```bash
+# Check Hyprland status
+hyprctl workspaces
+hyprctl clients
+
+# Test manual toggle
+~/.config/waybar/scripts/special-workspace-toggle.py discord
+```
+
+### **Missing Icons**
+```bash
+# Install nerd fonts
+sudo pacman -S ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols-mono
+
+# Or download from: https://www.nerdfonts.com/
+```
+
+## 📊 Widget Status Reference
+
+### **Special Workspace Classes**
+- `.empty` → App not running
+- `.exists` → App running, workspace hidden  
+- `.active` → Workspace visible and focused
+
+### **System Status Classes**
+- `.normal` → All systems good (< 70% usage)
+- `.warning` → High usage (70-90%)
+- `.critical` → Very high usage (> 90%)
+
+### **Audio Classes**
+- `.muted` → Audio muted
+- `.low/.medium/.high` → Volume levels
+
+### **Battery Classes**
+- `.charging` → Plugged in and charging
+- `.warning` → Low battery (< 30%)
+- `.critical` → Very low battery (< 15%)
+
+## 🎯 Tips & Tricks
+
+### **Performance**
+- **Disable animations** on lower-end systems by setting `transition: none`
+- **Increase update intervals** in config for better performance
+- **Use simpler backgrounds** if blur effects are slow
+
+### **Customization**
+- **Extract colors** from your wallpaper using tools like `imagemagick`
+- **Adjust transparency** based on your wallpaper brightness
+- **Create themes** by saving different CSS files
+
+### **Workflow**
+- **Use special workspaces** for persistent apps (Discord, IDE, etc.)
+- **Regular workspaces** for temporary tasks
+- **Popup widgets** for quick system checks without opening full apps
+
+## 📱 Modern Features
+
+### **Glassmorphism Effects**
+- **Backdrop blur** for depth
+- **Subtle borders** with transparency
+- **Layered shadows** for dimension
+
+### **Smooth Animations**
+- **Cubic-bezier** easing for natural motion
+- **Transform animations** for hover effects
+- **Opacity transitions** for state changes
+
+### **Smart Interactions**
+- **Progressive disclosure** - simple view with detailed popups
+- **Context-aware** behaviors based on system state
+- **Minimal cognitive load** with clear visual hierarchy
+
+---
+
+## ✨ Result
+
+You now have a **gorgeous, modern waybar** that's:
+- **Visually stunning** with glassmorphism effects
+- **Highly functional** with intelligent popups
+- **Performance optimized** with efficient scripts  
+- **Fully customizable** to match your aesthetic
+
+Perfect for anyone who wants a **professional, anime-inspired desktop** that's both beautiful and practical! 🌸✨

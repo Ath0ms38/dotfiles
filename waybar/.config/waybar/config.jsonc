@@ -1,39 +1,162 @@
 {
-    "include": [
-        "~/.config/waybar/modules/workspaces.jsonc",
-        "~/.config/waybar/modules/media.jsonc",
-        "~/.config/waybar/modules/system.jsonc",
-        "~/.config/waybar/modules/custom.jsonc"
-    ],
     "layer": "top",
     "position": "top",
-    "height": 34,
-    "spacing": 8,
-    "margin-top": 6,
-    "margin-left": 12,
-    "margin-right": 12,
-    "reload_style_on_change": true,
+    "height": 42,
+    "spacing": 4,
+    "margin-top": 8,
+    "margin-left": 16,
+    "margin-right": 16,
     
     "modules-left": [
         "hyprland/workspaces",
-        "custom/special-discord",
-        "custom/special-vscode", 
-        "custom/special-minecraft",
         "hyprland/window"
     ],
     
     "modules-center": [
-        "custom/media-player",
-        "custom/media-controls"
+        "custom/special-discord",
+        "custom/special-vscode", 
+        "custom/special-minecraft",
+        "custom/media"
     ],
     
     "modules-right": [
-        "tray",
-        "custom/volume-control",
-        "custom/wifi-bluetooth",
+        "custom/system-info",
+        "custom/audio",
+        "network",
         "battery",
-        "custom/notification-center",
-        "custom/calendar-french",
         "clock"
-    ]
+    ],
+
+    // Left modules
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "1": "󰲠",
+            "2": "󰲢", 
+            "3": "󰲤",
+            "4": "󰲦",
+            "5": "󰲨",
+            "6": "󰲪",
+            "7": "󰲬",
+            "8": "󰲮",
+            "9": "󰲰",
+            "10": "󰿬"
+        },
+        "on-click": "activate",
+        "sort-by-number": true,
+        "active-only": false,
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        }
+    },
+
+    "hyprland/window": {
+        "format": "  {}",
+        "max-length": 50,
+        "separate-outputs": true
+    },
+
+    // Center modules - Special workspaces
+    "custom/special-discord": {
+        "format": "󰙯",
+        "tooltip": true,
+        "tooltip-format": "Discord Workspace",
+        "on-click": "~/.config/waybar/scripts/special-workspace-toggle.py discord",
+        "interval": 2,
+        "exec": "~/.config/waybar/scripts/special-workspace-status.py discord"
+    },
+
+    "custom/special-vscode": {
+        "format": "󰨞",
+        "tooltip": true,
+        "tooltip-format": "VSCode Workspace", 
+        "on-click": "~/.config/waybar/scripts/special-workspace-toggle.py vscode",
+        "interval": 2,
+        "exec": "~/.config/waybar/scripts/special-workspace-status.py vscode"
+    },
+
+    "custom/special-minecraft": {
+        "format": "󰍳",
+        "tooltip": true,
+        "tooltip-format": "Minecraft Workspace",
+        "on-click": "~/.config/waybar/scripts/special-workspace-toggle.py minecraft", 
+        "interval": 2,
+        "exec": "~/.config/waybar/scripts/special-workspace-status.py minecraft"
+    },
+
+    "custom/media": {
+        "format": "{icon} {}",
+        "format-icons": {
+            "Playing": "󰐊",
+            "Paused": "󰏤",
+            "Stopped": "󰓛"
+        },
+        "max-length": 40,
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl previous",
+        "tooltip": true,
+        "exec": "~/.config/waybar/scripts/media-info.py",
+        "interval": 2
+    },
+
+    // Right modules
+    "custom/system-info": {
+        "format": "󰍛",
+        "tooltip": true,
+        "on-click": "~/.config/waybar/scripts/system-popup.py",
+        "interval": 5,
+        "exec": "~/.config/waybar/scripts/system-stats.py"
+    },
+
+    "custom/audio": {
+        "format": "{icon}",
+        "format-icons": {
+            "muted": "󰖁",
+            "low": "󰕿", 
+            "medium": "󰖀",
+            "high": "󰕾"
+        },
+        "on-click": "~/.config/waybar/scripts/audio-popup.py",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+        "tooltip": true,
+        "exec": "~/.config/waybar/scripts/audio-info.py",
+        "interval": 1
+    },
+
+    "network": {
+        "format-wifi": "󰤨",
+        "format-ethernet": "󰈀", 
+        "format-disconnected": "󰤭",
+        "tooltip": true,
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n󰖩 {ipaddr}",
+        "tooltip-format-ethernet": "󰈀 {ipaddr}",
+        "on-click": "~/.config/waybar/scripts/network-popup.py"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}",
+        "format-charging": "󰂄",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip": true,
+        "tooltip-format": "{capacity}% {time}",
+        "on-click": "~/.config/waybar/scripts/battery-popup.py"
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%A, %B %d, %Y}",
+        "tooltip": true,
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "~/.config/waybar/scripts/calendar-popup.py"
+    }
 }
