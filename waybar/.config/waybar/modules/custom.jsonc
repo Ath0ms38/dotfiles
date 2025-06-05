@@ -1,0 +1,78 @@
+{
+    "custom/special-discord": {
+        "format": " {}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/special-workspace.py discord",
+        "on-click": "~/.config/waybar/scripts/launch-or-focus.py discord",
+        "interval": 2
+    },
+    
+    "custom/special-vscode": {
+        "format": "󰨞 {}",
+        "return-type": "json", 
+        "exec": "~/.config/waybar/scripts/special-workspace.py vscode",
+        "on-click": "~/.config/waybar/scripts/launch-or-focus.py vscode",
+        "interval": 2
+    },
+    
+    "custom/special-minecraft": {
+        "format": "󰍳 {}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/special-workspace.py minecraft",
+        "on-click": "~/.config/waybar/scripts/launch-or-focus.py minecraft",
+        "interval": 2
+    },
+    
+    "custom/media-player": {
+        "format": "{icon} {text}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/media-player.py",
+        "on-click": "playerctl play-pause",
+        "on-click-right": "playerctl next",
+        "on-click-middle": "playerctl previous",
+        "interval": 2
+    },
+    
+    "custom/volume-control": {
+        "format": "{icon} {text}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/volume-control.py",
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +2%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -2%",
+        "interval": 1
+    },
+    
+    "custom/wifi-bluetooth": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/wifi-bluetooth.py",
+        "on-click": "nm-connection-editor",
+        "on-click-right": "blueman-manager",
+        "interval": 5
+    },
+    
+    "custom/notification-center": {
+        "format": "{} {icon}",
+        "format-icons": {
+            "notification": "󱅫",
+            "none": "",
+            "dnd-notification": " ",
+            "dnd-none": "󰂛"
+        },
+        "return-type": "json",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+    
+    "custom/calendar-french": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/calendar-french.py",
+        "on-click": "gnome-calendar",
+        "interval": 60
+    }
+}

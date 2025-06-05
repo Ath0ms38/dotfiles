@@ -1,0 +1,33 @@
+{
+    "hyprland/workspaces": {
+        "format": "{name}: {icon}",
+        "format-icons": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "special:discord": "",
+            "special:vscode": "󰨞",
+            "special:minecraft": "󰍳",
+            "active": "",
+            "default": ""
+        },
+        "persistent-workspaces": {
+            "*": [1, 2, 3, 4, 5]
+        },
+        "on-click": "activate",
+        "sort-by": "number",
+        "all-outputs": false
+    },
+    
+    "hyprland/window": {
+        "format": "{}",
+        "separate-outputs": true,
+        "max-length": 50,
+        "rewrite": {
+            "(.*) — Mozilla Firefox": "🌐 $1",
+            "(.*)Discord": "💬 $1"
+        }
+    }
+}

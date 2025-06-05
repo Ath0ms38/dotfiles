@@ -1,0 +1,163 @@
+* {
+  border: none;
+  border-radius: 8px;
+  font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free";
+  font-size: 14px;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: rgba(77, 62, 42, 0.95);
+  color: #7bb4c8;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  border-radius: 12px;
+  border: 2px solid #5084ae;
+}
+
+#workspaces {
+  background-color: #4d3e2a;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #5084ae;
+}
+
+#workspaces button {
+  padding: 4px 8px;
+  margin: 2px;
+  border-radius: 8px;
+  color: #7bb4c8;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+#workspaces button.active {
+  background-color: #5084ae;
+  color: #4d3e2a;
+}
+
+#workspaces button:hover {
+  background-color: #7bb4c8;
+  color: #4d3e2a;
+}
+
+#window {
+  background-color: #4d3e2a;
+  color: #7bb4c8;
+  padding: 6px 12px;
+  border: 1px solid #5084ae;
+  margin-left: 8px;
+}
+
+#custom-special-discord,
+#custom-special-vscode,
+#custom-special-minecraft {
+  background-color: #4d3e2a;
+  color: #d7a46a;
+  padding: 6px 10px;
+  margin: 2px;
+  border: 1px solid #5084ae;
+  transition: all 0.3s ease;
+}
+
+#custom-special-discord.active,
+#custom-special-vscode.active,
+#custom-special-minecraft.active {
+  background-color: #5084ae;
+  color: #4d3e2a;
+}
+
+#custom-special-discord.exists,
+#custom-special-vscode.exists,
+#custom-special-minecraft.exists {
+  background-color: #d7a46a;
+  color: #4d3e2a;
+}
+
+#custom-media-player {
+  background-color: #4d3e2a;
+  color: #7bb4c8;
+  padding: 6px 14px;
+  border: 1px solid #5084ae;
+  transition: all 0.3s ease;
+}
+
+#custom-media-player:hover {
+  background-color: #5084ae;
+  color: #d7a46a;
+}
+
+#custom-volume-control {
+  background-color: #4d3e2a;
+  color: #7bb4c8;
+  padding: 6px 12px;
+  border: 1px solid #5084ae;
+}
+
+#custom-volume-control:hover {
+  background-color: #7bb4c8;
+  color: #4d3e2a;
+}
+
+#custom-wifi-bluetooth {
+  background-color: #4d3e2a;
+  color: #7bb4c8;
+  padding: 6px 12px;
+  border: 1px solid #5084ae;
+}
+
+#custom-wifi-bluetooth:hover {
+  background-color: #7bb4c8;
+  color: #4d3e2a;
+}
+
+#battery {
+  background-color: #4d3e2a;
+  color: #7bb4c8;
+  padding: 6px 12px;
+  border: 1px solid #5084ae;
+}
+
+#battery.charging {
+  background-color: #7bb4c8;
+  color: #4d3e2a;
+}
+
+#clock, #custom-calendar-french {
+  background-color: #5084ae;
+  color: #4d3e2a;
+  padding: 6px 15px;
+  font-weight: bold;
+  border: 2px solid #7bb4c8;
+}
+
+#clock:hover, #custom-calendar-french:hover {
+  background-color: #7bb4c8;
+  color: #4d3e2a;
+}
+
+#custom-notification-center {
+  background-color: #4d3e2a;
+  color: #d7a46a;
+  padding: 6px 12px;
+  border: 1px solid #5084ae;
+}
+
+#custom-notification-center:hover {
+  background-color: #d7a46a;
+  color: #4d3e2a;
+}
+
+#tray {
+  background-color: #4d3e2a;
+  padding: 4px 8px;
+  border: 1px solid #5084ae;
+}
+
+tooltip {
+  background-color: rgba(77, 62, 42, 0.95);
+  color: #7bb4c8;
+  border: 2px solid #5084ae;
+  border-radius: 8px;
+  padding: 8px 12px;
+}

@@ -1,0 +1,39 @@
+{
+    "include": [
+        "~/.config/waybar/modules/workspaces.jsonc",
+        "~/.config/waybar/modules/media.jsonc",
+        "~/.config/waybar/modules/system.jsonc",
+        "~/.config/waybar/modules/custom.jsonc"
+    ],
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "spacing": 8,
+    "margin-top": 6,
+    "margin-left": 12,
+    "margin-right": 12,
+    "reload_style_on_change": true,
+    
+    "modules-left": [
+        "hyprland/workspaces",
+        "custom/special-discord",
+        "custom/special-vscode", 
+        "custom/special-minecraft",
+        "hyprland/window"
+    ],
+    
+    "modules-center": [
+        "custom/media-player",
+        "custom/media-controls"
+    ],
+    
+    "modules-right": [
+        "tray",
+        "custom/volume-control",
+        "custom/wifi-bluetooth",
+        "battery",
+        "custom/notification-center",
+        "custom/calendar-french",
+        "clock"
+    ]
+}

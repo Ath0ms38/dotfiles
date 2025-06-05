@@ -1,0 +1,146 @@
+.control-center {
+  background-color: rgba(77, 62, 42, 0.95);
+  border: 2px solid #5084ae;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.control-center .widget-title {
+  background-color: #5084ae;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.control-center .widget-title > .title {
+  font-size: 1.2em;
+}
+
+.control-center .widget-title > button {
+  background-color: #7bb4c8;
+  color: #4d3e2a;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-weight: bold;
+}
+
+.control-center .widget-title > button:hover {
+  background-color: #d7a46a;
+}
+
+.notification-row {
+  background-color: rgba(215, 164, 106, 0.15);
+  border: 1px solid #7bb4c8;
+  border-radius: 8px;
+  margin: 6px 0;
+  padding: 12px;
+  transition: all 0.2s ease;
+}
+
+.notification-row:hover {
+  background-color: rgba(215, 164, 106, 0.25);
+  border-color: #5084ae;
+}
+
+.notification-row .notification-content {
+  color: #7bb4c8;
+}
+
+.notification-row .notification-content .summary {
+  color: #d7a46a;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.notification-row .notification-content .body {
+  color: #7bb4c8;
+  margin-top: 4px;
+}
+
+.notification-row .notification-content .app-name {
+  color: #5084ae;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+.notification {
+  background-color: rgba(77, 62, 42, 0.95);
+  border: 2px solid #5084ae;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.notification .notification-content {
+  color: #7bb4c8;
+}
+
+.notification .notification-content .summary {
+  color: #d7a46a;
+  font-weight: bold;
+}
+
+.notification .notification-content .body {
+  color: #7bb4c8;
+  margin-top: 4px;
+}
+
+.notification .notification-action {
+  background-color: #5084ae;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 4px 2px;
+}
+
+.notification .notification-action:hover {
+  background-color: #7bb4c8;
+}
+
+.notification .close-button {
+  background-color: #d7a46a;
+  color: #4d3e2a;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-weight: bold;
+}
+
+.notification .close-button:hover {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.widget-dnd {
+  background-color: rgba(215, 164, 106, 0.2);
+  border: 1px solid #d7a46a;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+}
+
+.widget-dnd > switch {
+  background-color: #5084ae;
+  border-radius: 12px;
+}
+
+.widget-dnd > switch:checked {
+  background-color: #7bb4c8;
+}
+
+.widget-dnd > switch slider {
+  background-color: white;
+  border-radius: 50%;
+}
+
+.widget-dnd .widget-label {
+  color: #d7a46a;
+  font-weight: bold;
+}
