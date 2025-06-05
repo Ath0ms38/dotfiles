@@ -1,7 +1,7 @@
 * {
   border: none;
   border-radius: 0;
-  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", "Font Awesome 6 Free", "Font Awesome 5 Free", "Font Awesome 5 Brands", "Font Awesome 6 Brands", monospace;
   font-size: 13px;
   min-height: 0;
   font-weight: 600;
@@ -211,4 +211,8 @@ tooltip {
   background: rgba(248, 113, 113, 0.8);
   color: #ffffff;
   border: 1px solid rgba(248, 113, 113, 1.0);
+}
+
+#custom-special-discord {
+  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", monospace;
 }
