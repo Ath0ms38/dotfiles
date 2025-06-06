@@ -20,15 +20,16 @@ is_on_special_workspace() {
 # Store previous state
 declare -A prev_state
 
-# Function to get current app states
+# Function to get current app states including current workspace
 get_app_states() {
-    local discord_running vscode_running minecraft_running
+    local discord_running vscode_running minecraft_running current_ws
     
+    current_ws=$(hyprctl activeworkspace -j | jq -r '.id')
     discord_running=$(hyprctl clients -j | jq -r '.[] | select(.class=="discord") | .workspace.id' 2>/dev/null | head -1)
     vscode_running=$(hyprctl clients -j | jq -r '.[] | select(.class=="Code") | .workspace.id' 2>/dev/null | head -1)
     minecraft_running=$(hyprctl clients -j | jq -r '.[] | select(.class=="org.polymc.PolyMC") | .workspace.id' 2>/dev/null | head -1)
     
-    echo "discord:${discord_running:-0} vscode:${vscode_running:-0} minecraft:${minecraft_running:-0}"
+    echo "ws:${current_ws} discord:${discord_running:-0} vscode:${vscode_running:-0} minecraft:${minecraft_running:-0}"
 }
 
 echo "Starting special workspace monitor..."
@@ -37,12 +38,8 @@ echo "Starting special workspace monitor..."
 prev_state_str=$(get_app_states)
 
 while true; do
-    # Check every 2 seconds, but more frequently if on special workspace
-    if is_on_special_workspace; then
-        sleep 1
-    else
-        sleep 3
-    fi
+    # More frequent polling for better responsiveness
+    sleep 0.5
     
     # Get current state
     current_state_str=$(get_app_states)
