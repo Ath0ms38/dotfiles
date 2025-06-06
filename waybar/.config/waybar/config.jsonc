@@ -105,7 +105,7 @@
         "return-type": "json",
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status discord",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle discord",
-        "interval": 2
+        "signal": 8
     },
     
     "custom/special-vscode": {
@@ -113,7 +113,7 @@
         "return-type": "json", 
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status vscode",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle vscode",
-        "interval": 2
+        "signal": 9
     },
     
     "custom/special-minecraft": {
@@ -121,7 +121,7 @@
         "return-type": "json",
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status minecraft",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle minecraft",
-        "interval": 2
+        "signal": 10
     },
     
     "custom/media": {
