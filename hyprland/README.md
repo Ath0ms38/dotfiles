@@ -9,6 +9,7 @@ hyprland/
 ├── .config/
 │   └── hypr/
 │       ├── hyprland.conf      # Main config file (imports only)
+│       ├── hyprpaper.conf     # Wallpaper configuration for hyprpaper
 │       └── conf/              # Modular configuration files
 │           ├── monitors.conf      # Monitor configuration
 │           ├── programs.conf      # Program definitions and autostart
@@ -24,6 +25,12 @@ hyprland/
 
 ### `hyprland.conf`
 The main configuration file that imports all modular files using `source` statements.
+
+### `hyprpaper.conf`
+- Wallpaper configuration for hyprpaper daemon
+- Preloads wallpapers and sets default wallpaper
+- IPC settings for dynamic wallpaper changes
+- Splash screen configuration
 
 ### `conf/monitors.conf`
 - Monitor settings and display configuration

@@ -1,6 +1,53 @@
-# ✨ Beautiful Modern Waybar Setup for Hyprland
+# ✨ Dotfiles - Hyprland & Waybar Configuration
 
-A stunning, glassmorphism-inspired waybar configuration with modern animations, popup widgets, and intelligent special workspace management.
+A comprehensive dotfiles repository featuring a modular Hyprland configuration and advanced Waybar setup with intelligent workspace management, custom scripts, and modern visual effects.
+
+## 🏗️ Project Structure
+
+```
+dotfiles/
+├── hyprland/           # Modular Hyprland configuration
+├── waybar/             # Advanced Waybar with smart features
+├── swaync/             # Notification center configuration
+├── wallpapers/         # Desktop wallpapers
+├── Makefile           # Installation automation
+├── README.md          # This file
+└── TROUBLESHOOTING.md # Common issues and solutions
+```
+
+## 🖥️ Hyprland Configuration
+
+### **Modular Design**
+- **Split configuration** into logical files for better maintainability
+- **Easy customization** with separate files for each aspect
+- **Version control friendly** with smaller, focused files
+
+### **Configuration Files**
+- `hyprland.conf` - Main config with imports
+- `hyprpaper.conf` - Wallpaper management
+- `conf/monitors.conf` - Display settings
+- `conf/programs.conf` - Application definitions
+- `conf/environment.conf` - Environment variables
+- `conf/appearance.conf` - Visual settings and animations
+- `conf/input.conf` - Keyboard and mouse settings
+- `conf/keybindings.conf` - All keyboard shortcuts
+- `conf/rules.conf` - Window and workspace rules
+
+## 🎨 Waybar - Advanced System Bar
+
+### **Smart Workspace Management Features**
+- **Special Workspaces**: Dedicated workspaces for Discord (11), VS Code (12), and Minecraft (13)
+- **Auto-launcher**: Automatically launches applications when switching to special workspaces
+- **Workspace Navigator**: Enhanced navigation with SUPER+SHIFT+arrow keys
+- **Visual Indicators**: Dynamic icons showing workspace status and application presence
+- **Modular Configuration**: Split into logical modules for easy maintenance
+
+### **Interactive System Monitoring**
+- **Audio Control**: Click for popup, scroll for volume adjustment
+- **System Stats**: CPU, memory, disk usage with interactive popups
+- **Battery Management**: Smart indicator with detailed information popup
+- **Network Status**: Connection details with popup interface
+- **Media Integration**: Real-time media player control and information
 
 ## 🎨 Design Features
 
@@ -104,6 +151,14 @@ Instead of opening applications, clicking widgets shows beautiful popup notifica
 - **Auto-sizing** based on content
 - **Consistent spacing** and alignment
 - **Screen-aware** positioning
+
+## 📂 Component Documentation
+
+For detailed information about each component:
+
+- **[Hyprland Configuration](hyprland/README.md)** - Complete guide to the modular Hyprland setup
+- **[Waybar Configuration](waybar/README.md)** - Advanced Waybar features and customization
+- **[Troubleshooting Guide](TROUBLESHOOTING.md)** - Common issues and solutions
 
 ## 🛠️ Installation
 
