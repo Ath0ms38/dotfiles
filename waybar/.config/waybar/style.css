@@ -7,15 +7,14 @@
   font-weight: 600;
 }
 
-/* Completely transparent waybar background with stable height */
+/* Waybar window - let it size naturally */
 window#waybar {
   background: transparent;
   color: #f5f0e8;
   margin: 0;
-  min-height: 40px;
 }
 
-/* Make tooltips with warm anime room aesthetic */
+/* Tooltips with warm anime room aesthetic */
 tooltip {
   background: rgba(61, 45, 41, 0.95);
   border: 1px solid rgba(255, 183, 186, 0.3);
@@ -24,7 +23,7 @@ tooltip {
   padding: 8px 12px;
 }
 
-/* Waybar compatible animations - no glow effects */
+/* Waybar compatible animations - no transform scaling */
 @keyframes pulse {
   0% { opacity: 1; }
   50% { opacity: 0.85; }
@@ -43,55 +42,67 @@ tooltip {
   100% { border-color: rgba(255, 183, 186, 0.4); }
 }
 
-/* Workspaces - warm cherry blossom and sunset tones */
+/* Workspaces container */
 #workspaces {
   background: transparent;
   margin: 4px 8px 4px 4px;
   padding: 2px;
 }
 
+/* Base workspace button styling - no border in normal state */
 #workspaces button {
   background: rgba(141, 110, 99, 0.8);
   color: #f3e5ab;
   border-radius: 12px;
   padding: 6px 10px;
   margin: 2px;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 183, 186, 0.4);
+  transition: all 0.15s ease-out;
+  border: 1px solid transparent;
   animation: colorshift 4s ease-in-out infinite;
+  min-height: 20px;
+  min-width: 20px;
 }
 
+/* Hover effect - seamless expansion without gaps */
 #workspaces button:hover {
   background: rgba(255, 183, 186, 0.6);
   color: #3d2d29;
-  border: 1px solid rgba(255, 183, 186, 0.8);
+  border: 1px solid transparent;
   animation: none;
+  box-shadow: 0 0 0 2px rgba(255, 183, 186, 0.6);
 }
 
+/* Active workspace - seamless expansion without gaps */
 #workspaces button.active {
   background: rgba(255, 204, 92, 0.8);
   color: #3d2d29;
-  border: 1px solid rgba(255, 204, 92, 1.0);
+  border: 1px solid transparent;
   font-weight: bold;
   animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 0 3px rgba(255, 204, 92, 0.8);
 }
 
-/* Window title - cozy paper/cream aesthetic */
+/* Window title - no border in normal state */
 #window {
   background: rgba(141, 110, 99, 0.7);
   color: #f5f0e8;
   border-radius: 12px;
   padding: 6px 16px;
   margin: 4px;
-  border: 1px solid rgba(255, 183, 186, 0.3);
+  border: 1px solid transparent;
   font-weight: 500;
   font-style: italic;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease-out;
   animation: bordershift 6s ease-in-out infinite;
+  min-height: 20px;
+  min-width: 100px;
 }
 
+/* Window title - seamless expansion without gaps */
 #window:hover {
   background: rgba(255, 183, 186, 0.4);
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 1px rgba(255, 183, 186, 0.4);
 }
 
 #window.empty {
@@ -99,7 +110,7 @@ tooltip {
   border: none;
 }
 
-/* Special workspace buttons - warm anime room tones */
+/* Special workspace buttons - no border in normal state */
 #custom-special-discord,
 #custom-special-vscode,
 #custom-special-minecraft {
@@ -108,10 +119,12 @@ tooltip {
   border-radius: 12px;
   padding: 8px 12px;
   margin: 4px 2px;
-  border: 2px solid rgba(255, 183, 186, 0.5);
+  border: 2px solid transparent;
   font-size: 16px;
-  transition: all 0.3s ease;
+  transition: all 0.15s ease-out;
   animation: pulse 5s ease-in-out infinite;
+  min-height: 24px;
+  min-width: 32px;
 }
 
 #custom-special-discord {
@@ -126,15 +139,17 @@ tooltip {
   animation-delay: 1.5s;
 }
 
-/* Hover effects for all states - fixed size, only colors change */
+/* Hover effects - seamless expansion without gaps */
 #custom-special-discord:hover,
 #custom-special-discord.exists:hover,
 #custom-special-discord.active:hover {
   background: rgba(179, 157, 219, 1.0);
   color: #ffffff;
-  border: 2px solid rgba(200, 180, 255, 1.0);
+  border: 2px solid transparent;
   font-weight: bold;
+  opacity: 0.95;
   animation: none;
+  box-shadow: 0 0 0 3px rgba(179, 157, 219, 1.0);
 }
 
 #custom-special-vscode:hover,
@@ -142,9 +157,11 @@ tooltip {
 #custom-special-vscode.active:hover {
   background: rgba(255, 138, 101, 1.0);
   color: #ffffff;
-  border: 2px solid rgba(255, 160, 120, 1.0);
+  border: 2px solid transparent;
   font-weight: bold;
+  opacity: 0.95;
   animation: none;
+  box-shadow: 0 0 0 3px rgba(255, 138, 101, 1.0);
 }
 
 #custom-special-minecraft:hover,
@@ -152,62 +169,72 @@ tooltip {
 #custom-special-minecraft.active:hover {
   background: rgba(255, 204, 92, 1.0);
   color: #3d2d29;
-  border: 2px solid rgba(255, 220, 120, 1.0);
+  border: 2px solid transparent;
   font-weight: bold;
+  opacity: 0.95;
   animation: none;
+  box-shadow: 0 0 0 3px rgba(255, 204, 92, 1.0);
 }
 
-/* Active states - prominent warm colors */
+/* Active states - seamless expansion without gaps */
 #custom-special-discord.active {
   background: rgba(179, 157, 219, 0.9);
   color: #ffffff;
-  border: 2px solid rgba(179, 157, 219, 1.0);
+  border: 2px solid transparent;
   animation: pulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 0 4px rgba(179, 157, 219, 0.9);
 }
 
 #custom-special-vscode.active {
   background: rgba(255, 138, 101, 0.9);
   color: #ffffff;
-  border: 2px solid rgba(255, 138, 101, 1.0);
+  border: 2px solid transparent;
   animation: pulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 0 4px rgba(255, 138, 101, 0.9);
 }
 
 #custom-special-minecraft.active {
   background: rgba(255, 204, 92, 0.9);
   color: #3d2d29;
-  border: 2px solid rgba(255, 204, 92, 1.0);
+  border: 2px solid transparent;
   animation: pulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 0 4px rgba(255, 204, 92, 0.9);
 }
 
-/* Exists state - subtle cherry blossom indication */
+/* Exists state - seamless expansion without gaps */
 #custom-special-discord.exists,
 #custom-special-vscode.exists,
 #custom-special-minecraft.exists {
   background: rgba(255, 183, 186, 0.6);
   color: #3d2d29;
-  border: 2px solid rgba(255, 183, 186, 0.9);
+  border: 2px solid transparent;
   animation: pulse 4s ease-in-out infinite;
+  box-shadow: 0 0 0 2px rgba(255, 183, 186, 0.6);
 }
 
-/* Media player - soft Mount Fuji purple */
+/* Media player - no border in normal state */
 #custom-media {
   background: rgba(141, 110, 99, 0.8);
   color: #f5f0e8;
   border-radius: 12px;
   padding: 6px 14px;
   margin: 4px 2px;
-  border: 1px solid rgba(179, 157, 219, 0.4);
-  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  transition: all 0.15s ease-out;
   animation: pulse 7s ease-in-out infinite;
+  min-height: 20px;
+  min-width: 80px;
 }
 
+/* Media player - seamless expansion without gaps */
 #custom-media:hover {
   background: rgba(179, 157, 219, 0.6);
   color: #3d2d29;
-  border: 1px solid rgba(179, 157, 219, 0.8);
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 2px rgba(179, 157, 219, 0.6);
 }
 
-/* Right side modules - warm anime room aesthetic */
+/* Right side modules - matching border colors */
 #custom-system-info,
 #custom-audio,
 #network,
@@ -218,9 +245,11 @@ tooltip {
   border-radius: 12px;
   padding: 6px 12px;
   margin: 4px 2px;
-  border: 1px solid rgba(255, 183, 186, 0.4);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(141, 110, 99, 0.8);
+  transition: background 0.15s ease-out, border 0.15s ease-out;
   animation: bordershift 6s ease-in-out infinite;
+  min-height: 20px;
+  min-width: 24px;
 }
 
 #custom-system-info {
@@ -246,15 +275,16 @@ tooltip {
 #clock:hover {
   background: rgba(255, 183, 186, 0.6);
   color: #3d2d29;
-  border: 1px solid rgba(255, 183, 186, 0.9);
+  border: 1px solid rgba(255, 183, 186, 0.6);
+  box-shadow: 0 0 0 2px rgba(255, 183, 186, 0.6);
 }
 
-/* Clock - special sunset styling */
+/* Clock - matching border color */
 #clock {
   background: rgba(255, 204, 92, 0.7);
   color: #3d2d29;
   font-weight: bold;
-  border: 1px solid rgba(255, 204, 92, 0.9);
+  border: 1px solid rgba(255, 204, 92, 0.7);
   font-size: 14px;
   margin-right: 4px;
   animation: pulse 3s ease-in-out infinite;
@@ -262,6 +292,8 @@ tooltip {
 
 #clock:hover {
   background: rgba(255, 204, 92, 0.9);
+  border: 1px solid rgba(255, 204, 92, 0.9);
+  box-shadow: 0 0 0 2px rgba(255, 204, 92, 0.9);
 }
 
 /* Status colors - warm anime palette */
@@ -293,8 +325,4 @@ tooltip {
   background: rgba(255, 107, 129, 0.9);
   color: #ffffff;
   border: 1px solid rgba(255, 107, 129, 1.0);
-}
-
-#custom-special-discord {
-  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", monospace;
 }
