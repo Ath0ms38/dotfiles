@@ -173,6 +173,15 @@ def manage_workspace(workspace_name):
     except Exception as e:
         print(f"Error managing workspace: {e}")
 
+def update_waybar_buttons():
+    """Trigger waybar button updates after workspace changes"""
+    try:
+        subprocess.run(['pkill', '-RTMIN+8', 'waybar'], check=False)  # Discord
+        subprocess.run(['pkill', '-RTMIN+9', 'waybar'], check=False)  # VSCode
+        subprocess.run(['pkill', '-RTMIN+10', 'waybar'], check=False) # Minecraft
+    except Exception as e:
+        print(f"Error updating waybar: {e}")
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: regular-workspace-manager.py <action> [workspace_name]")
@@ -195,6 +204,8 @@ if __name__ == "__main__":
             sys.exit(1)
         workspace_name = sys.argv[2]
         manage_workspace(workspace_name)
+        # Update waybar buttons after workspace change
+        update_waybar_buttons()
     
     else:
         print(f"Unknown action: {action}")
