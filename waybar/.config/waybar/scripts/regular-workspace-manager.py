@@ -92,7 +92,6 @@ def manage_workspace(workspace_name):
         }
         
         if workspace_name not in apps:
-            print(f"Unknown workspace: {workspace_name}")
             return
         
         app = apps[workspace_name]
@@ -113,10 +112,7 @@ def manage_workspace(workspace_name):
             )
             
             if not app_in_workspace:
-                print(f"Launching {app['class']} in workspace {target_workspace}")
                 subprocess.run(['hyprctl', 'dispatch', 'exec', app['command']], check=True)
-            else:
-                print(f"Already on workspace {target_workspace} with {app['class']}")
             return
         
         # Get current clients to check app status
@@ -139,7 +135,6 @@ def manage_workspace(workspace_name):
         
         if not app_running:
             # Launch app in its dedicated workspace
-            print(f"Launching {app['class']} in workspace {target_workspace}")
             subprocess.run([
                 'hyprctl', 'dispatch', 'exec', 
                 f'[workspace {target_workspace}] {app["command"]}'
@@ -153,7 +148,6 @@ def manage_workspace(workspace_name):
             
         elif not app_in_correct_workspace:
             # Move existing app to its dedicated workspace
-            print(f"Moving {app['class']} to workspace {target_workspace}")
             subprocess.run([
                 'hyprctl', 'dispatch', 'movetoworkspacesilent', 
                 f"{target_workspace},class:{app['class']}"
@@ -165,13 +159,12 @@ def manage_workspace(workspace_name):
             ], check=True)
         else:
             # App is already in correct workspace, just switch to it
-            print(f"Switching to workspace {target_workspace}")
             subprocess.run([
                 'hyprctl', 'dispatch', 'workspace', str(target_workspace)
             ], check=True)
             
-    except Exception as e:
-        print(f"Error managing workspace: {e}")
+    except Exception:
+        pass
 
 def update_waybar_buttons():
     """Trigger waybar button updates after workspace changes"""
@@ -179,8 +172,8 @@ def update_waybar_buttons():
         subprocess.run(['pkill', '-RTMIN+8', 'waybar'], check=False)  # Discord
         subprocess.run(['pkill', '-RTMIN+9', 'waybar'], check=False)  # VSCode
         subprocess.run(['pkill', '-RTMIN+10', 'waybar'], check=False) # Minecraft
-    except Exception as e:
-        print(f"Error updating waybar: {e}")
+    except Exception:
+        pass
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

@@ -32,8 +32,6 @@ get_app_states() {
     echo "ws:${current_ws} discord:${discord_running:-0} vscode:${vscode_running:-0} minecraft:${minecraft_running:-0}"
 }
 
-echo "Starting special workspace monitor..."
-
 # Initialize previous state
 prev_state_str=$(get_app_states)
 
@@ -46,7 +44,6 @@ while true; do
     
     # Check if state changed
     if [[ "$current_state_str" != "$prev_state_str" ]]; then
-        echo "State changed: $prev_state_str -> $current_state_str"
         update_buttons
         prev_state_str="$current_state_str"
     fi
