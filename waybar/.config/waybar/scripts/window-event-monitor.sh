@@ -5,9 +5,9 @@
 
 # Function to update waybar buttons
 update_buttons() {
-    pkill -RTMIN+8 waybar   # Discord
-    pkill -RTMIN+9 waybar   # VSCode  
-    pkill -RTMIN+10 waybar  # Minecraft
+    pkill -RTMIN+8 waybar >/dev/null 2>&1   # Discord
+    pkill -RTMIN+9 waybar >/dev/null 2>&1   # VSCode  
+    pkill -RTMIN+10 waybar >/dev/null 2>&1  # Minecraft
 }
 
 # Function to check if we're on a special workspace

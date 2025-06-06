@@ -112,7 +112,8 @@ def manage_workspace(workspace_name):
             )
             
             if not app_in_workspace:
-                subprocess.run(['hyprctl', 'dispatch', 'exec', app['command']], check=True)
+                subprocess.run(['hyprctl', 'dispatch', 'exec', app['command']], 
+                             capture_output=True, check=True)
             return
         
         # Get current clients to check app status
@@ -138,30 +139,30 @@ def manage_workspace(workspace_name):
             subprocess.run([
                 'hyprctl', 'dispatch', 'exec', 
                 f'[workspace {target_workspace}] {app["command"]}'
-            ], check=True)
+            ], capture_output=True, check=True)
             
             # Wait a moment for the app to start, then switch
             time.sleep(0.8)
             subprocess.run([
                 'hyprctl', 'dispatch', 'workspace', str(target_workspace)
-            ], check=True)
+            ], capture_output=True, check=True)
             
         elif not app_in_correct_workspace:
             # Move existing app to its dedicated workspace
             subprocess.run([
                 'hyprctl', 'dispatch', 'movetoworkspacesilent', 
                 f"{target_workspace},class:{app['class']}"
-            ], check=True)
+            ], capture_output=True, check=True)
             
             # Switch to the workspace
             subprocess.run([
                 'hyprctl', 'dispatch', 'workspace', str(target_workspace)
-            ], check=True)
+            ], capture_output=True, check=True)
         else:
             # App is already in correct workspace, just switch to it
             subprocess.run([
                 'hyprctl', 'dispatch', 'workspace', str(target_workspace)
-            ], check=True)
+            ], capture_output=True, check=True)
             
     except Exception:
         pass
@@ -169,9 +170,9 @@ def manage_workspace(workspace_name):
 def update_waybar_buttons():
     """Trigger waybar button updates after workspace changes"""
     try:
-        subprocess.run(['pkill', '-RTMIN+8', 'waybar'], check=False)  # Discord
-        subprocess.run(['pkill', '-RTMIN+9', 'waybar'], check=False)  # VSCode
-        subprocess.run(['pkill', '-RTMIN+10', 'waybar'], check=False) # Minecraft
+        subprocess.run(['pkill', '-RTMIN+8', 'waybar'], capture_output=True, check=False)  # Discord
+        subprocess.run(['pkill', '-RTMIN+9', 'waybar'], capture_output=True, check=False)  # VSCode
+        subprocess.run(['pkill', '-RTMIN+10', 'waybar'], capture_output=True, check=False) # Minecraft
     except Exception:
         pass
 
