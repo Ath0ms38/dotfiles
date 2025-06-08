@@ -1,4 +1,4 @@
-.PHONY: all install uninstall waybar hyprland swaync zsh starship kitty restart-waybar
+.PHONY: all install uninstall waybar hyprland swaync zsh starship kitty fastfetch restart-waybar
 
 all: install
 
@@ -10,6 +10,7 @@ install:
 	stow --target=$(HOME) --restow zsh
 	stow --target=$(HOME) --restow starship
 	stow --target=$(HOME) --restow kitty
+	stow --target=$(HOME) --restow fastfetch
 	chmod +x ~/.config/waybar/scripts/*
 	chmod +x ~/.config/fabric/*
 	@echo "Dotfiles installed successfully!"
@@ -22,6 +23,7 @@ uninstall:
 	stow --target=$(HOME) --delete zsh
 	stow --target=$(HOME) --delete starship
 	stow --target=$(HOME) --delete kitty
+	stow --target=$(HOME) --delete fastfetch
 	@echo "Dotfiles uninstalled successfully!"
 
 waybar:
@@ -43,6 +45,9 @@ starship:
 kitty:
 	stow --target=$(HOME) --restow kitty
 
+fastfetch:
+	stow --target=$(HOME) --restow fastfetch
+
 restart-waybar:
 	pkill waybar || true
 	waybar &
@@ -57,4 +62,5 @@ help:
 	@echo "  zsh         - Install only zsh config"
 	@echo "  starship    - Install only starship config"
 	@echo "  kitty       - Install only kitty config"
+	@echo "  fastfetch   - Install only fastfetch config"
 	@echo "  restart-waybar - Restart waybar"
