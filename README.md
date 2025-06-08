@@ -9,6 +9,9 @@ dotfiles/
 ├── hyprland/           # Modular Hyprland configuration
 ├── waybar/             # Advanced Waybar with smart features
 ├── swaync/             # Notification center configuration
+├── kitty/              # Beautiful transparent terminal theme
+├── starship/           # Modern shell prompt configuration
+├── zsh/                # Enhanced zsh shell configuration
 ├── wallpapers/         # Desktop wallpapers
 ├── Makefile           # Installation automation
 ├── README.md          # This file
@@ -48,6 +51,27 @@ dotfiles/
 - **Battery Management**: Smart indicator with detailed information popup
 - **Network Status**: Connection details with popup interface
 - **Media Integration**: Real-time media player control and information
+
+## 💻 Terminal Configuration
+
+### **Beautiful Terminal Experience**
+- **Kitty Terminal**: 90% transparency with background blur effects
+- **Starship Prompt**: Modern, informative prompt with git integration
+- **Zsh Shell**: Enhanced shell with auto-suggestions and syntax highlighting
+- **Consistent Color Theme**: Warm color palette matching the desktop aesthetic
+
+### **Enhanced Features**
+- **Auto-suggestions**: Gray text completions as you type
+- **Syntax Highlighting**: Real-time command highlighting with colors
+- **Modern File Listing**: Enhanced `ls` with icons and colors via `eza`
+- **Fuzzy Finding**: Quick file/command search with `fzf`
+- **Developer Tools**: Git integration, Python support, virtual environment detection
+
+### **Terminal Transparency**
+- **Dynamic Opacity**: Adjustable transparency (75% - 100%)
+- **Background Blur**: 64px blur for depth and readability
+- **Color Coordination**: Terminal colors match the desktop theme
+- **Professional Appearance**: Clean, distraction-free interface
 
 ## 🎨 Design Features
 
@@ -158,6 +182,9 @@ For detailed information about each component:
 
 - **[Hyprland Configuration](hyprland/README.md)** - Complete guide to the modular Hyprland setup
 - **[Waybar Configuration](waybar/README.md)** - Advanced Waybar features and customization
+- **[Kitty Terminal](kitty/README.md)** - Beautiful transparent terminal configuration
+- **[Starship Prompt](starship/README.md)** - Modern shell prompt setup and customization
+- **[Zsh Configuration](zsh/README.md)** - Enhanced shell with plugins and themes
 - **[Troubleshooting Guide](TROUBLESHOOTING.md)** - Common issues and solutions
 
 ## 🛠️ Installation
@@ -169,6 +196,11 @@ sudo pacman -S waybar swaync playerctl pavucontrol
 sudo pacman -S python python-pip python-psutil
 sudo pacman -S ttf-jetbrains-mono-nerd
 
+# Terminal packages
+sudo pacman -S kitty zsh starship
+sudo pacman -S eza bat ripgrep fd fzf
+sudo pacman -S zsh-autosuggestions zsh-syntax-highlighting
+
 # Optional utilities
 sudo pacman -S nm-connection-editor brightnessctl
 ```
@@ -179,8 +211,21 @@ sudo pacman -S nm-connection-editor brightnessctl
 make install
 
 # Or manual installation
-stow --target=$HOME waybar hyprland swaync
+stow --target=$HOME waybar hyprland swaync kitty starship zsh
 chmod +x ~/.config/waybar/scripts/*.py
+```
+
+### **Terminal Setup**
+```bash
+# Install Oh My Zsh (if not already installed)
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Install zsh plugins for Oh My Zsh
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+# Set zsh as default shell
+chsh -s /usr/bin/zsh
 ```
 
 ### **Activate**
