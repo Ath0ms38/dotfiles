@@ -1,0 +1,83 @@
+window {
+  background: transparent;
+}
+
+/* Eww-compatible Cozy Anime Room Style - Back to 0.60 Transparency */
+.popup-bg {
+  background: rgba(77, 62, 42, 0.60); /* warm brown, transparent */
+  border: 1px solid #ffb7ba;
+  border-radius: 14px;
+  color: #f5f0e8;
+  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", monospace;
+  font-size: 13px;
+  padding: 14px;
+  margin: 10px;
+}
+
+box {
+  border: none;
+  background: none;
+}
+
+.popup-header {
+  margin-bottom: 8px;
+  padding: 0;
+}
+
+.header-text {
+  color: #ffcc5c;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.close-btn {
+  background: transparent;
+  color: #ffb7ba;
+  border: none;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 15px;
+  margin-left: 8px;
+  margin-top: 2px;
+  margin-right: 2px;
+}
+
+button, .action-btn, .control-btn {
+  background: rgba(141, 110, 99, 0.8);
+  color: #f3e5ab;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  margin: 4px;
+  font-family: inherit;
+  font-weight: 600;
+}
+
+button:hover, .action-btn:hover, .control-btn:hover {
+  background: #ffb7ba;
+  color: #3d2d29;
+}
+
+.section-title {
+  color: #ffcc5c;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 10px 0 6px 0;
+}
+
+label {
+  color: #f5f0e8;
+  font-size: 13px;
+}
+
+input, scale, .volume-slider, .progress-bar {
+  background: #f5f0e8;
+  border-radius: 8px;
+  border: 1px solid #ffb7ba;
+  color: #3d2d29;
+  padding: 2px 4px;
+  margin: 4px 0;
+}
