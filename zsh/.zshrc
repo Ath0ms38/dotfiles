@@ -155,3 +155,9 @@ export EZA_COLORS="da=1;34:gm=1;35:uu=1;36:un=1;31:gu=1;33:ur=1;32:uw=1;35:ux=1;
 setopt PROMPT_SUBST
 setopt AUTO_CD
 setopt GLOB_DOTS
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
+
+eval "$(pyenv virtualenv-init -)"
