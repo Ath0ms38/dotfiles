@@ -1,1 +1,18 @@
 waybar/.config/waybar/waybar-env/
+
+# AGS build and dependency artifacts
+ags/.config/ags/node_modules/
+ags/.config/ags/package-lock.json
+ags/.config/ags/types/
+ags/.config/ags/.DS_Store
+ags/.config/ags/.env
+ags/.config/ags/.cache/
+ags/.config/ags/dist/
+ags/.config/ags/.tsbuildinfo
+
+# Editor/OS files
+.DS_Store
+*.swp
+*.swo
+*.bak
+*.tmp
