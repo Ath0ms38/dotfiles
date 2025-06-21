@@ -165,5 +165,60 @@
         "on-click": "swaync-client -t -sw",
         "on-click-right": "swaync-client -d -sw",
         "escape": true
+    },
+    "custom/ags-audio": {
+      "format": "",
+      "tooltip": "Audio",
+      "on-click": "ags request toggle_audio"
+    },
+    "custom/ags-network": {
+      "format": "",
+      "tooltip": "Network",
+      "on-click": "ags request toggle_network"
+    },
+    "custom/ags-system-monitor": {
+      "format": "",
+      "tooltip": "System Monitor",
+      "on-click": "ags request toggle_system"
+    },
+    "custom/ags-power-display": {
+      "format": "",
+      "tooltip": "Power Display",
+      "on-click": "ags request toggle_power_display"
+    },
+    "custom/ags-media-control": {
+      "format": "",
+      "tooltip": "Media Control",
+      "on-click": "ags request toggle_media_control"
+    },
+    "custom/ags-quick-settings": {
+      "format": "",
+      "tooltip": "Quick Settings",
+      "on-click": "ags request toggle_quick_settings"
+    },
+    "custom/ags-productivity": {
+      "format": "",
+      "tooltip": "Productivity",
+      "on-click": "ags request toggle_productivity"
+    },
+    "custom/ags-gaming": {
+      "format": "",
+      "tooltip": "Gaming",
+      "on-click": "ags request toggle_gaming"
+    },
+    "custom/ags-notification-center": {
+      "format": "",
+      "tooltip": "Notification Center",
+      "on-click": "ags request toggle_notifications"
+    },
+    "custom/ags-power-menu": {
+      "format": "",
+      "tooltip": "Power Menu",
+      "on-click": "ags request toggle_power_menu"
+    },
+    "custom/ags-calendar": {
+      "format": "",
+      "tooltip": "Calendar",
+      "on-click": "ags request toggle_calendar"
     }
 }

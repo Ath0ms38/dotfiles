@@ -2,6 +2,7 @@
 
 import Network from "gi://AstalNetwork"
 import Bluetooth from "gi://AstalBluetooth"
+import Gtk from "gi://Gtk?version=3.0"
 import { bind, Variable } from "astal"
 import { execAsync } from "astal/process"
 

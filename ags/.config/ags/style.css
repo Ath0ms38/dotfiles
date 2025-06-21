@@ -1,79 +1,8 @@
-body {
-  background: linear-gradient(135deg, #232136 80%, #393552 100%);
-  color: #e0def4;
-  font-family: "JetBrains Mono", "Fira Code", monospace;
-  font-size: 15px;
-}
-
-.window {
-  background: #393552;
-  border-radius: 16px;
-  border: 2px solid #44415a;
-  box-shadow: 0 8px 32px 0 rgba(35, 33, 54, 0.7);
-  padding: 1.5rem;
-}
-
-.header {
-  color: #c4a7e7;
-  font-size: 1.4rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  letter-spacing: 0.05em;
-}
-
-.button {
-  background: #c4a7e7;
-  color: #232136;
-  border: none;
+/* Minimal AGS CSS for debugging popup backgrounds */
+.window, .popup-window {
+  background: #222 !important;
+  color: #fff;
   border-radius: 8px;
-  padding: 0.5rem 1.2rem;
-  font-weight: 600;
-  transition: background 0.2s;
-  box-shadow: 0 2px 8px 0 rgba(35, 33, 54, 0.7);
+  border: 2px solid #444;
+  padding: 2rem;
 }
-.button:hover {
-  background: #f6c177;
-  color: #393552;
-}
-
-.card {
-  background: #393552;
-  border: 1px solid #44415a;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 8px 0 rgba(35, 33, 54, 0.7);
-}
-
-/* GTK CSS does not support webkit-scrollbar pseudo-elements; removed for AGS compatibility */
-a {
-  color: #9ccfd8;
-  text-decoration: underline;
-}
-a:hover {
-  color: #f6c177;
-}
-
-.widget-title {
-  color: #f6c177;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.widget-content {
-  background: #232136;
-  border-radius: 8px;
-  padding: 0.75rem;
-  color: #e0def4;
-}
-
-.notification {
-  background: #c4a7e7;
-  color: #232136;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 2px 8px 0 rgba(35, 33, 54, 0.7);
-}
-
-/*# sourceMappingURL=style.css.map */

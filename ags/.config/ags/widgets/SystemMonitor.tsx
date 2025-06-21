@@ -2,6 +2,7 @@
 
 import { Variable, bind } from "astal"
 import { execAsync } from "astal/process"
+import Gtk from "gi://Gtk?version=3.0"
 
 interface SystemInfo {
     cpuUsage: number
@@ -27,7 +28,7 @@ const systemInfo = Variable<SystemInfo>({
     diskUsed: 0,
     gpuUsage: 0,
     gpuTemp: 0
-}).poll(2000, async () => {
+}).poll(5000, async () => {
     const cpu = await execAsync(["bash", "-c", "top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | cut -d'%' -f1"])
         .then(out => parseInt(out)).catch(() => 0)
     

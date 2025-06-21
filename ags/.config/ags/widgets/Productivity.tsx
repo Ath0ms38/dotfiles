@@ -2,6 +2,7 @@
 
 import { Variable, bind } from "astal"
 import { execAsync } from "astal/process"
+import Gtk from "gi://Gtk?version=3.0"
 
 interface Task {
     id: number
@@ -61,7 +62,7 @@ function stopTimer() {
 timerSeconds.set(pomodoroMinutes.get() * 60)
 
 // Poll clipboard
-clipboardHistory.poll(2000, async () => {
+clipboardHistory.poll(5000, async () => {
     try {
         const clip = await execAsync(["wl-paste"]).then(out => out.trim())
         const history = clipboardHistory.get()
@@ -79,6 +80,12 @@ clipboardHistory.poll(2000, async () => {
 })
 
 export default function ProductivityWidget({ fullView = false }: { fullView?: boolean }) {
+    // Cleanup interval on widget destroy
+    if (typeof globalThis !== "undefined" && globalThis.connect) {
+        globalThis.connect("destroy", () => {
+            if (timerInterval) clearInterval(timerInterval)
+        })
+    }
     if (fullView) {
         return <box className="productivity-full" vertical spacing={12}>
             <label className="widget-title" label="📋 Productivity Tools" />

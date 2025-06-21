@@ -2,6 +2,8 @@
 
 import { Variable, bind } from "astal"
 import { execAsync } from "astal/process"
+import { Widget } from "astal/gtk3"
+import Gtk from "gi://Gtk?version=3.0"
 
 interface GameLauncher {
     name: string
@@ -17,7 +19,7 @@ const gameLaunchers: GameLauncher[] = [
     { name: "Minecraft", command: "minecraft-launcher", icon: "minecraft" }
 ]
 
-const gpuStats = Variable({ usage: 0, temp: 0, memory: 0 }).poll(2000, async () => {
+const gpuStats = Variable({ usage: 0, temp: 0, memory: 0 }).poll(5000, async () => {
     const usage = await execAsync(["nvidia-smi", "--query-gpu=utilization.gpu", "--format=csv,noheader,nounits"])
         .then(out => parseInt(out)).catch(() => 0)
     
@@ -65,7 +67,11 @@ export default function GamingWidget({ fullView = false }: { fullView?: boolean 
                         <box hexpand />
                         <label label={bind(gpuStats).as(stats => `${stats.usage}%`)} />
                     </box>
-                    <progressbar value={bind(gpuStats).as(stats => stats.usage / 100)} />
+                    <Widget.LevelBar
+                        value={bind(gpuStats).as(stats => stats.usage / 100)}
+                        minValue={0}
+                        maxValue={1}
+                    />
                     
                     <box className="stat-row" spacing={12}>
                         <label label="Temperature:" />
@@ -78,7 +84,11 @@ export default function GamingWidget({ fullView = false }: { fullView?: boolean 
                         <box hexpand />
                         <label label={bind(gpuStats).as(stats => `${stats.memory}%`)} />
                     </box>
-                    <progressbar value={bind(gpuStats).as(stats => stats.memory / 100)} />
+                    <Widget.LevelBar
+                        value={bind(gpuStats).as(stats => stats.memory / 100)}
+                        minValue={0}
+                        maxValue={1}
+                    />
                 </box>
             </box>
 

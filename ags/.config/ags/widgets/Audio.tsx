@@ -5,52 +5,58 @@ import Wp from "gi://AstalWp"
 
 export default function AudioWidget({ fullView = false }: { fullView?: boolean }) {
     try {
+        // Debug: log available Widget keys
+        // @ts-ignore
+        if (typeof globalThis !== "undefined" && globalThis.console) {
+            // eslint-disable-next-line no-console
+            console.log("Available Widget keys:", Object.keys(Widget));
+        }
         const audio = Wp.get_default()
         const speaker = audio?.audio?.defaultSpeaker
         const mic = audio?.audio?.defaultMicrophone
 
         if (!audio) {
-            return Widget.Box({
+            return new Widget.Box({
                 className: "audio-widget-error",
                 vertical: true,
                 children: [
-                    Widget.Label({ label: "Audio service not available" })
+                    new Widget.Label({ label: "Audio service not available" })
                 ]
             })
         }
 
         if (fullView) {
-            return Widget.Box({
+            return new Widget.Box({
                 className: "audio-widget-full",
                 vertical: true,
                 spacing: 12,
                 children: [
-                    Widget.Label({
+                    new Widget.Label({
                         className: "widget-title",
                         label: "🎵 Audio Control"
                     }),
                     
                     // Speaker section
-                    speaker ? Widget.Box({
+                    speaker ? new Widget.Box({
                         className: "speaker-section",
                         vertical: true,
                         spacing: 8,
                         children: [
-                            Widget.Label({
+                            new Widget.Label({
                                 className: "section-label",
                                 label: "Speaker"
                             }),
-                            Widget.Box({
+                            new Widget.Box({
                                 spacing: 12,
                                 children: [
-                                    Widget.Button({
+                                    new Widget.Button({
                                         className: "mute-button",
                                         onClicked: () => speaker?.set_mute(!speaker.mute),
-                                        child: Widget.Icon({
+                                        child: new Widget.Icon({
                                             icon: bind(speaker, "volumeIcon").as(i => i || "audio-volume-medium-symbolic")
                                         })
                                     }),
-                                    Widget.Scale({
+                                    new Widget.Slider({
                                         className: "volume-slider",
                                         drawValue: false,
                                         hexpand: true,
@@ -61,74 +67,74 @@ export default function AudioWidget({ fullView = false }: { fullView?: boolean }
                                             if (speaker) speaker.volume = value
                                         }
                                     }),
-                                    Widget.Label({
+                                    new Widget.Label({
                                         className: "volume-label",
                                         label: bind(speaker, "volume").as(v => `${Math.round((v || 0) * 100)}%`)
                                     })
                                 ]
                             })
                         ]
-                    }) : Widget.Box(),
+                    }) : new Widget.Box(),
 
                     // Microphone section
-                    mic ? Widget.Box({
-                        className: "mic-section",
-                        vertical: true,
-                        spacing: 8,
-                        children: [
-                            Widget.Label({
-                                className: "section-label",
-                                label: "Microphone"
-                            }),
-                            Widget.Box({
-                                spacing: 12,
-                                children: [
-                                    Widget.Button({
-                                        className: "mute-button",
-                                        onClicked: () => mic?.set_mute(!mic.mute),
-                                        child: Widget.Icon({
-                                            icon: bind(mic, "volumeIcon").as(i => i || "microphone-sensitivity-medium-symbolic")
-                                        })
-                                    }),
-                                    Widget.Scale({
-                                        className: "volume-slider",
-                                        drawValue: false,
-                                        hexpand: true,
-                                        min: 0,
-                                        max: 1,
-                                        value: bind(mic, "volume").as(v => v || 0),
-                                        onDragged: ({ value }) => {
-                                            if (mic) mic.volume = value
-                                        }
-                                    }),
-                                    Widget.Label({
-                                        className: "volume-label",
-                                        label: bind(mic, "volume").as(v => `${Math.round((v || 0) * 100)}%`)
-                                    })
-                                ]
-                            })
-                        ]
-                    }) : Widget.Box(),
+                    // mic ? new Widget.Box({
+                    //     className: "mic-section",
+                    //     vertical: true,
+                    //     spacing: 8,
+                    //     children: [
+                    //         new Widget.Label({
+                    //             className: "section-label",
+                    //             label: "Microphone"
+                    //         }),
+                    //         new Widget.Box({
+                    //             spacing: 12,
+                    //             children: [
+                    //                 new Widget.Button({
+                    //                     className: "mute-button",
+                    //                     onClicked: () => mic?.set_mute(!mic.mute),
+                    //                     child: new Widget.Icon({
+                    //                         icon: bind(mic, "volumeIcon").as(i => i || "microphone-sensitivity-medium-symbolic")
+                    //                     })
+                    //                 }),
+                    //                 new Widget.Slider({
+                    //                     className: "volume-slider",
+                    //                     drawValue: false,
+                    //                     hexpand: true,
+                    //                     min: 0,
+                    //                     max: 1,
+                    //                     value: bind(mic, "volume").as(v => v || 0),
+                    //                     onDragged: ({ value }) => {
+                    //                         if (mic) mic.volume = value
+                    //                     }
+                    //                 }),
+                    //                 new Widget.Label({
+                    //                     className: "volume-label",
+                    //                     label: bind(mic, "volume").as(v => `${Math.round((v || 0) * 100)}%`)
+                    //                 })
+                    //             ]
+                    //         })
+                    //     ]
+                    // }) : new Widget.Box(),
 
                     // Audio profiles
-                    Widget.Box({
+                    new Widget.Box({
                         className: "audio-profiles",
                         vertical: true,
                         spacing: 8,
                         children: [
-                            Widget.Label({
+                            new Widget.Label({
                                 className: "section-label",
                                 label: "Audio Profiles"
                             }),
-                            Widget.Box({
+                            new Widget.Box({
                                 spacing: 6,
                                 children: [
-                                    Widget.Button({
+                                    new Widget.Button({
                                         className: "profile-button",
                                         label: "Stereo",
                                         onClicked: () => execAsync(["pactl", "set-card-profile", "0", "output:analog-stereo"]).catch(console.error)
                                     }),
-                                    Widget.Button({
+                                    new Widget.Button({
                                         className: "profile-button",
                                         label: "HDMI",
                                         onClicked: () => execAsync(["pactl", "set-card-profile", "0", "output:hdmi-stereo"]).catch(console.error)
@@ -139,16 +145,16 @@ export default function AudioWidget({ fullView = false }: { fullView?: boolean }
                     }),
 
                     // Quick actions
-                    Widget.Box({
+                    new Widget.Box({
                         className: "audio-actions",
                         spacing: 6,
                         children: [
-                            Widget.Button({
+                            new Widget.Button({
                                 className: "action-button",
                                 label: "Audio Settings",
                                 onClicked: () => execAsync(["pavucontrol"]).catch(console.error)
                             }),
-                            Widget.Button({
+                            new Widget.Button({
                                 className: "action-button",
                                 label: "EasyEffects",
                                 onClicked: () => execAsync(["easyeffects"]).catch(console.error)
@@ -160,19 +166,19 @@ export default function AudioWidget({ fullView = false }: { fullView?: boolean }
         }
 
         // Compact view
-        return Widget.Box({
+        return new Widget.Box({
             className: "audio-widget-compact",
             children: [
-                Widget.Icon({
+                new Widget.Icon({
                     icon: speaker ? bind(speaker, "volumeIcon").as(i => i || "audio-volume-medium-symbolic") : "audio-volume-medium-symbolic"
                 })
             ]
         })
     } catch (error) {
         console.error("Audio widget error:", error)
-        return Widget.Box({
+        return new Widget.Box({
             className: "audio-widget-error",
-            children: [Widget.Label({ label: "Audio Error" })]
+            children: [new Widget.Label({ label: "Audio Error" })]
         })
     }
 }

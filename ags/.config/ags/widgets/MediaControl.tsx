@@ -1,7 +1,9 @@
 // AGS v2 Media Control Widget
 
 import Mpris from "gi://AstalMpris"
+import { execAsync } from "astal/process"
 import { bind } from "astal"
+import Gtk from "gi://Gtk?version=3.0"
 
 export default function MediaControlWidget({ fullView = false }: { fullView?: boolean }) {
     const mpris = Mpris.get_default()

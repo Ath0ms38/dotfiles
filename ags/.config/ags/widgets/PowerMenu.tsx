@@ -1,7 +1,9 @@
 // AGS v2 Power Menu Widget
 
 import { execAsync } from "astal/process"
+import { bind } from "astal"
 import { Variable } from "astal"
+import Gtk from "gi://Gtk?version=3.0"
 
 interface PowerAction {
     name: string

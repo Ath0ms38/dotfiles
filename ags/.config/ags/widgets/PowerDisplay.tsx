@@ -3,14 +3,16 @@
 import { bind, Variable } from "astal"
 import { execAsync } from "astal/process"
 import Battery from "gi://AstalBattery"
+import { Widget } from "astal/gtk3"
+import Gtk from "gi://Gtk?version=3.0"
 
-const brightness = Variable(50).poll(2000, async () => {
+const brightness = Variable(50).poll(5000, async () => {
     const max = await execAsync(["brightnessctl", "max"]).then(out => parseInt(out)).catch(() => 255)
     const current = await execAsync(["brightnessctl", "get"]).then(out => parseInt(out)).catch(() => 128)
     return Math.round((current / max) * 100)
 })
 
-const powerProfile = Variable("balanced").poll(5000, () =>
+const powerProfile = Variable("balanced").poll(10000, () =>
     execAsync(["powerprofilesctl", "get"]).then(out => out.trim()).catch(() => "balanced")
 )
 
@@ -48,16 +50,19 @@ export default function PowerDisplayWidget({ fullView = false }: { fullView?: bo
                 <label className="section-label" label="Brightness" />
                 <box spacing={12}>
                     <icon icon="display-brightness-symbolic" />
-                    <scale className="brightness-slider"
-                        min={5} max={100}
-                        value={bind(brightness)}
-                        onDragged={({ value }) => {
+                    {new Widget.Slider({
+                        className: "brightness-slider",
+                        min: 5,
+                        max: 100,
+                        value: bind(brightness),
+                        onDragged: ({ value }) => {
                             const val = Math.round(value)
                             execAsync(["brightnessctl", "set", `${val}%`])
                             brightness.set(val)
-                        }}
-                        drawValue={false}
-                        hexpand={true} />
+                        },
+                        drawValue: false,
+                        hexpand: true,
+                    })}
                     <label label={bind(brightness).as(b => `${b}%`)} />
                 </box>
                 <box className="brightness-presets" spacing={6}>

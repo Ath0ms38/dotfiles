@@ -3,6 +3,7 @@
 import { Variable, bind } from "astal"
 import { frenchLocale } from "../services/french-locale"
 import { execAsync } from "astal/process"
+import Gtk from "gi://Gtk?version=3.0"
 
 const currentDate = Variable(new Date()).poll(60000, () => new Date())
 
@@ -45,10 +46,10 @@ export default function CalendarWidget({ fullView = false }: { fullView?: boolea
                     label={bind(currentDate).as(date => `Semaine ${getWeekNumber(date)}`)} />
             </box>
             
-            <calendar className="french-calendar"
+            {/* <calendar className="french-calendar"
                 showDayNames={true}
                 showHeading={true}
-                showWeekNumbers={true} />
+                showWeekNumbers={true} /> */}
             
             {/* Quick date info */}
             <box className="date-info" vertical spacing={6}>

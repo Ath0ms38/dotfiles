@@ -42,7 +42,7 @@ export default function QuickSettingsWidget({ fullView = false }: { fullView?: b
                             execAsync(["swaync-client", "-d"])
                         }}>
                         <box vertical spacing={4}>
-                            <icon icon="notification-disabled-symbolic" iconSize={24} />
+                            <icon icon="dialog-information-symbolic" iconSize={24} />
                             <label label="Do Not Disturb" />
                         </box>
                     </button>
@@ -80,7 +80,7 @@ export default function QuickSettingsWidget({ fullView = false }: { fullView?: b
                     <button className="toggle-button"
                         onClicked={() => execAsync(["hyprpicker", "-a"])}>
                         <box vertical spacing={4}>
-                            <icon icon="color-picker-symbolic" iconSize={24} />
+                            <icon icon="applications-graphics-symbolic" iconSize={24} />
                             <label label="Color Picker" />
                         </box>
                     </button>
