@@ -1,0 +1,20 @@
+{
+  "name": "ags-config",
+  "version": "1.0.0",
+  "description": "Anime Room themed AGS configuration with TypeScript and custom widgets.",
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "ags",
+    "dev": "tsc --watch"
+  },
+  "author": "athoms",
+  "license": "MIT",
+  "dependencies": {
+    "ags": "^1.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

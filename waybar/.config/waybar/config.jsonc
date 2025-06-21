@@ -20,12 +20,17 @@
     ],
     
     "modules-right": [
-        "custom/system-info",
-        "custom/audio",
-        "network",
-        "battery",
-        "clock",
-        "custom/notification-center"
+        "custom/ags-audio",
+        "custom/ags-network",
+        "custom/ags-system-monitor",
+        "custom/ags-power-display",
+        "custom/ags-media-control",
+        "custom/ags-quick-settings",
+        "custom/ags-productivity",
+        "custom/ags-gaming",
+        "custom/ags-notification-center",
+        "custom/ags-power-menu",
+        "custom/ags-calendar"
     ],
 
     // Left modules
@@ -94,7 +99,7 @@
         "on-click": "~/.config/waybar/scripts/calendar-popup.py"
     },
 
-    // Custom modules
+        // Custom modules
     "custom/special-discord": {
         "format": "󰙯 {}",
         "return-type": "json",

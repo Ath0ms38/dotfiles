@@ -1,0 +1,90 @@
+// Anime Room Theme for AGS
+
+$background: #232136;
+$foreground: #e0def4;
+$accent: #c4a7e7;
+$secondary: #9ccfd8;
+$highlight: #f6c177;
+$surface: #393552;
+$border: #44415a;
+$shadow: rgba(35, 33, 54, 0.7);
+
+body {
+  background: linear-gradient(135deg, $background 80%, $surface 100%);
+  color: $foreground;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 15px;
+}
+
+.window {
+  background: $surface;
+  border-radius: 16px;
+  border: 2px solid $border;
+  box-shadow: 0 8px 32px 0 $shadow;
+  padding: 1.5rem;
+}
+
+.header {
+  color: $accent;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.button {
+  background: $accent;
+  color: $background;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px 0 $shadow;
+  &:hover {
+    background: $highlight;
+    color: $surface;
+  }
+}
+
+.card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px 0 $shadow;
+}
+
+/* GTK CSS does not support webkit-scrollbar pseudo-elements; removed for AGS compatibility */
+
+a {
+  color: $secondary;
+  text-decoration: underline;
+  &:hover {
+    color: $highlight;
+  }
+}
+
+// Widget-specific styles
+.widget-title {
+  color: $highlight;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.widget-content {
+  background: $background;
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: $foreground;
+}
+
+.notification {
+  background: $accent;
+  color: $background;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 8px 0 $shadow;
+}
