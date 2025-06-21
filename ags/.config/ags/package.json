@@ -1,20 +1,16 @@
 {
   "name": "ags-config",
   "version": "1.0.0",
-  "description": "Anime Room themed AGS configuration with TypeScript and custom widgets.",
-  "main": "app.ts",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "ags",
-    "dev": "tsc --watch"
-  },
-  "author": "athoms",
-  "license": "MIT",
-  "dependencies": {
-    "ags": "^1.8.0"
+    "types": "ags types Gtk=3.0 AstalWp AstalBattery AstalBluetooth AstalNetwork AstalNotifd AstalMpris",
+    "check": "tsc --noEmit",
+    "start": "ags run ."
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
+    "@girs/gjs": "latest",
+    "@girs/gtk-3.0": "latest",
+    "@girs/glib-2.0": "latest",
+    "typescript": "^5.3.0"
   }
 }
