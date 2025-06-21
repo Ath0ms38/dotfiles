@@ -1,8 +1,47 @@
-/* Minimal AGS CSS for debugging popup backgrounds */
-.window, .popup-window {
-  background: #222 !important;
-  color: #fff;
-  border-radius: 8px;
-  border: 2px solid #444;
+/* AGS Popup - Kitty Terminal Inspired Theme */
+.popup-window {
+  background-color: #3d2f2a;
+  color: #f5f0e8;
+  border-radius: 14px;
+  background-clip: padding-box;
+  box-shadow: 0 8px 32px 0 rgba(61, 47, 42, 0.25);
   padding: 2rem;
+  font-family: 'JetBrains Mono', 'Fira Mono', 'monospace';
+}
+.window {
+  background-color: transparent;
+  color: #f5f0e8;
+  box-shadow: none;
+  padding: 0;
+  font-family: 'JetBrains Mono', 'Fira Mono', 'monospace';
+}
+.anime-room-theme {
+  color: #f5f0e8;
+  font-family: 'JetBrains Mono', 'Fira Mono', 'monospace';
+}
+
+
+.popup-window .title, .window .title {
+  color: #ffcc5c;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.popup-window .button, .window .button {
+  background-color: #ffb7ba;
+  color: #3d2f2a;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.popup-window .button:hover, .window .button:hover {
+  background-color: #ffcc5c;
+  color: #3d2f2a;
+}
+
+.popup-window .highlight, .window .highlight {
+  color: #ffcc5c;
 }

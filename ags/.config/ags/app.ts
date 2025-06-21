@@ -17,6 +17,7 @@ function createPopup(name: string, WidgetComponent: any, position: { marginTop: 
         className: "popup-window anime-room-theme",
         visible: true,
         anchor: ["center"],
+        transparent: true,
         // layer: "overlay", // temporarily disable overlay for debugging
         marginTop: position.marginTop,
         marginRight: position.marginRight,
@@ -34,7 +35,7 @@ function createPopup(name: string, WidgetComponent: any, position: { marginTop: 
             });
         },
         child: new Widget.Box({
-            className: "popup-window",
+            className: "popup-window-box",
             child: WidgetComponent({ fullView: true })
         }),
     });
