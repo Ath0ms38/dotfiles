@@ -1,47 +1,177 @@
-/* AGS Popup - Kitty Terminal Inspired Theme */
-.popup-window {
-  background-color: #3d2f2a;
-  color: #f5f0e8;
-  border-radius: 14px;
-  background-clip: padding-box;
-  box-shadow: 0 8px 32px 0 rgba(61, 47, 42, 0.25);
-  padding: 2rem;
-  font-family: 'JetBrains Mono', 'Fira Mono', 'monospace';
-}
+/* AGS Anime Room Theme - Matching Waybar Colors */
+
+/* Base window styling */
 .window {
   background-color: transparent;
   color: #f5f0e8;
-  box-shadow: none;
-  padding: 0;
-  font-family: 'JetBrains Mono', 'Fira Mono', 'monospace';
 }
-.anime-room-theme {
+
+/* Popup window with blur effect like waybar */
+/* Note: GTK CSS does not support blur. For a blur effect, use a compositor (e.g., picom, hyprland) with blur enabled for this window class. */
+.popup-window {
+  background-color: rgba(61, 47, 42, 0.80); /* More transparency */
   color: #f5f0e8;
-  font-family: 'JetBrains Mono', 'Fira Mono', 'monospace';
+  border: 3px solid #ffb7ba; /* Stronger border */
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin: 10px;
 }
 
+/* Widget titles matching waybar accent colors */
+.widget-title {
+  color: #ffcc5c;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  font-family: 'JetBrainsMono Nerd Font', monospace;
+}
 
-.popup-window .title, .window .title {
+/* Calendar Widget Specific Styles */
+.calendar-widget-full {
+  min-width: 320px;
+}
+
+.french-date {
+  color: #ffb7ba;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.french-time {
+  color: #ffcc5c;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-family: 'JetBrainsMono Nerd Font', monospace;
+}
+
+.week-number {
+  color: #b39ddb;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* Date time section */
+.date-time-section {
+  background: rgba(141, 110, 99, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 183, 186, 0.2);
+}
+
+/* Date info section */
+.date-info {
+  background: rgba(141, 110, 99, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.info-row {
+  color: #f5f0e8;
+  font-size: 14px;
+}
+
+.info-row label:first-child {
+  color: #b39ddb;
+  font-weight: 600;
+}
+
+.info-row label:last-child {
   color: #ffcc5c;
   font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
 }
 
-.popup-window .button, .window .button {
-  background-color: #ffb7ba;
-  color: #3d2f2a;
+/* Calendar actions */
+.calendar-actions {
+}
+
+.action-button {
+  background: rgba(255, 183, 186, 0.3);
+  color: #f5f0e8;
+  border: 1px solid rgba(255, 183, 186, 0.4);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background: rgba(255, 183, 186, 0.5);
+  border-color: rgba(255, 183, 186, 0.6);
+  color: #ffffff;
+}
+
+.action-button:active {
+  background: rgba(255, 183, 186, 0.6);
+}
+
+/* Box spacing utilities */
+box {
+  background: transparent;
+}
+
+/* Labels */
+label {
+  color: #f5f0e8;
+  font-family: 'JetBrainsMono Nerd Font', monospace;
+}
+
+.section-label {
+  color: #ffb7ba;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* Buttons base style */
+button {
+  background: rgba(141, 110, 99, 0.4);
+  color: #f5f0e8;
+  border: 1px solid rgba(255, 183, 186, 0.3);
   border-radius: 8px;
-  padding: 0.5rem 1rem;
-  margin: 0.5rem 0;
-  transition: background 0.2s, color 0.2s;
+  padding: 6px 12px;
+  font-family: 'JetBrainsMono Nerd Font', monospace;
+  transition: all 0.15s ease;
 }
 
-.popup-window .button:hover, .window .button:hover {
-  background-color: #ffcc5c;
-  color: #3d2f2a;
+button:hover {
+  background: rgba(255, 183, 186, 0.4);
+  border-color: rgba(255, 183, 186, 0.5);
 }
 
-.popup-window .highlight, .window .highlight {
-  color: #ffcc5c;
+button:active {
+  background: rgba(255, 183, 186, 0.5);
+}
+
+/* Animations */
+.popup-window {
+}
+
+/* Make sure text is readable */
+* {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure popup window has proper styling */
+.popup-window-box {
+  background: transparent;
+}
+
+/* Other widget placeholders for consistency */
+.audio-widget-full,
+.network-widget-full,
+.system-monitor-full,
+.power-display-full,
+.media-control-full,
+.quick-settings-full,
+.productivity-full,
+.gaming-full,
+.notification-center-full,
+.power-menu-full {
+  min-width: 320px;
 }
