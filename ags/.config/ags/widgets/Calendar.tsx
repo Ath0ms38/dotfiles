@@ -1,9 +1,9 @@
-// AGS v2 Calendar Widget with French Localization - Anime Room Theme
+// AGS v2 Calendar Widget with French Localization - Fixed with Widget constructors
 
 import { Variable, bind } from "astal"
 import { frenchLocale } from "../services/french-locale"
 import { execAsync } from "astal/process"
-import Gtk from "gi://Gtk?version=3.0"
+import { Widget } from "astal/gtk3"
 
 const currentDate = Variable(new Date()).poll(1000, () => new Date())
 
@@ -33,79 +33,142 @@ function getWeekNumber(date: Date): number {
 
 export default function CalendarWidget({ fullView = false }: { fullView?: boolean }) {
     if (fullView) {
-        return <box className="calendar-widget-full" vertical spacing={16}>
-            <label className="widget-title" label="📅 Calendrier" />
-            
-            {/* Main date/time display */}
-            <box className="date-time-section" vertical spacing={12}>
-                <label className="french-time"
-                    label={bind(currentDate).as(formatFrenchTime)} />
-                    
-                <label className="french-date"
-                    label={bind(currentDate).as(formatFrenchDate)} />
+        return new Widget.Box({
+            className: "calendar-widget-full",
+            vertical: true,
+            spacing: 16,
+            children: [
+                new Widget.Label({
+                    className: "widget-title",
+                    label: "📅 Calendrier"
+                }),
                 
-                <label className="week-number"
-                    label={bind(currentDate).as(date => `📆 Semaine ${getWeekNumber(date)}`)} />
-            </box>
-            
-            {/* Date statistics */}
-            <box className="date-info" vertical spacing={8}>
-                <box className="info-row" spacing={8}>
-                    <label label="Jour de l'année:" />
-                    <box hexpand />
-                    <label label={bind(currentDate).as(date => {
-                        const start = new Date(date.getFullYear(), 0, 0)
-                        const diff = date.getTime() - start.getTime()
-                        const oneDay = 1000 * 60 * 60 * 24
-                        const dayNum = Math.floor(diff / oneDay)
-                        return `${dayNum} / 365`
-                    })} />
-                </box>
+                // Main date/time display
+                new Widget.Box({
+                    className: "date-time-section",
+                    vertical: true,
+                    spacing: 12,
+                    children: [
+                        new Widget.Label({
+                            className: "french-time",
+                            label: bind(currentDate).as(formatFrenchTime)
+                        }),
+                        
+                        new Widget.Label({
+                            className: "french-date",
+                            label: bind(currentDate).as(formatFrenchDate)
+                        }),
+                        
+                        new Widget.Label({
+                            className: "week-number",
+                            label: bind(currentDate).as(date => `📆 Semaine ${getWeekNumber(date)}`)
+                        })
+                    ]
+                }),
                 
-                <box className="info-row" spacing={8}>
-                    <label label="Jours restants:" />
-                    <box hexpand />
-                    <label label={bind(currentDate).as(date => {
-                        const endYear = new Date(date.getFullYear(), 11, 31)
-                        const diff = endYear.getTime() - date.getTime()
-                        const oneDay = 1000 * 60 * 60 * 24
-                        const days = Math.ceil(diff / oneDay)
-                        return `${days} jours`
-                    })} />
-                </box>
-                
-                <box className="info-row" spacing={8}>
-                    <label label="Progression:" />
-                    <box hexpand />
-                    <label label={bind(currentDate).as(date => {
-                        const start = new Date(date.getFullYear(), 0, 1)
-                        const end = new Date(date.getFullYear(), 11, 31)
-                        const total = end.getTime() - start.getTime()
-                        const current = date.getTime() - start.getTime()
-                        const percent = Math.round((current / total) * 100)
-                        return `${percent}%`
-                    })} />
-                </box>
-            </box>
+                // Date statistics
+                new Widget.Box({
+                    className: "date-info",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Box({
+                            className: "info-row",
+                            spacing: 8,
+                            children: [
+                                new Widget.Label({
+                                    label: "Jour de l'année:"
+                                }),
+                                new Widget.Box({ hexpand: true }),
+                                new Widget.Label({
+                                    label: bind(currentDate).as(date => {
+                                        const start = new Date(date.getFullYear(), 0, 0)
+                                        const diff = date.getTime() - start.getTime()
+                                        const oneDay = 1000 * 60 * 60 * 24
+                                        const dayNum = Math.floor(diff / oneDay)
+                                        return `${dayNum} / 365`
+                                    })
+                                })
+                            ]
+                        }),
+                        
+                        new Widget.Box({
+                            className: "info-row",
+                            spacing: 8,
+                            children: [
+                                new Widget.Label({
+                                    label: "Jours restants:"
+                                }),
+                                new Widget.Box({ hexpand: true }),
+                                new Widget.Label({
+                                    label: bind(currentDate).as(date => {
+                                        const endYear = new Date(date.getFullYear(), 11, 31)
+                                        const diff = endYear.getTime() - date.getTime()
+                                        const oneDay = 1000 * 60 * 60 * 24
+                                        const days = Math.ceil(diff / oneDay)
+                                        return `${days} jours`
+                                    })
+                                })
+                            ]
+                        }),
+                        
+                        new Widget.Box({
+                            className: "info-row",
+                            spacing: 8,
+                            children: [
+                                new Widget.Label({
+                                    label: "Progression:"
+                                }),
+                                new Widget.Box({ hexpand: true }),
+                                new Widget.Label({
+                                    label: bind(currentDate).as(date => {
+                                        const start = new Date(date.getFullYear(), 0, 1)
+                                        const end = new Date(date.getFullYear(), 11, 31)
+                                        const total = end.getTime() - start.getTime()
+                                        const current = date.getTime() - start.getTime()
+                                        const percent = Math.round((current / total) * 100)
+                                        return `${percent}%`
+                                    })
+                                })
+                            ]
+                        })
+                    ]
+                }),
 
-            {/* Quick actions */}
-            <box className="calendar-actions" spacing={8}>
-                <button className="action-button" 
-                    onClicked={() => execAsync(["gnome-calendar"]).catch(() => 
-                        execAsync(["firefox", "--new-window", "https://calendar.google.com"])
-                    )}>
-                    📅 Calendrier
-                </button>
-                <button className="action-button" 
-                    onClicked={() => execAsync(["firefox", "--new-window", "https://calendar.google.com"])}>
-                    🌐 Google Calendar
-                </button>
-            </box>
-        </box>
+                // Quick actions
+                new Widget.Box({
+                    className: "calendar-actions",
+                    spacing: 8,
+                    children: [
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "📅 Calendrier",
+                            onClicked: () => {
+                                execAsync(["gnome-calendar"]).catch(() => 
+                                    execAsync(["firefox", "--new-window", "https://calendar.google.com"])
+                                )
+                            }
+                        }),
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "🌐 Google Calendar",
+                            onClicked: () => {
+                                execAsync(["firefox", "--new-window", "https://calendar.google.com"])
+                            }
+                        })
+                    ]
+                })
+            ]
+        })
     }
 
     // Compact view (not used in popup)
-    return <box className="calendar-widget-compact">
-        <icon icon="x-office-calendar-symbolic" />
-    </box>
+    return new Widget.Box({
+        className: "calendar-widget-compact",
+        children: [
+            new Widget.Icon({
+                icon: "x-office-calendar-symbolic"
+            })
+        ]
+    })
 }

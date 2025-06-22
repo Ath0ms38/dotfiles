@@ -1,24 +1,31 @@
-/* AGS Anime Room Theme - Matching Waybar Colors */
+/* AGS Anime Room Theme - GTK CSS Compatible */
 
 /* Base window styling */
-.window {
+window {
   background-color: transparent;
   color: #f5f0e8;
+  font-family: 'JetBrainsMono Nerd Font', monospace;
 }
 
-/* Popup window with blur effect like waybar */
-/* Note: GTK CSS does not support blur. For a blur effect, use a compositor (e.g., picom, hyprland) with blur enabled for this window class. */
-.popup-window {
-  background-color: rgba(61, 47, 42, 0.80); /* More transparency */
+/* Popup window with anime room aesthetic */
+window.popup-window {
+  background-color: rgba(61, 47, 42, 0.95);
   color: #f5f0e8;
-  border: 3px solid #ffb7ba; /* Stronger border */
+  border: 2px solid #ffb7ba;
   border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  margin: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  margin: 0;
+  padding: 0;
 }
 
-/* Widget titles matching waybar accent colors */
+/* Popup content container - using min-width only */
+.popup-content {
+  background: transparent;
+  padding: 20px;
+  min-width: 350px;
+}
+
+/* Widget titles */
 .widget-title {
   color: #ffcc5c;
   font-size: 18px;
@@ -30,6 +37,7 @@
 /* Calendar Widget Specific Styles */
 .calendar-widget-full {
   min-width: 320px;
+  background: transparent;
 }
 
 .french-date {
@@ -55,24 +63,26 @@
 
 /* Date time section */
 .date-time-section {
-  background: rgba(141, 110, 99, 0.3);
+  background: rgba(141, 110, 99, 0.4);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
-  border: 1px solid rgba(255, 183, 186, 0.2);
+  border: 1px solid rgba(255, 183, 186, 0.3);
 }
 
 /* Date info section */
 .date-info {
-  background: rgba(141, 110, 99, 0.2);
+  background: rgba(141, 110, 99, 0.3);
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 12px;
+  border: 1px solid rgba(255, 183, 186, 0.2);
 }
 
 .info-row {
   color: #f5f0e8;
   font-size: 14px;
+  margin-bottom: 4px;
 }
 
 .info-row label:first-child {
@@ -87,30 +97,32 @@
 
 /* Calendar actions */
 .calendar-actions {
+  margin-top: 8px;
 }
 
 .action-button {
-  background: rgba(255, 183, 186, 0.3);
+  background: rgba(255, 183, 186, 0.4);
   color: #f5f0e8;
-  border: 1px solid rgba(255, 183, 186, 0.4);
+  border: 1px solid rgba(255, 183, 186, 0.5);
   border-radius: 10px;
-  padding: 8px 16px;
+  padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
   transition: all 0.2s ease;
+  margin-right: 8px;
 }
 
 .action-button:hover {
-  background: rgba(255, 183, 186, 0.5);
-  border-color: rgba(255, 183, 186, 0.6);
+  background: rgba(255, 183, 186, 0.6);
+  border-color: rgba(255, 183, 186, 0.7);
   color: #ffffff;
 }
 
 .action-button:active {
-  background: rgba(255, 183, 186, 0.6);
+  background: rgba(255, 183, 186, 0.7);
 }
 
-/* Box spacing utilities */
+/* Box containers */
 box {
   background: transparent;
 }
@@ -123,46 +135,162 @@ label {
 
 .section-label {
   color: #ffb7ba;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 /* Buttons base style */
 button {
-  background: rgba(141, 110, 99, 0.4);
+  background: rgba(141, 110, 99, 0.5);
   color: #f5f0e8;
-  border: 1px solid rgba(255, 183, 186, 0.3);
+  border: 1px solid rgba(255, 183, 186, 0.4);
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 8px 12px;
   font-family: 'JetBrainsMono Nerd Font', monospace;
   transition: all 0.15s ease;
 }
 
 button:hover {
-  background: rgba(255, 183, 186, 0.4);
-  border-color: rgba(255, 183, 186, 0.5);
+  background: rgba(255, 183, 186, 0.5);
+  border-color: rgba(255, 183, 186, 0.6);
 }
 
 button:active {
-  background: rgba(255, 183, 186, 0.5);
+  background: rgba(255, 183, 186, 0.6);
 }
 
-/* Animations */
-.popup-window {
+/* Icon styling */
+icon {
+  color: inherit;
 }
 
-/* Make sure text is readable */
-* {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+/* Entry fields */
+entry {
+  background: rgba(141, 110, 99, 0.3);
+  color: #f5f0e8;
+  border: 1px solid rgba(255, 183, 186, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'JetBrainsMono Nerd Font', monospace;
 }
 
-/* Ensure popup window has proper styling */
-.popup-window-box {
+entry:focus {
+  border-color: rgba(255, 183, 186, 0.6);
+  box-shadow: 0 0 0 2px rgba(255, 183, 186, 0.2);
+}
+
+/* Sliders and scales */
+scale {
+  background: rgba(141, 110, 99, 0.3);
+  border-radius: 6px;
+}
+
+scale trough {
+  background: rgba(141, 110, 99, 0.4);
+  border-radius: 6px;
+  min-height: 6px;
+}
+
+scale highlight {
+  background: #ffcc5c;
+  border-radius: 6px;
+}
+
+scale slider {
+  background: #ffcc5c;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+/* Switches */
+switch {
+  background: rgba(141, 110, 99, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 183, 186, 0.3);
+}
+
+switch:checked {
+  background: rgba(255, 204, 92, 0.6);
+}
+
+switch slider {
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Checkboxes */
+checkbox {
+  background: rgba(141, 110, 99, 0.4);
+  border: 1px solid rgba(255, 183, 186, 0.3);
+  border-radius: 4px;
+  color: #ffcc5c;
+}
+
+checkbox:checked {
+  background: rgba(255, 204, 92, 0.6);
+  border-color: rgba(255, 204, 92, 0.8);
+}
+
+/* Scrolled windows */
+scrolledwindow {
   background: transparent;
 }
 
-/* Other widget placeholders for consistency */
+scrolledwindow scrollbar {
+  background: rgba(141, 110, 99, 0.2);
+  border-radius: 6px;
+}
+
+scrolledwindow scrollbar slider {
+  background: rgba(255, 183, 186, 0.5);
+  border-radius: 6px;
+}
+
+/* Progress bars */
+progressbar {
+  background: rgba(141, 110, 99, 0.3);
+  border-radius: 6px;
+}
+
+progressbar progress {
+  background: #ffcc5c;
+  border-radius: 6px;
+}
+
+/* Level bars */
+levelbar {
+  background: rgba(141, 110, 99, 0.3);
+  border-radius: 6px;
+}
+
+levelbar block.filled {
+  background: #ffcc5c;
+  border-radius: 6px;
+}
+
+/* Separators */
+separator {
+  background: rgba(255, 183, 186, 0.3);
+  min-height: 1px;
+  min-width: 1px;
+}
+
+/* Revealer animations */
+revealer {
+  background: transparent;
+}
+
+/* Circular progress */
+progress {
+  color: #ffcc5c;
+  background: rgba(141, 110, 99, 0.3);
+}
+
+/* Other widget base styles */
 .audio-widget-full,
 .network-widget-full,
 .system-monitor-full,
@@ -174,4 +302,17 @@ button:active {
 .notification-center-full,
 .power-menu-full {
   min-width: 320px;
+  background: transparent;
+}
+
+/* Simple animations that work in GTK */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+/* Apply pulse animation to some elements */
+.widget-title {
+  animation: pulse 3s ease-in-out infinite;
 }
