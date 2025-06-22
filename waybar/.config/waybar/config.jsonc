@@ -30,7 +30,7 @@
         "custom/ags-gaming",
         "custom/ags-notification-center",
         "custom/ags-power-menu",
-        "custom/ags-calendar"
+        "clock"
     ],
 
     // Left modules
@@ -216,9 +216,11 @@
       "tooltip": "Power Menu",
       "on-click": "ags request toggle_power_menu"
     },
-    "custom/ags-calendar": {
-      "format": "",
-      "tooltip": "Calendar",
-      "on-click": "ags request toggle_calendar"
+    "clock": {
+        "format": "{:%H:%M:%S}",
+        "format-alt": "{:%A, %B %d, %Y}",
+        "tooltip": true,
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "ags request toggle_calendar"
     }
 }
