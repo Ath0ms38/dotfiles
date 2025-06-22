@@ -345,7 +345,7 @@ tooltip {
   border-radius: 12px;
   padding: 7px 13px;
   margin: 4px 2px;
-  border: 1.5px solid rgba(255, 183, 186, 0.3);
+  border: 1.5px solid transparent;
   transition: all 0.15s ease-out;
   animation: bordershift 6s ease-in-out infinite;
   min-height: 22px;
@@ -366,7 +366,7 @@ tooltip {
 #custom-ags-calendar:hover {
   background: rgba(255, 183, 186, 0.6);
   color: #3d2d29;
-  border: 1.5px solid rgba(255, 183, 186, 0.7);
+  border: 1.5px solid transparent;
   animation: none;
   box-shadow: 0 0 0 2px rgba(255, 183, 186, 0.6);
 }
