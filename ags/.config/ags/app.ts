@@ -114,11 +114,11 @@ function createPopup(name: string, WidgetComponent: any): void {
                 });
                 
                 // Focus out to close (optional)
-                self.connect("focus-out-event", () => {
-                    print(`Focus lost, closing ${name}`);
-                    setTimeout(() => destroyPopup(name), 100); // Small delay to prevent immediate close
-                    return false;
-                });
+                // self.connect("focus-out-event", () => {
+                //     print(`Focus lost, closing ${name}`);
+                //     setTimeout(() => destroyPopup(name), 100); // Small delay to prevent immediate close
+                //     return false;
+                // });
                 
                 // Cleanup on destroy
                 self.connect("destroy", () => {
