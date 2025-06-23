@@ -54,25 +54,9 @@ function getDisplayGeometry(): Promise<{ width: number; height: number }> {
 }
 
 async function calculatePopupPosition(popupType: string): Promise<PopupPosition> {
-    const waybar = await getWaybarGeometry();
-    const display = await getDisplayGeometry();
-    
-    const popupWidth = 380;  // Estimated popup width
-    const popupHeight = 500; // Estimated popup height
-    const padding = 10;
-    
-    // Calculate position below waybar, aligned to the right
-    const x = display.width - popupWidth - padding - 16; // 16 is waybar margin-right
-    const y = waybar.y + waybar.height + padding;
-    
-    print(`Calculated position for ${popupType}: x=${x}, y=${y}`);
-    print(`Waybar: x=${waybar.x}, y=${waybar.y}, w=${waybar.width}, h=${waybar.height}`);
-    print(`Display: w=${display.width}, h=${display.height}`);
-    
+    // Margin and geometry calculations are now handled by CSS
     return {
         anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT,
-        marginTop: y,
-        marginRight: 20,
         monitor: 0
     };
 }
@@ -92,10 +76,6 @@ function createPopup(name: string, WidgetComponent: any): void {
             visible: true,
             anchor: position.anchor,
             layer: Astal.Layer.OVERLAY,
-            marginTop: position.marginTop,
-            marginRight: position.marginRight,
-            marginLeft: position.marginLeft,
-            marginBottom: position.marginBottom,
             keymode: Astal.Keymode.ON_DEMAND,
             exclusivity: Astal.Exclusivity.NORMAL,
             monitor: position.monitor ?? 0,
@@ -132,7 +112,7 @@ function createPopup(name: string, WidgetComponent: any): void {
                 self.grab_focus();
             },
             child: new Widget.Box({
-                className: "popup-content",
+                className: `popup-content popup-content-${name}`,
                 child: WidgetComponent({ fullView: true })
             })
         });
@@ -148,8 +128,6 @@ function createPopup(name: string, WidgetComponent: any): void {
             visible: true,
             anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT,
             layer: Astal.Layer.OVERLAY,
-            marginTop: 60,
-            marginRight: 20,
             keymode: Astal.Keymode.ON_DEMAND,
             exclusivity: Astal.Exclusivity.NORMAL,
             setup: (self: any) => {
@@ -171,7 +149,7 @@ function createPopup(name: string, WidgetComponent: any): void {
                 self.grab_focus();
             },
             child: new Widget.Box({
-                className: "popup-content", 
+                className: `popup-content popup-content-${name}`,
                 child: WidgetComponent({ fullView: true })
             })
         });

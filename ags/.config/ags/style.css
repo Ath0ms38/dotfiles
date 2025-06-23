@@ -20,9 +20,27 @@ window.popup-window {
 
 /* Popup content container - using min-width only */
 .popup-content {
-  background: transparent;
+  margin-top: 60px;    /* Default gap from waybar */
+  margin-right: 20px;  /* Default gap from right edge */
+  background-color: rgba(61, 47, 42, 0.95);
+  border: 2px solid #ffb7ba;
+  border-radius: 16px;
   padding: 20px;
   min-width: 350px;
+}
+
+/* Unique margins for each widget popup */
+.popup-content-calendar {
+  margin-top: 80px;    /* Example: calendar popup lower */
+  margin-right: 40px;  /* Example: calendar popup more to left */
+}
+.popup-content-audio {
+  margin-top: 40px;    /* Example: audio popup higher */
+  margin-right: 10px;  /* Example: audio popup closer to right */
+}
+.popup-content-network {
+  margin-top: 100px;   /* Example: network popup even lower */
+  margin-right: 60px;  /* Example: network popup more to left */
 }
 
 /* Widget titles */
