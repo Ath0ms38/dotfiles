@@ -1,0 +1,5 @@
+* [33maf5ec53[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m)[m Commit all changes
+* [33mf4d6c47[m Make calendar widget transparent, remove inner border, and update close behavior to only close on toggle button
+* [33md389af0[m fix(ags): AGS v2 Astal window positioning and type definitions for enums
+* [33m379e385[m fix(waybar): ensure clock updates every second and remove duplicate config
+* [33m86484b5[m Fix AGS CSS for GTK compatibility, improve popup border/transparency, enable Hyprland blur for popups

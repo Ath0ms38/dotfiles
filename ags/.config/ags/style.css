@@ -9,11 +9,11 @@ window {
 
 /* Popup window with anime room aesthetic */
 window.popup-window {
-  background-color: rgba(61, 47, 42, 0.95);
-  color: #f5f0e8;
-  border: 2px solid #ffb7ba;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   margin: 0;
   padding: 0;
 }
@@ -31,8 +31,8 @@ window.popup-window {
 
 /* Unique margins for each widget popup */
 .popup-content-calendar {
-  margin-top: 80px;    /* Example: calendar popup lower */
-  margin-right: 40px;  /* Example: calendar popup more to left */
+  margin-top: 2px;    /* Example: calendar popup lower */
+  margin-right: 10px;  /* Example: calendar popup more to left */
 }
 .popup-content-audio {
   margin-top: 40px;    /* Example: audio popup higher */
