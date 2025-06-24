@@ -22,7 +22,7 @@ window.popup-window {
 .popup-content {
   margin-top: 60px;    /* Default gap from waybar */
   margin-right: 20px;  /* Default gap from right edge */
-  background-color: rgba(61, 47, 42, 0.95);
+  background-color: rgba(61, 47, 42, 0.5);
   border: 2px solid #ffb7ba;
   border-radius: 16px;
   padding: 20px;
