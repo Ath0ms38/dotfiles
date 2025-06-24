@@ -334,3 +334,341 @@ progress {
 .widget-title {
   animation: pulse 3s ease-in-out infinite;
 }
+
+/* Audio Widget Styles */
+.audio-widget-full { min-width: 380px; }
+.speaker-section, .mic-section { 
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+.volume-slider { min-width: 200px; }
+.mute-button { min-width: 40px; }
+.profile-button { min-width: 80px; }
+.audio-profiles, .audio-actions { margin-top: 8px; }
+
+/* Network Widget Styles */
+.network-widget-full { min-width: 400px; }
+.wifi-section, .bluetooth-section {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+.wifi-list { padding: 4px; }
+.wifi-item {
+    margin-bottom: 4px;
+}
+.wifi-item:hover { background: rgba(255, 183, 186, 0.3); }
+.current-network { 
+    background: rgba(255, 204, 92, 0.3);
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+.scan-button, .disconnect-button { min-width: 100px; }
+.network-actions { margin-top: 8px; }
+
+/* System Monitor Styles */
+.system-monitor-full { min-width: 420px; }
+.cpu-section, .memory-section, .disk-section, .gpu-section {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 8px;
+}
+circular-progress {
+    color: #ffcc5c;
+    background: rgba(141, 110, 99, 0.2);
+    min-width: 60px;
+    min-height: 60px;
+}
+.usage-details { 
+    color: #b39ddb;
+    font-size: 13px;
+}
+.temp-label {
+    color: #ff8a65;
+    font-weight: bold;
+}
+.system-actions { margin-top: 8px; }
+
+/* Power Display Styles */
+.power-display-full { min-width: 380px; }
+.battery-section, .brightness-section, .power-profile-section, .display-section {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+.brightness-slider { min-width: 200px; }
+.brightness-presets { margin-top: 8px; }
+.preset-button { min-width: 50px; }
+.profile-button {
+    min-width: 100px;
+    margin-right: 6px;
+}
+.profile-button.active {
+    background: rgba(255, 204, 92, 0.6);
+    border-color: rgba(255, 204, 92, 0.8);
+}
+.battery-status { color: #b39ddb; }
+.battery-time { color: #81ecec; font-size: 13px; }
+
+/* Media Control Styles */
+.media-control-full { min-width: 450px; }
+.player-widget {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+.album-art {
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+}
+.track-title { 
+    color: #ffcc5c;
+    font-size: 16px;
+    font-weight: bold;
+}
+.track-artist { color: #b39ddb; }
+.track-album { color: #81ecec; font-size: 13px; }
+.player-name { 
+    color: #74705d;
+    font-size: 12px;
+    font-style: italic;
+}
+.progress-bar { min-width: 300px; }
+.time-labels { font-size: 12px; color: #b39ddb; }
+.media-controls button { min-width: 40px; min-height: 40px; }
+.play-pause-button { min-width: 50px; min-height: 50px; }
+.volume-slider { min-width: 150px; }
+.media-apps { margin-top: 12px; }
+.app-button { min-width: 90px; }
+
+/* Quick Settings Styles */
+.quick-settings-full { min-width: 400px; }
+.toggle-grid { 
+    background: rgba(141, 110, 99, 0.2);
+    padding: 8px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+.toggle-button {
+    min-width: 110px;
+    min-height: 80px;
+    margin: 4px;
+    padding: 8px;
+}
+.toggle-button.active {
+    background: rgba(255, 204, 92, 0.6);
+    border-color: rgba(255, 204, 92, 0.8);
+}
+.toggle-button icon { margin-bottom: 4px; }
+.screenshot-section, .recording-section, .services-section {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+.record-button {
+    background: rgba(255, 107, 129, 0.4);
+}
+.record-button:hover {
+    background: rgba(255, 107, 129, 0.6);
+}
+
+/* Productivity Styles */
+.productivity-full { min-width: 420px; }
+.tasks-section, .pomodoro-section, .clipboard-section, .notes-section {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+.task-item {
+    padding: 4px;
+    margin-bottom: 2px;
+}
+.task-completed {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+.delete-button {
+    min-width: 30px;
+    min-height: 30px;
+    padding: 4px;
+}
+.timer-display {
+    font-size: 36px;
+    color: #ffcc5c;
+    font-weight: bold;
+    margin: 12px 0;
+}
+.timer-button { min-width: 80px; }
+.clipboard-item {
+    padding: 6px;
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+.clipboard-item:hover {
+    background: rgba(255, 183, 186, 0.3);
+}
+.task-input, .note-input {
+    margin-top: 8px;
+}
+.save-note-button {
+    margin-top: 8px;
+}
+
+/* Gaming Styles */
+.gaming-full { min-width: 400px; }
+.launchers-section, .gpu-stats-section, .gaming-mode-section {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+}
+.launcher-grid {
+}
+.launcher-button {
+    min-width: 90px;
+    min-height: 80px;
+    margin: 4px;
+}
+.stat-row {
+    margin-bottom: 8px;
+}
+levelbar {
+    min-height: 8px;
+    border-radius: 4px;
+    background: rgba(141, 110, 99, 0.4);
+}
+levelbar block.filled {
+    background: linear-gradient(90deg, #a8e6cf 0%, #ffcc5c 50%, #ff8a65 100%);
+}
+.gaming-mode-info {
+    color: #b39ddb;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 4px;
+}
+.gaming-actions { margin-top: 8px; }
+
+/* Notification Center Styles */
+.notification-center-full { min-width: 450px; }
+.notification-header {
+    margin-bottom: 12px;
+}
+.clear-all-button {
+    background: rgba(255, 107, 129, 0.4);
+}
+.dnd-section {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+}
+.filter-section {
+    margin-bottom: 8px;
+}
+.filter-button {
+    min-width: 60px;
+    margin-right: 4px;
+}
+.filter-button.active {
+    background: rgba(255, 204, 92, 0.6);
+    border-color: rgba(255, 204, 92, 0.8);
+}
+.notification-list {
+    padding: 4px;
+}
+.notification-item {
+    background: rgba(141, 110, 99, 0.3);
+    border: 1px solid rgba(255, 183, 186, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 6px;
+}
+.notification-app {
+    color: #b39ddb;
+    font-size: 12px;
+    font-weight: bold;
+}
+.notification-time {
+    color: #81ecec;
+    font-size: 11px;
+}
+.notification-summary {
+    color: #ffcc5c;
+    font-weight: bold;
+    margin-top: 4px;
+}
+.notification-body {
+    color: #f5f0e8;
+    font-size: 13px;
+    margin-top: 2px;
+}
+.dismiss-button {
+    min-width: 30px;
+    min-height: 30px;
+    padding: 4px;
+}
+.notification-actions {
+    margin-top: 8px;
+}
+.no-notifications {
+    color: #b39ddb;
+    font-style: italic;
+    padding: 20px;
+}
+.settings-button {
+    margin-top: 8px;
+}
+
+/* Power Menu Styles */
+.power-menu-full { min-width: 380px; }
+.power-actions-grid {
+    background: rgba(141, 110, 99, 0.2);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+.power-action-button {
+    min-width: 110px;
+    min-height: 100px;
+    margin: 6px;
+    padding: 12px;
+}
+.power-action-button:hover {
+    background: rgba(255, 183, 186, 0.5);
+}
+.power-action-button icon {
+    margin-bottom: 8px;
+}
+.confirmation-dialog {
+    background: rgba(255, 107, 129, 0.3);
+    border: 2px solid rgba(255, 107, 129, 0.6);
+    border-radius: 12px;
+    padding: 20px;
+}
+.confirm-text {
+    font-size: 16px;
+    margin-bottom: 16px;
+    color: #ffcc5c;
+}
+.confirm-button {
+    background: rgba(255, 107, 129, 0.6);
+    margin-right: 8px;
+}
+.cancel-button {
+    background: rgba(141, 110, 99, 0.6);
+}
+.user-info {
+    background: rgba(141, 110, 99, 0.3);
+    border-radius: 10px;
+    padding: 8px 12px;
+}

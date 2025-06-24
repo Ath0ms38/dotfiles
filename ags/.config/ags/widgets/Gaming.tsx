@@ -1,9 +1,8 @@
-// AGS v2 Gaming Widget
+// ags/.config/ags/widgets/Gaming.tsx
 
 import { Variable, bind } from "astal"
 import { execAsync } from "astal/process"
 import { Widget } from "astal/gtk3"
-import Gtk from "gi://Gtk?version=3.0"
 
 interface GameLauncher {
     name: string
@@ -39,103 +38,179 @@ const gameMode = Variable(false)
 
 export default function GamingWidget({ fullView = false }: { fullView?: boolean }) {
     if (fullView) {
-        return <box className="gaming-full" vertical spacing={12}>
-            <label className="widget-title" label="🎮 Gaming & Performance" />
-            
-            {/* Game Launchers */}
-            <box className="launchers-section" vertical spacing={8}>
-                <label className="section-label" label="Game Launchers" />
-                <box className="launcher-grid" spacing={8}>
-                    {gameLaunchers.map(launcher => (
-                        <button key={launcher.name} className="launcher-button"
-                            onClicked={() => execAsync([launcher.command])}>
-                            <box vertical spacing={4}>
-                                <icon icon={launcher.icon} iconSize={32} />
-                                <label label={launcher.name} />
-                            </box>
-                        </button>
-                    ))}
-                </box>
-            </box>
+        return new Widget.Box({
+            className: "gaming-full",
+            vertical: true,
+            spacing: 12,
+            children: [
+                new Widget.Label({
+                    className: "widget-title",
+                    label: "🎮 Gaming & Performance"
+                }),
+                
+                // Game Launchers
+                new Widget.Box({
+                    className: "launchers-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "Game Launchers"
+                        }),
+                        new Widget.Box({
+                            className: "launcher-grid",
+                            spacing: 8,
+                            children: gameLaunchers.map(launcher => new Widget.Button({
+                                className: "launcher-button",
+                                onClicked: () => execAsync([launcher.command]),
+                                child: new Widget.Box({
+                                    vertical: true,
+                                    spacing: 4,
+                                    children: [
+                                        new Widget.Icon({ icon: launcher.icon, iconSize: 32 }),
+                                        new Widget.Label({ label: launcher.name })
+                                    ]
+                                })
+                            }))
+                        })
+                    ]
+                }),
 
-            {/* GPU Stats */}
-            <box className="gpu-stats-section" vertical spacing={8}>
-                <label className="section-label" label="GPU Performance" />
-                <box vertical spacing={6}>
-                    <box className="stat-row" spacing={12}>
-                        <label label="Usage:" />
-                        <box hexpand />
-                        <label label={bind(gpuStats).as(stats => `${stats.usage}%`)} />
-                    </box>
-                    <Widget.LevelBar
-                        value={bind(gpuStats).as(stats => stats.usage / 100)}
-                        minValue={0}
-                        maxValue={1}
-                    />
-                    
-                    <box className="stat-row" spacing={12}>
-                        <label label="Temperature:" />
-                        <box hexpand />
-                        <label label={bind(gpuStats).as(stats => `${stats.temp}°C`)} />
-                    </box>
-                    
-                    <box className="stat-row" spacing={12}>
-                        <label label="Memory:" />
-                        <box hexpand />
-                        <label label={bind(gpuStats).as(stats => `${stats.memory}%`)} />
-                    </box>
-                    <Widget.LevelBar
-                        value={bind(gpuStats).as(stats => stats.memory / 100)}
-                        minValue={0}
-                        maxValue={1}
-                    />
-                </box>
-            </box>
+                // GPU Stats
+                new Widget.Box({
+                    className: "gpu-stats-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "GPU Performance"
+                        }),
+                        new Widget.Box({
+                            vertical: true,
+                            spacing: 6,
+                            children: [
+                                new Widget.Box({
+                                    className: "stat-row",
+                                    spacing: 12,
+                                    children: [
+                                        new Widget.Label({ label: "Usage:" }),
+                                        new Widget.Box({ hexpand: true }),
+                                        new Widget.Label({
+                                            label: bind(gpuStats).as(stats => `${stats.usage}%`)
+                                        })
+                                    ]
+                                }),
+                                new Widget.LevelBar({
+                                    value: bind(gpuStats).as(stats => stats.usage / 100),
+                                    minValue: 0,
+                                    maxValue: 1
+                                }),
+                                
+                                new Widget.Box({
+                                    className: "stat-row",
+                                    spacing: 12,
+                                    children: [
+                                        new Widget.Label({ label: "Temperature:" }),
+                                        new Widget.Box({ hexpand: true }),
+                                        new Widget.Label({
+                                            label: bind(gpuStats).as(stats => `${stats.temp}°C`)
+                                        })
+                                    ]
+                                }),
+                                
+                                new Widget.Box({
+                                    className: "stat-row",
+                                    spacing: 12,
+                                    children: [
+                                        new Widget.Label({ label: "Memory:" }),
+                                        new Widget.Box({ hexpand: true }),
+                                        new Widget.Label({
+                                            label: bind(gpuStats).as(stats => `${stats.memory}%`)
+                                        })
+                                    ]
+                                }),
+                                new Widget.LevelBar({
+                                    value: bind(gpuStats).as(stats => stats.memory / 100),
+                                    minValue: 0,
+                                    maxValue: 1
+                                })
+                            ]
+                        })
+                    ]
+                }),
 
-            {/* Gaming Mode */}
-            <box className="gaming-mode-section" vertical spacing={8}>
-                <label className="section-label" label="Gaming Mode" />
-                <box spacing={12}>
-                    <label label="Enable Gaming Mode" />
-                    <box hexpand />
-                    <switch active={bind(gameMode)}
-                        onActivate={({ active }) => {
-                            gameMode.set(active)
-                            if (active) {
-                                // Enable gaming optimizations
-                                execAsync(["hyprctl", "keyword", "decoration:blur", "false"])
-                                execAsync(["hyprctl", "keyword", "animations:enabled", "false"])
-                                execAsync(["powerprofilesctl", "set", "performance"])
-                                execAsync(["notify-send", "Gaming Mode", "Performance optimizations enabled"])
-                            } else {
-                                // Restore normal settings
-                                execAsync(["hyprctl", "keyword", "decoration:blur", "true"])
-                                execAsync(["hyprctl", "keyword", "animations:enabled", "true"])
-                                execAsync(["powerprofilesctl", "set", "balanced"])
-                                execAsync(["notify-send", "Gaming Mode", "Normal settings restored"])
-                            }
-                        }} />
-                </box>
-                <label className="gaming-mode-info" 
-                    label="Disables visual effects and enables performance mode" />
-            </box>
+                // Gaming Mode
+                new Widget.Box({
+                    className: "gaming-mode-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "Gaming Mode"
+                        }),
+                        new Widget.Box({
+                            spacing: 12,
+                            children: [
+                                new Widget.Label({ label: "Enable Gaming Mode" }),
+                                new Widget.Box({ hexpand: true }),
+                                // @ts-ignore - Switch widget
+                                new Widget.Switch({
+                                    active: bind(gameMode),
+                                    onActivate: ({ active }: any) => {
+                                        gameMode.set(active)
+                                        if (active) {
+                                            execAsync(["hyprctl", "keyword", "decoration:blur", "false"])
+                                            execAsync(["hyprctl", "keyword", "animations:enabled", "false"])
+                                            execAsync(["powerprofilesctl", "set", "performance"])
+                                            execAsync(["notify-send", "Gaming Mode", "Performance optimizations enabled"])
+                                        } else {
+                                            execAsync(["hyprctl", "keyword", "decoration:blur", "true"])
+                                            execAsync(["hyprctl", "keyword", "animations:enabled", "true"])
+                                            execAsync(["powerprofilesctl", "set", "balanced"])
+                                            execAsync(["notify-send", "Gaming Mode", "Normal settings restored"])
+                                        }
+                                    }
+                                })
+                            ]
+                        }),
+                        new Widget.Label({
+                            className: "gaming-mode-info",
+                            label: "Disables visual effects and enables performance mode"
+                        })
+                    ]
+                }),
 
-            {/* Quick Actions */}
-            <box className="gaming-actions" spacing={6}>
-                <button className="action-button" onClicked={() => execAsync(["mangohud", "glxgears"])}>
-                    Test MangoHud
-                </button>
-                <button className="action-button" onClicked={() => execAsync(["corectrl"])}>
-                    CoreCtrl
-                </button>
-                <button className="action-button" onClicked={() => execAsync(["nvidia-settings"])}>
-                    NVIDIA Settings
-                </button>
-            </box>
-        </box>
+                // Quick Actions
+                new Widget.Box({
+                    className: "gaming-actions",
+                    spacing: 6,
+                    children: [
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "Test MangoHud",
+                            onClicked: () => execAsync(["mangohud", "glxgears"])
+                        }),
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "CoreCtrl",
+                            onClicked: () => execAsync(["corectrl"])
+                        }),
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "NVIDIA Settings",
+                            onClicked: () => execAsync(["nvidia-settings"])
+                        })
+                    ]
+                })
+            ]
+        })
     }
 
-    return <box className="gaming-compact">
-        <icon icon="input-gaming-symbolic" />
-    </box>
+    return new Widget.Box({
+        className: "gaming-compact",
+        children: [new Widget.Icon({ icon: "input-gaming-symbolic" })]
+    })
 }

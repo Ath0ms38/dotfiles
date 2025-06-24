@@ -1,8 +1,8 @@
-// AGS v2 Productivity Tools Widget
+// ags/.config/ags/widgets/Productivity.tsx
 
 import { Variable, bind } from "astal"
 import { execAsync } from "astal/process"
-import Gtk from "gi://Gtk?version=3.0"
+import { Widget } from "astal/gtk3"
 
 interface Task {
     id: number
@@ -39,7 +39,6 @@ function startTimer() {
         } else {
             timerRunning.set(false)
             clearInterval(timerInterval)
-            // Toggle between work and break
             if (isBreak.get()) {
                 isBreak.set(false)
                 timerSeconds.set(pomodoroMinutes.get() * 60)
@@ -80,126 +79,196 @@ clipboardHistory.poll(5000, async () => {
 })
 
 export default function ProductivityWidget({ fullView = false }: { fullView?: boolean }) {
-    // Cleanup interval on widget destroy
     if (typeof globalThis !== "undefined" && globalThis.connect) {
         globalThis.connect("destroy", () => {
             if (timerInterval) clearInterval(timerInterval)
         })
     }
+
     if (fullView) {
-        return <box className="productivity-full" vertical spacing={12}>
-            <label className="widget-title" label="📋 Productivity Tools" />
-            
-            {/* Tasks Section */}
-            <box className="tasks-section" vertical spacing={8}>
-                <label className="section-label" label="Tasks" />
-                <scrollable heightRequest={150}>
-                    <box vertical spacing={4}>
-                        {bind(tasks).as(taskList => 
-                            taskList.map(task => (
-                                <box key={task.id} className="task-item" spacing={8}>
-                                    <checkbox active={task.completed}
-                                        onActivate={({ active }) => {
-                                            const updated = tasks.get().map(t => 
-                                                t.id === task.id ? { ...t, completed: active } : t
-                                            )
-                                            tasks.set(updated)
-                                        }} />
-                                    <label label={task.text} 
-                                        className={task.completed ? "task-completed" : ""}
-                                        hexpand />
-                                    <button className="delete-button"
-                                        onClicked={() => {
-                                            tasks.set(tasks.get().filter(t => t.id !== task.id))
-                                        }}>
-                                        <icon icon="user-trash-symbolic" />
-                                    </button>
-                                </box>
-                            ))
-                        )}
-                    </box>
-                </scrollable>
-                <entry className="task-input"
-                    placeholderText="Add new task..."
-                    onActivate={(self) => {
-                        if (self.text) {
-                            tasks.set([...tasks.get(), {
-                                id: Date.now(),
-                                text: self.text,
-                                completed: false,
-                                createdAt: new Date()
-                            }])
-                            self.text = ""
-                        }
-                    }} />
-            </box>
+        return new Widget.Box({
+            className: "productivity-full",
+            vertical: true,
+            spacing: 12,
+            children: [
+                new Widget.Label({
+                    className: "widget-title",
+                    label: "📋 Productivity Tools"
+                }),
+                
+                // Tasks Section
+                new Widget.Box({
+                    className: "tasks-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "Tasks"
+                        }),
+                        // @ts-ignore - Scrollable widget
+                        new Widget.Scrollable({
+                            heightRequest: 150,
+                            child: new Widget.Box({
+                                vertical: true,
+                                spacing: 4,
+                                children: bind(tasks).as(taskList => 
+                                    taskList.map(task => new Widget.Box({
+                                        className: "task-item",
+                                        spacing: 8,
+                                        children: [
+                                            // @ts-ignore - CheckBox widget
+                                            new Widget.CheckBox({
+                                                active: task.completed,
+                                                onActivate: ({ active }: any) => {
+                                                    const updated = tasks.get().map(t => 
+                                                        t.id === task.id ? { ...t, completed: active } : t
+                                                    )
+                                                    tasks.set(updated)
+                                                }
+                                            }),
+                                            new Widget.Label({
+                                                label: task.text,
+                                                className: task.completed ? "task-completed" : "",
+                                                hexpand: true
+                                            }),
+                                            new Widget.Button({
+                                                className: "delete-button",
+                                                onClicked: () => {
+                                                    tasks.set(tasks.get().filter(t => t.id !== task.id))
+                                                },
+                                                child: new Widget.Icon({ icon: "user-trash-symbolic" })
+                                            })
+                                        ]
+                                    }))
+                                )
+                            })
+                        }),
+                        new Widget.Entry({
+                            className: "task-input",
+                            placeholderText: "Add new task...",
+                            onActivate: (self: any) => {
+                                if (self.text) {
+                                    tasks.set([...tasks.get(), {
+                                        id: Date.now(),
+                                        text: self.text,
+                                        completed: false,
+                                        createdAt: new Date()
+                                    }])
+                                    self.text = ""
+                                }
+                            }
+                        })
+                    ]
+                }),
 
-            {/* Pomodoro Timer */}
-            <box className="pomodoro-section" vertical spacing={8}>
-                <label className="section-label" label={bind(isBreak).as(b => b ? "Break Time" : "Pomodoro Timer")} />
-                <label className="timer-display" 
-                    label={bind(timerSeconds).as(s => {
-                        const mins = Math.floor(s / 60)
-                        const secs = s % 60
-                        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
-                    })} />
-                <box spacing={6}>
-                    <button className="timer-button"
-                        onClicked={() => timerRunning.get() ? stopTimer() : startTimer()}>
-                        {bind(timerRunning).as(r => r ? "Pause" : "Start")}
-                    </button>
-                    <button className="timer-button"
-                        onClicked={() => {
-                            stopTimer()
-                            isBreak.set(false)
-                            timerSeconds.set(pomodoroMinutes.get() * 60)
-                        }}>
-                        Reset
-                    </button>
-                </box>
-            </box>
+                // Pomodoro Timer
+                new Widget.Box({
+                    className: "pomodoro-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: bind(isBreak).as(b => b ? "Break Time" : "Pomodoro Timer")
+                        }),
+                        new Widget.Label({
+                            className: "timer-display",
+                            label: bind(timerSeconds).as(s => {
+                                const mins = Math.floor(s / 60)
+                                const secs = s % 60
+                                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+                            })
+                        }),
+                        new Widget.Box({
+                            spacing: 6,
+                            children: [
+                                new Widget.Button({
+                                    className: "timer-button",
+                                    label: bind(timerRunning).as(r => r ? "Pause" : "Start"),
+                                    onClicked: () => timerRunning.get() ? stopTimer() : startTimer()
+                                }),
+                                new Widget.Button({
+                                    className: "timer-button",
+                                    label: "Reset",
+                                    onClicked: () => {
+                                        stopTimer()
+                                        isBreak.set(false)
+                                        timerSeconds.set(pomodoroMinutes.get() * 60)
+                                    }
+                                })
+                            ]
+                        })
+                    ]
+                }),
 
-            {/* Clipboard History */}
-            <box className="clipboard-section" vertical spacing={8}>
-                <label className="section-label" label="Clipboard History" />
-                <scrollable heightRequest={100}>
-                    <box vertical spacing={4}>
-                        {bind(clipboardHistory).as(history => 
-                            history.map(item => (
-                                <button key={item.id} className="clipboard-item"
-                                    onClicked={() => execAsync(["wl-copy", item.text])}>
-                                    <label label={item.text.slice(0, 50) + (item.text.length > 50 ? "..." : "")} />
-                                </button>
-                            ))
-                        )}
-                    </box>
-                </scrollable>
-            </box>
+                // Clipboard History
+                new Widget.Box({
+                    className: "clipboard-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "Clipboard History"
+                        }),
+                        // @ts-ignore - Scrollable widget
+                        new Widget.Scrollable({
+                            heightRequest: 100,
+                            child: new Widget.Box({
+                                vertical: true,
+                                spacing: 4,
+                                children: bind(clipboardHistory).as(history => 
+                                    history.map(item => new Widget.Button({
+                                        className: "clipboard-item",
+                                        onClicked: () => execAsync(["wl-copy", item.text]),
+                                        child: new Widget.Label({
+                                            label: item.text.slice(0, 50) + (item.text.length > 50 ? "..." : "")
+                                        })
+                                    }))
+                                )
+                            })
+                        })
+                    ]
+                }),
 
-            {/* Quick Note */}
-            <box className="notes-section" vertical spacing={8}>
-                <label className="section-label" label="Quick Note" />
-                <entry className="note-input"
-                    text={bind(currentNote)}
-                    placeholderText="Type your note here..."
-                    onChanged={(self) => currentNote.set(self.text)} />
-                <button className="save-note-button"
-                    onClicked={() => {
-                        if (currentNote.get()) {
-                            const note = currentNote.get()
-                            const date = new Date().toISOString()
-                            execAsync(["bash", "-c", `echo "${date}: ${note}" >> ~/notes.txt`])
-                            currentNote.set("")
-                            execAsync(["notify-send", "Note Saved", "Note saved to ~/notes.txt"])
-                        }
-                    }}>
-                    Save Note
-                </button>
-            </box>
-        </box>
+                // Quick Note
+                new Widget.Box({
+                    className: "notes-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "Quick Note"
+                        }),
+                        new Widget.Entry({
+                            className: "note-input",
+                            text: bind(currentNote),
+                            placeholderText: "Type your note here...",
+                            onChanged: (self: any) => currentNote.set(self.text)
+                        }),
+                        new Widget.Button({
+                            className: "save-note-button",
+                            label: "Save Note",
+                            onClicked: () => {
+                                if (currentNote.get()) {
+                                    const note = currentNote.get()
+                                    const date = new Date().toISOString()
+                                    execAsync(["bash", "-c", `echo "${date}: ${note}" >> ~/notes.txt`])
+                                    currentNote.set("")
+                                    execAsync(["notify-send", "Note Saved", "Note saved to ~/notes.txt"])
+                                }
+                            }
+                        })
+                    ]
+                })
+            ]
+        })
     }
 
-    return <box className="productivity-compact">
-        <icon icon="view-list-symbolic" />
-    </box>
+    return new Widget.Box({
+        className: "productivity-compact",
+        children: [new Widget.Icon({ icon: "view-list-symbolic" })]
+    })
 }

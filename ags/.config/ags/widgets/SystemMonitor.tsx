@@ -1,8 +1,8 @@
-// AGS v2 System Monitor Widget
+// ags/.config/ags/widgets/SystemMonitor.tsx
 
 import { Variable, bind } from "astal"
 import { execAsync } from "astal/process"
-import Gtk from "gi://Gtk?version=3.0"
+import { Widget } from "astal/gtk3"
 
 interface SystemInfo {
     cpuUsage: number
@@ -73,85 +73,188 @@ const systemInfo = Variable<SystemInfo>({
 
 export default function SystemMonitorWidget({ fullView = false }: { fullView?: boolean }) {
     if (fullView) {
-        return <box className="system-monitor-full" vertical spacing={12}>
-            <label className="widget-title" label="💻 System Monitor" />
-            
-            {/* CPU Section */}
-            <box className="cpu-section" vertical spacing={8}>
-                <label className="section-label" label="CPU" />
-                <box spacing={12}>
-                    <circularprogress className="usage-circle"
-                        value={bind(systemInfo).as(info => info.cpuUsage / 100)} />
-                    <box vertical>
-                        <label label={bind(systemInfo).as(info => `${info.cpuUsage}% Usage`)} />
-                        <label className="temp-label" 
-                            label={bind(systemInfo).as(info => `${info.cpuTemp}°C`)} />
-                    </box>
-                </box>
-            </box>
+        return new Widget.Box({
+            className: "system-monitor-full",
+            vertical: true,
+            spacing: 12,
+            children: [
+                new Widget.Label({
+                    className: "widget-title",
+                    label: "💻 System Monitor"
+                }),
+                
+                // CPU Section
+                new Widget.Box({
+                    className: "cpu-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "CPU"
+                        }),
+                        new Widget.Box({
+                            spacing: 12,
+                            children: [
+                                // @ts-ignore - CircularProgress widget
+                                new Widget.CircularProgress({
+                                    className: "usage-circle",
+                                    value: bind(systemInfo).as(info => info.cpuUsage / 100)
+                                }),
+                                new Widget.Box({
+                                    vertical: true,
+                                    children: [
+                                        new Widget.Label({
+                                            label: bind(systemInfo).as(info => `${info.cpuUsage}% Usage`)
+                                        }),
+                                        new Widget.Label({
+                                            className: "temp-label",
+                                            label: bind(systemInfo).as(info => `${info.cpuTemp}°C`)
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
+                    ]
+                }),
 
-            {/* Memory Section */}
-            <box className="memory-section" vertical spacing={8}>
-                <label className="section-label" label="Memory" />
-                <box spacing={12}>
-                    <circularprogress className="usage-circle"
-                        value={bind(systemInfo).as(info => info.memUsage / 100)} />
-                    <box vertical>
-                        <label label={bind(systemInfo).as(info => `${info.memUsage}% Usage`)} />
-                        <label className="usage-details" 
-                            label={bind(systemInfo).as(info => 
-                                `${(info.memUsed / 1024**3).toFixed(1)} / ${(info.memTotal / 1024**3).toFixed(1)} GB`
-                            )} />
-                    </box>
-                </box>
-            </box>
+                // Memory Section
+                new Widget.Box({
+                    className: "memory-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "Memory"
+                        }),
+                        new Widget.Box({
+                            spacing: 12,
+                            children: [
+                                // @ts-ignore - CircularProgress widget
+                                new Widget.CircularProgress({
+                                    className: "usage-circle",
+                                    value: bind(systemInfo).as(info => info.memUsage / 100)
+                                }),
+                                new Widget.Box({
+                                    vertical: true,
+                                    children: [
+                                        new Widget.Label({
+                                            label: bind(systemInfo).as(info => `${info.memUsage}% Usage`)
+                                        }),
+                                        new Widget.Label({
+                                            className: "usage-details",
+                                            label: bind(systemInfo).as(info => 
+                                                `${(info.memUsed / 1024**3).toFixed(1)} / ${(info.memTotal / 1024**3).toFixed(1)} GB`
+                                            )
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
+                    ]
+                }),
 
-            {/* Disk Section */}
-            <box className="disk-section" vertical spacing={8}>
-                <label className="section-label" label="Disk (/)" />
-                <box spacing={12}>
-                    <circularprogress className="usage-circle"
-                        value={bind(systemInfo).as(info => info.diskUsage / 100)} />
-                    <box vertical>
-                        <label label={bind(systemInfo).as(info => `${info.diskUsage}% Usage`)} />
-                        <label className="usage-details" 
-                            label={bind(systemInfo).as(info => 
-                                `${(info.diskUsed / 1024**3).toFixed(0)} / ${(info.diskTotal / 1024**3).toFixed(0)} GB`
-                            )} />
-                    </box>
-                </box>
-            </box>
+                // Disk Section
+                new Widget.Box({
+                    className: "disk-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "Disk (/)"
+                        }),
+                        new Widget.Box({
+                            spacing: 12,
+                            children: [
+                                // @ts-ignore - CircularProgress widget
+                                new Widget.CircularProgress({
+                                    className: "usage-circle",
+                                    value: bind(systemInfo).as(info => info.diskUsage / 100)
+                                }),
+                                new Widget.Box({
+                                    vertical: true,
+                                    children: [
+                                        new Widget.Label({
+                                            label: bind(systemInfo).as(info => `${info.diskUsage}% Usage`)
+                                        }),
+                                        new Widget.Label({
+                                            className: "usage-details",
+                                            label: bind(systemInfo).as(info => 
+                                                `${(info.diskUsed / 1024**3).toFixed(0)} / ${(info.diskTotal / 1024**3).toFixed(0)} GB`
+                                            )
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
+                    ]
+                }),
 
-            {/* GPU Section */}
-            <box className="gpu-section" vertical spacing={8}>
-                <label className="section-label" label="GPU (NVIDIA)" />
-                <box spacing={12}>
-                    <circularprogress className="usage-circle"
-                        value={bind(systemInfo).as(info => info.gpuUsage / 100)} />
-                    <box vertical>
-                        <label label={bind(systemInfo).as(info => `${info.gpuUsage}% Usage`)} />
-                        <label className="temp-label" 
-                            label={bind(systemInfo).as(info => `${info.gpuTemp}°C`)} />
-                    </box>
-                </box>
-            </box>
+                // GPU Section
+                new Widget.Box({
+                    className: "gpu-section",
+                    vertical: true,
+                    spacing: 8,
+                    children: [
+                        new Widget.Label({
+                            className: "section-label",
+                            label: "GPU (NVIDIA)"
+                        }),
+                        new Widget.Box({
+                            spacing: 12,
+                            children: [
+                                // @ts-ignore - CircularProgress widget
+                                new Widget.CircularProgress({
+                                    className: "usage-circle",
+                                    value: bind(systemInfo).as(info => info.gpuUsage / 100)
+                                }),
+                                new Widget.Box({
+                                    vertical: true,
+                                    children: [
+                                        new Widget.Label({
+                                            label: bind(systemInfo).as(info => `${info.gpuUsage}% Usage`)
+                                        }),
+                                        new Widget.Label({
+                                            className: "temp-label",
+                                            label: bind(systemInfo).as(info => `${info.gpuTemp}°C`)
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
+                    ]
+                }),
 
-            {/* Quick actions */}
-            <box className="system-actions" spacing={6}>
-                <button className="action-button" onClicked={() => execAsync(["kitty", "-e", "btop"])}>
-                    Btop
-                </button>
-                <button className="action-button" onClicked={() => execAsync(["kitty", "-e", "htop"])}>
-                    Htop
-                </button>
-                <button className="action-button" onClicked={() => execAsync(["nvidia-settings"])}>
-                    NVIDIA Settings
-                </button>
-            </box>
-        </box>
+                // Quick actions
+                new Widget.Box({
+                    className: "system-actions",
+                    spacing: 6,
+                    children: [
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "Btop",
+                            onClicked: () => execAsync(["kitty", "-e", "btop"])
+                        }),
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "Htop",
+                            onClicked: () => execAsync(["kitty", "-e", "htop"])
+                        }),
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "NVIDIA Settings",
+                            onClicked: () => execAsync(["nvidia-settings"])
+                        })
+                    ]
+                })
+            ]
+        })
     }
 
-    return <box className="system-monitor-compact">
-        <icon icon="computer-symbolic" />
-    </box>
+    return new Widget.Box({
+        className: "system-monitor-compact",
+        children: [new Widget.Icon({ icon: "computer-symbolic" })]
+    })
 }
