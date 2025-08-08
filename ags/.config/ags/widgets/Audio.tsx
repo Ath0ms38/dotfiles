@@ -5,10 +5,7 @@ import { Widget } from "astal/gtk3"
 import { execAsync } from "astal/process"
 import Wp from "gi://AstalWp"
 
-const audioProfiles = [
-    { name: "Stereo", command: ["pactl", "set-card-profile", "1", "HiFi (HDMI1, HDMI2, HDMI3, Headphones, Mic1, Mic2)"] },
-    { name: "HDMI", command: ["pactl", "set-card-profile", "0", "output:hdmi-stereo"] }
-]
+
 
 export default function AudioWidget({ fullView = false }: { fullView?: boolean }) {
     const audio = Wp.get_default()
@@ -122,6 +119,16 @@ export default function AudioWidget({ fullView = false }: { fullView?: boolean }
                     className: "audio-actions",
                     spacing: 6,
                     children: [
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "Speakers",
+                            onClicked: () => execAsync(["wpctl", "set-profile", "@DEFAULT_AUDIO_SINK@", "1"]).catch(console.error)
+                        }),
+                        new Widget.Button({
+                            className: "action-button",
+                            label: "Headphones",
+                            onClicked: () => execAsync(["wpctl", "set-profile", "@DEFAULT_AUDIO_SINK@", "25"]).catch(console.error)
+                        }),
                         new Widget.Button({
                             className: "action-button",
                             label: "Audio Settings",

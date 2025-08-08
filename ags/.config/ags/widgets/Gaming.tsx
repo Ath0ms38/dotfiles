@@ -85,7 +85,7 @@ export default function GamingWidget({ fullView = false }: { fullView?: boolean 
                     children: [
                         new Widget.Label({
                             className: "section-label",
-                            label: "GPU Performance"
+                            label: "GPU Performance (NVIDIA)"
                         }),
                         new Widget.Box({
                             vertical: true,

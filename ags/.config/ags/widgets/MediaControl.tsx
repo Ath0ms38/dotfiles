@@ -38,7 +38,8 @@ export default function MediaControlWidget({ fullView = false }: { fullView?: bo
                                     spacing: 12,
                                     children: [
                                         player.coverArt ? new Widget.Box({
-                                            className: "album-art"
+                                            className: "album-art",
+                                            style: `background-image: url('${player.coverArt}');`
                                         }) : new Widget.Box({}),
                                         new Widget.Box({
                                             vertical: true,
