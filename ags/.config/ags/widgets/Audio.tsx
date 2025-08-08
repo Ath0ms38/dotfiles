@@ -76,7 +76,7 @@ for id in $ids; do
   name=$(echo "$name" | sed -E 's/:playback_[A-Z]{2}//g' | tr '|' ' ')
   vol=$(wpctl get-volume "$id" 2>/dev/null | grep -Eo '[0-9]+\\.[0-9]+' | head -n1)
   [ -z "$vol" ] && vol=0.0
-  echo "$id|$name|$vol"
+  echo "$id|$name|$media|$desc|$vol"
 done`
         ]).then(out => {
             const lines = out.trim().split("\n").filter(Boolean)
@@ -84,16 +84,44 @@ done`
             const streams: StreamInfo[] = lines
                 .filter(l => l.includes("|"))
                 .map(l => {
-                    const [id, rawName, vol] = l.split("|")
-                    const lname = rawName.toLowerCase()
-                    if (lname.includes("playback_fl") || lname.includes("playback_fr")) return null
-                    if (lname.includes("player") && lname.includes("playback")) return null
+                    const parts = l.split("|")
+                    // legacy fallback (old 3-field format)
+                    let id = parts[0]
+                    let rawName = parts[1] || ""
+                    let mediaName = parts[2] || ""
+                    let descName = parts[3] || ""
+                    let volStr = parts[parts.length - 1] || "0"
+                    const lnameAll = (rawName + " " + mediaName + " " + descName).toLowerCase()
+
+                    if (lnameAll.includes("playback_fl") || lnameAll.includes("playback_fr")) return null
+                    if (lnameAll.includes("player") && lnameAll.includes("playback")) return null
+
+                    // Build a richer display name:
                     let name = rawName
-                    const MAX_LEN = 70
-                    if (name.length > MAX_LEN) name = name.slice(0, MAX_LEN - 1) + "…"
+
+                    // Prefer mediaName if rawName is too generic
+                    const generic = ["firefox", "chromium", "brave-browser", "google chrome", "brave", "vlc"]
+                    if (generic.includes(rawName.toLowerCase()) && mediaName && mediaName.length > 2) {
+                        name = mediaName
+                    }
+
+                    // If descName is longer and contains extra info, prefer it
+                    if (descName && descName.length > name.length && !descName.toLowerCase().includes("pipewire")) {
+                        name = descName
+                    }
+
+                    // Combine if distinct and short
+                    if (mediaName && mediaName !== name && mediaName.length > 6 && !name.toLowerCase().includes(mediaName.toLowerCase())) {
+                        // Avoid duplication if desc already included
+                        name = `${name} — ${mediaName}`
+                    }
+
+                    // Clean stray duplicate separators
+                    name = name.replace(/( — ){2,}/g, " — ").trim()
+
                     if (seen.has(id)) return null
                     seen.add(id)
-                    return { id, name, volume: parseFloat(vol) || 0 }
+                    return { id, name, volume: parseFloat(volStr) || 0 }
                 })
                 .filter((x): x is StreamInfo => !!x)
             streamsVar.set(streams)
