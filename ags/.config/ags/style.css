@@ -23,11 +23,14 @@ window.popup-window {
   margin-top: 60px;    /* Default gap from waybar */
   margin-right: 20px;  /* Default gap from right edge */
   background-color: rgba(61, 47, 42, 0.5);
-  border: 2px solid #ffb7ba;
+  /* Use inset box-shadow instead of animated border to reduce trailing artifacts */
+  border: 2px solid transparent;
+  box-shadow: inset 0 0 0 2px #ffb7ba;
   border-radius: 16px;
   padding: 20px;
   min-width: 350px;
 }
+
 
 /* Unique margins for each widget popup */
 .popup-content-calendar {
