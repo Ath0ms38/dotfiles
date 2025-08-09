@@ -416,6 +416,29 @@ circular-progress {
     background: rgba(255, 204, 92, 0.6);
     border-color: rgba(255, 204, 92, 0.8);
 }
+
+/* Audio widget additions */
+.action-button.active {
+    background: rgba(255, 204, 92, 0.6);
+    border-color: rgba(255, 204, 92, 0.8);
+}
+.app-volume-row {
+    padding: 4px 6px;
+    border-radius: 8px;
+}
+.app-volume-row:hover {
+    background: rgba(255, 183, 186, 0.15);
+}
+.app-volume-name {
+    font-size: 11px;
+}
+.app-stream-actions button {
+    min-width: 60px;
+}
+.dropdown-toggle {
+    min-width: 32px;
+    padding: 4px 6px;
+}
 .battery-status { color: #b39ddb; }
 .battery-time { color: #81ecec; font-size: 13px; }
 
