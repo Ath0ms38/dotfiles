@@ -1,4 +1,4 @@
-.PHONY: all install uninstall waybar hyprland swaync zsh starship kitty fastfetch restart-waybar
+.PHONY: all install uninstall waybar hyprland swaync zsh starship kitty fastfetch ags setup-ags restart-waybar
 
 all: install
 
@@ -11,6 +11,7 @@ install:
 	stow --target=$(HOME) --restow starship
 	stow --target=$(HOME) --restow kitty
 	stow --target=$(HOME) --restow fastfetch
+	stow --target=$(HOME) --restow ags
 	chmod +x ~/.config/waybar/scripts/*
 	chmod +x ~/.config/fabric/*
 	@echo "Dotfiles installed successfully!"
@@ -24,6 +25,7 @@ uninstall:
 	stow --target=$(HOME) --delete starship
 	stow --target=$(HOME) --delete kitty
 	stow --target=$(HOME) --delete fastfetch
+	stow --target=$(HOME) --delete ags
 	@echo "Dotfiles uninstalled successfully!"
 
 waybar:
@@ -63,4 +65,6 @@ help:
 	@echo "  starship    - Install only starship config"
 	@echo "  kitty       - Install only kitty config"
 	@echo "  fastfetch   - Install only fastfetch config"
+	@echo "  ags         - Install only ags config"
+	@echo "  setup-ags   - Install AGS with all system dependencies"
 	@echo "  restart-waybar - Restart waybar"

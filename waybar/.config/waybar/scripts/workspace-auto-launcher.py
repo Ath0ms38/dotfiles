@@ -1,4 +1,4 @@
-#!/home/athoms/.config/waybar/waybar-env/bin/python
+#!/usr/bin/env python3
 """
 Workspace Auto-Launcher for Hyprland
 Checks if an app needs to be launched for the current workspace and launches it if needed.

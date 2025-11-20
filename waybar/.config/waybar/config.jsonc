@@ -94,7 +94,7 @@
 
         // Custom modules
     "custom/special-discord": {
-        "format": "󰙯 {}",
+        "format": "󰙯 {text}",
         "return-type": "json",
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status discord",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle discord",
@@ -102,7 +102,7 @@
     },
     
     "custom/special-vscode": {
-        "format": "󰨞 {}",
+        "format": "󰨞 {text}",
         "return-type": "json", 
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status vscode",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle vscode",
@@ -110,7 +110,7 @@
     },
     
     "custom/special-minecraft": {
-        "format": "󰍳 {}",
+        "format": "󰍳 {text}",
         "return-type": "json",
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status minecraft",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle minecraft",

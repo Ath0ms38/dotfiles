@@ -1,4 +1,4 @@
-#!/home/athoms/.config/waybar/waybar-env/bin/python
+#!/usr/bin/env python3
 import psutil
 import json
 
