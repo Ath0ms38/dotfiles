@@ -21,14 +21,14 @@ if ! python -c "import fabric" 2>/dev/null; then
 fi
 
 # Kill existing Fabric bar processes
-# Look for python processes running main.py in this directory
+# Look for python processes running fabric-bar.py in this directory
 SCRIPT_DIR="$(pwd)"
-pkill -f "python.*${SCRIPT_DIR}/main.py" 2>/dev/null || true
+pkill -f "python.*${SCRIPT_DIR}/fabric-bar.py" 2>/dev/null || true
 sleep 0.5
 
 # Launch the bar
 echo "Starting Fabric bar..."
-python main.py &
+python fabric-bar.py &
 
 echo "Fabric bar started! PID: $!"
-echo "To stop: pkill -f 'python.*main.py' or run: killall -9 python"
+echo "To stop: pkill -f 'fabric-bar' or run: ./stop.sh"
