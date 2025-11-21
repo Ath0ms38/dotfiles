@@ -170,7 +170,6 @@ button:hover {
 /* Discord button states */
 #special-workspaces > button#special-discord.active {
   background: var(--discord-purple);
-  box-shadow: 0 0 0 4px var(--discord-purple);
   font-weight: bold;
 }
 
@@ -178,40 +177,34 @@ button:hover {
   color: var(--white);
 }
 
-#special-workspaces > button#special-discord.active:hover {
-  background: var(--discord-purple);
-  box-shadow: 0 0 0 4px var(--discord-purple);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-discord.idle {
   background: var(--discord-purple);
-  box-shadow: 0 0 0 2px var(--discord-purple);
 }
 
 #special-workspaces > button#special-discord.idle label {
   color: var(--white);
 }
 
-#special-workspaces > button#special-discord.idle:hover {
-  background: var(--discord-purple);
-  box-shadow: 0 0 0 4px var(--discord-purple);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-discord.empty {
   background: var(--workspace-empty);
-  border: 2px solid transparent;
 }
 
 #special-workspaces > button#special-discord.empty label {
   color: var(--text-medium);
 }
 
+#special-workspaces > button#special-discord.empty:hover {
+  background: var(--discord-purple);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-discord.empty:hover label {
+  color: var(--white);
+}
+
 /* VS Code button states */
 #special-workspaces > button#special-vscode.active {
   background: var(--vscode-orange);
-  box-shadow: 0 0 0 4px var(--vscode-orange);
   font-weight: bold;
 }
 
@@ -219,40 +212,34 @@ button:hover {
   color: var(--white);
 }
 
-#special-workspaces > button#special-vscode.active:hover {
-  background: var(--vscode-orange);
-  box-shadow: 0 0 0 4px var(--vscode-orange);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-vscode.idle {
   background: var(--vscode-orange);
-  box-shadow: 0 0 0 2px var(--vscode-orange);
 }
 
 #special-workspaces > button#special-vscode.idle label {
   color: var(--white);
 }
 
-#special-workspaces > button#special-vscode.idle:hover {
-  background: var(--vscode-orange);
-  box-shadow: 0 0 0 4px var(--vscode-orange);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-vscode.empty {
   background: var(--workspace-empty);
-  border: 2px solid transparent;
 }
 
 #special-workspaces > button#special-vscode.empty label {
   color: var(--text-medium);
 }
 
+#special-workspaces > button#special-vscode.empty:hover {
+  background: var(--vscode-orange);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-vscode.empty:hover label {
+  color: var(--white);
+}
+
 /* Minecraft button states */
 #special-workspaces > button#special-minecraft.active {
   background: var(--minecraft-green);
-  box-shadow: 0 0 0 4px var(--minecraft-green);
   font-weight: bold;
 }
 
@@ -260,40 +247,34 @@ button:hover {
   color: var(--white);
 }
 
-#special-workspaces > button#special-minecraft.active:hover {
-  background: var(--minecraft-green);
-  box-shadow: 0 0 0 4px var(--minecraft-green);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-minecraft.idle {
   background: var(--minecraft-green);
-  box-shadow: 0 0 0 2px var(--minecraft-green);
 }
 
 #special-workspaces > button#special-minecraft.idle label {
   color: var(--white);
 }
 
-#special-workspaces > button#special-minecraft.idle:hover {
-  background: var(--minecraft-green);
-  box-shadow: 0 0 0 4px var(--minecraft-green);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-minecraft.empty {
   background: var(--workspace-empty);
-  border: 2px solid transparent;
 }
 
 #special-workspaces > button#special-minecraft.empty label {
   color: var(--text-medium);
 }
 
+#special-workspaces > button#special-minecraft.empty:hover {
+  background: var(--minecraft-green);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-minecraft.empty:hover label {
+  color: var(--white);
+}
+
 /* Steam button states */
 #special-workspaces > button#special-steam.active {
   background: var(--steam-blue);
-  box-shadow: 0 0 0 4px var(--steam-blue);
   font-weight: bold;
 }
 
@@ -301,34 +282,29 @@ button:hover {
   color: var(--white);
 }
 
-#special-workspaces > button#special-steam.active:hover {
-  background: var(--steam-blue);
-  box-shadow: 0 0 0 4px var(--steam-blue);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-steam.idle {
   background: var(--steam-blue);
-  box-shadow: 0 0 0 2px var(--steam-blue);
 }
 
 #special-workspaces > button#special-steam.idle label {
   color: var(--white);
 }
 
-#special-workspaces > button#special-steam.idle:hover {
-  background: var(--steam-blue);
-  box-shadow: 0 0 0 4px var(--steam-blue);
-  font-weight: bold;
-}
-
 #special-workspaces > button#special-steam.empty {
   background: var(--workspace-empty);
-  border: 2px solid transparent;
 }
 
 #special-workspaces > button#special-steam.empty label {
   color: var(--text-medium);
+}
+
+#special-workspaces > button#special-steam.empty:hover {
+  background: var(--steam-blue);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-steam.empty:hover label {
+  color: var(--white);
 }
 
 /* Active window */

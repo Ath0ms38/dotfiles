@@ -146,134 +146,110 @@ button:hover {
 /* Discord button states */
 #special-workspaces > button#special-discord.active {
   background: @discord-purple;
-  box-shadow: 0 0 0 4px @discord-purple;
   font-weight: bold;
 }
 #special-workspaces > button#special-discord.active label {
   color: @white;
 }
-#special-workspaces > button#special-discord.active:hover {
-  background: @discord-purple;
-  box-shadow: 0 0 0 4px @discord-purple;
-  font-weight: bold;
-}
 #special-workspaces > button#special-discord.idle {
   background: @discord-purple;
-  box-shadow: 0 0 0 2px @discord-purple;
 }
 #special-workspaces > button#special-discord.idle label {
   color: @white;
 }
-#special-workspaces > button#special-discord.idle:hover {
-  background: @discord-purple;
-  box-shadow: 0 0 0 4px @discord-purple;
-  font-weight: bold;
-}
 #special-workspaces > button#special-discord.empty {
   background: @workspace-empty;
-  border: 2px solid transparent;
 }
 #special-workspaces > button#special-discord.empty label {
   color: @text-medium;
 }
+#special-workspaces > button#special-discord.empty:hover {
+  background: @discord-purple;
+  font-weight: bold;
+}
+#special-workspaces > button#special-discord.empty:hover label {
+  color: @white;
+}
 /* VS Code button states */
 #special-workspaces > button#special-vscode.active {
   background: @vscode-orange;
-  box-shadow: 0 0 0 4px @vscode-orange;
   font-weight: bold;
 }
 #special-workspaces > button#special-vscode.active label {
   color: @white;
 }
-#special-workspaces > button#special-vscode.active:hover {
-  background: @vscode-orange;
-  box-shadow: 0 0 0 4px @vscode-orange;
-  font-weight: bold;
-}
 #special-workspaces > button#special-vscode.idle {
   background: @vscode-orange;
-  box-shadow: 0 0 0 2px @vscode-orange;
 }
 #special-workspaces > button#special-vscode.idle label {
   color: @white;
 }
-#special-workspaces > button#special-vscode.idle:hover {
-  background: @vscode-orange;
-  box-shadow: 0 0 0 4px @vscode-orange;
-  font-weight: bold;
-}
 #special-workspaces > button#special-vscode.empty {
   background: @workspace-empty;
-  border: 2px solid transparent;
 }
 #special-workspaces > button#special-vscode.empty label {
   color: @text-medium;
 }
+#special-workspaces > button#special-vscode.empty:hover {
+  background: @vscode-orange;
+  font-weight: bold;
+}
+#special-workspaces > button#special-vscode.empty:hover label {
+  color: @white;
+}
 /* Minecraft button states */
 #special-workspaces > button#special-minecraft.active {
   background: @minecraft-green;
-  box-shadow: 0 0 0 4px @minecraft-green;
   font-weight: bold;
 }
 #special-workspaces > button#special-minecraft.active label {
   color: @white;
 }
-#special-workspaces > button#special-minecraft.active:hover {
-  background: @minecraft-green;
-  box-shadow: 0 0 0 4px @minecraft-green;
-  font-weight: bold;
-}
 #special-workspaces > button#special-minecraft.idle {
   background: @minecraft-green;
-  box-shadow: 0 0 0 2px @minecraft-green;
 }
 #special-workspaces > button#special-minecraft.idle label {
   color: @white;
 }
-#special-workspaces > button#special-minecraft.idle:hover {
-  background: @minecraft-green;
-  box-shadow: 0 0 0 4px @minecraft-green;
-  font-weight: bold;
-}
 #special-workspaces > button#special-minecraft.empty {
   background: @workspace-empty;
-  border: 2px solid transparent;
 }
 #special-workspaces > button#special-minecraft.empty label {
   color: @text-medium;
 }
+#special-workspaces > button#special-minecraft.empty:hover {
+  background: @minecraft-green;
+  font-weight: bold;
+}
+#special-workspaces > button#special-minecraft.empty:hover label {
+  color: @white;
+}
 /* Steam button states */
 #special-workspaces > button#special-steam.active {
   background: @steam-blue;
-  box-shadow: 0 0 0 4px @steam-blue;
   font-weight: bold;
 }
 #special-workspaces > button#special-steam.active label {
   color: @white;
 }
-#special-workspaces > button#special-steam.active:hover {
-  background: @steam-blue;
-  box-shadow: 0 0 0 4px @steam-blue;
-  font-weight: bold;
-}
 #special-workspaces > button#special-steam.idle {
   background: @steam-blue;
-  box-shadow: 0 0 0 2px @steam-blue;
 }
 #special-workspaces > button#special-steam.idle label {
   color: @white;
 }
-#special-workspaces > button#special-steam.idle:hover {
-  background: @steam-blue;
-  box-shadow: 0 0 0 4px @steam-blue;
-  font-weight: bold;
-}
 #special-workspaces > button#special-steam.empty {
   background: @workspace-empty;
-  border: 2px solid transparent;
 }
 #special-workspaces > button#special-steam.empty label {
   color: @text-medium;
+}
+#special-workspaces > button#special-steam.empty:hover {
+  background: @steam-blue;
+  font-weight: bold;
+}
+#special-workspaces > button#special-steam.empty:hover label {
+  color: @white;
 }
 /* Active window */
 #active-window {
