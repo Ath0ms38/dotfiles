@@ -1,0 +1,340 @@
+@define-color bg-primary rgba(141, 110, 99, 0.8);
+  @define-color bg-secondary rgba(141, 110, 99, 0.7);
+  @define-color bg-popup rgba(60, 45, 41, 0.75);
+  @define-color bg-tooltip rgba(61, 45, 41, 0.95);
+  @define-color accent-pink rgba(255, 183, 186, 0.9);
+  @define-color accent-pink-border rgba(255, 183, 186, 0.5);
+  @define-color accent-pink-dim rgba(255, 183, 186, 0.3);
+  @define-color accent-light-pink rgba(255, 200, 203, 0.7);
+  @define-color accent-yellow rgba(255, 204, 92, 0.9);
+  @define-color accent-teal rgba(134, 181, 169, 0.7);
+  @define-color discord-purple rgba(179, 157, 219, 0.9);
+  @define-color vscode-orange rgba(255, 138, 101, 1.0);
+  @define-color minecraft-green rgba(102, 153, 204, 1.0);
+  @define-color steam-blue rgba(102, 153, 204, 1.0);
+  @define-color text-light rgba(245, 240, 232, 1.0);
+  @define-color text-medium rgba(243, 229, 171, 1.0);
+  @define-color text-dark rgba(61, 45, 41, 1.0);
+  @define-color text-very-dark rgba(42, 31, 29, 1.0);
+  @define-color button-bg rgba(141, 110, 99, 0.9);
+  @define-color button-text rgba(243, 229, 171, 1.0);
+  @define-color workspace-occupied rgba(179, 157, 219, 0.9);
+  @define-color workspace-empty rgba(141, 110, 99, 0.9);
+  @define-color urgent-red rgba(240, 71, 71, 0.8);
+  @define-color white rgba(255, 255, 255, 1.0);
+  @define-color transparent rgba(0, 0, 0, 0);
+/**
+ * Fabric Bar Stylesheet
+ * Matching Waybar Warm Anime Room Aesthetic
+ */
+/* Color Variables */
+/* Base styles */
+* {
+  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", "Font Awesome";
+  font-size: 13px;
+  font-weight: 600;
+  color: @text-light;
+}
+/* Main bar window - completely transparent like waybar */
+#main-bar {
+  background: transparent;
+}
+/* Bar content - also transparent, no background */
+#bar-content {
+  background: transparent;
+  padding: 0;
+  margin: 4px;
+}
+/* Sections */
+#left-section,
+#center-section,
+#right-section {
+  background: transparent;
+  margin: 0;
+}
+/* Common button styles - match waybar exactly */
+button {
+  background: @button-bg;
+  color: @button-text;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 6px 10px;
+  margin: 2px;
+  min-width: 20px;
+  min-height: 20px;
+}
+button:hover {
+  background: @accent-pink;
+  color: @text-dark;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 2px @accent-pink;
+}
+/* Workspace buttons */
+#workspaces {
+  background: transparent;
+  padding: 2px;
+  margin: 0 8px 0 0;
+}
+/* Default workspace button - occupied workspace (has windows, not active) */
+#workspaces > button {
+  background: @workspace-occupied;
+  color: @text-light;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 6px 10px;
+  margin: 2px;
+  min-width: 20px;
+  min-height: 20px;
+}
+/* Hover state for all workspace buttons */
+#workspaces > button:hover {
+  background: @accent-pink;
+  box-shadow: 0 0 0 2px @accent-pink;
+  font-weight: bold;
+}
+#workspaces > button:hover label {
+  color: @text-dark;
+}
+/* Active workspace - highest priority */
+#workspaces > button.active {
+  background: @accent-yellow;
+  font-weight: bold;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 3px @accent-yellow;
+}
+#workspaces > button.active label {
+  color: @text-very-dark;
+}
+/* Empty workspace - no windows */
+#workspaces > button.empty {
+  background: @workspace-empty;
+  border: 1px solid transparent;
+}
+#workspaces > button.empty label {
+  color: @text-medium;
+}
+/* Empty workspace on hover */
+#workspaces > button.empty:hover {
+  background: @accent-pink;
+  box-shadow: 0 0 0 2px @accent-pink;
+  font-weight: bold;
+}
+#workspaces > button.empty:hover label {
+  color: @text-dark;
+}
+#workspaces > button.urgent {
+  background: @urgent-red;
+  color: @white;
+}
+/* Special workspace buttons */
+#special-workspaces {
+  background: transparent;
+  padding: 2px;
+  margin: 0 8px;
+}
+#special-workspaces > button {
+  background: @button-bg;
+  color: @button-text;
+  font-size: 18px;
+  min-width: 40px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  margin: 2px;
+}
+#special-workspaces > button#special-discord.active {
+  background: @discord-purple;
+  color: @white;
+  box-shadow: 0 0 0 4px @discord-purple;
+  font-weight: bold;
+}
+#special-workspaces > button#special-discord.idle {
+  background: @accent-pink;
+  color: @text-dark;
+  box-shadow: 0 0 0 2px @accent-pink;
+}
+#special-workspaces > button#special-discord.idle:hover {
+  background: @accent-pink;
+  box-shadow: 0 0 0 3px @accent-pink;
+  opacity: 0.95;
+  font-weight: bold;
+}
+#special-workspaces > button#special-discord.empty {
+  background: @workspace-empty;
+  color: @text-medium;
+  border: 2px solid transparent;
+}
+#special-workspaces > button#special-discord.active:hover {
+  background: @discord-purple;
+  box-shadow: 0 0 0 3px @discord-purple;
+  opacity: 0.95;
+}
+#special-workspaces > button#special-vscode.active {
+  background: @vscode-orange;
+  color: @white;
+  box-shadow: 0 0 0 4px @vscode-orange;
+  font-weight: bold;
+}
+#special-workspaces > button#special-vscode.idle {
+  background: @accent-pink;
+  color: @text-dark;
+  box-shadow: 0 0 0 2px @accent-pink;
+}
+#special-workspaces > button#special-vscode.idle:hover {
+  background: @accent-pink;
+  box-shadow: 0 0 0 3px @accent-pink;
+  opacity: 0.95;
+  font-weight: bold;
+}
+#special-workspaces > button#special-vscode.empty {
+  background: @workspace-empty;
+  color: @text-medium;
+  border: 2px solid transparent;
+}
+#special-workspaces > button#special-vscode.active:hover {
+  background: @vscode-orange;
+  box-shadow: 0 0 0 3px @vscode-orange;
+  opacity: 0.95;
+}
+#special-workspaces > button#special-minecraft.active {
+  background: @accent-yellow;
+  color: @text-dark;
+  box-shadow: 0 0 0 4px @accent-yellow;
+  font-weight: bold;
+}
+#special-workspaces > button#special-minecraft.idle {
+  background: @accent-pink;
+  color: @text-dark;
+  box-shadow: 0 0 0 2px @accent-pink;
+}
+#special-workspaces > button#special-minecraft.idle:hover {
+  background: @accent-pink;
+  box-shadow: 0 0 0 3px @accent-pink;
+  opacity: 0.95;
+  font-weight: bold;
+}
+#special-workspaces > button#special-minecraft.empty {
+  background: @workspace-empty;
+  color: @text-medium;
+  border: 2px solid transparent;
+}
+#special-workspaces > button#special-minecraft.active:hover {
+  background: @accent-yellow;
+  box-shadow: 0 0 0 3px @accent-yellow;
+  opacity: 0.95;
+}
+#special-workspaces > button#special-steam.active {
+  background: @steam-blue;
+  color: @white;
+  box-shadow: 0 0 0 4px @steam-blue;
+  font-weight: bold;
+}
+#special-workspaces > button#special-steam.idle {
+  background: @accent-pink;
+  color: @text-dark;
+  box-shadow: 0 0 0 2px @accent-pink;
+}
+#special-workspaces > button#special-steam.idle:hover {
+  background: @accent-pink;
+  box-shadow: 0 0 0 3px @accent-pink;
+  opacity: 0.95;
+  font-weight: bold;
+}
+#special-workspaces > button#special-steam.empty {
+  background: @workspace-empty;
+  color: @text-medium;
+  border: 2px solid transparent;
+}
+#special-workspaces > button#special-steam.active:hover {
+  background: @steam-blue;
+  box-shadow: 0 0 0 3px @steam-blue;
+  opacity: 0.95;
+}
+/* Active window */
+#active-window {
+  background: @bg-secondary;
+  color: @text-light;
+  border-radius: 12px;
+  padding: 6px 16px;
+  margin: 4px;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-style: italic;
+  min-width: 100px;
+}
+/* Widget buttons on right side */
+#widget-buttons {
+  background: transparent;
+  margin: 0 4px;
+}
+#widget-buttons > button {
+  background: @button-bg;
+  color: @button-text;
+  font-size: 18px;
+  padding: 6px 12px;
+}
+#audio-button,
+#network-button,
+#battery-button,
+#tray-button,
+#utility-button,
+#power-button {
+  background: @button-bg;
+  color: @button-text;
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 2px;
+  font-size: 18px;
+}
+/* Clock */
+#clock {
+  background: @button-bg;
+  color: @button-text;
+  border-radius: 12px;
+  padding: 6px 16px;
+  margin: 2px 4px;
+  font-weight: 600;
+}
+/* Widget Popups */
+#audio-widget,
+#network-widget,
+#battery-widget,
+#power-menu-widget,
+#system-tray-widget,
+#utility-widget {
+  background: @bg-popup;
+  border: 2px solid @accent-pink-border;
+  border-radius: 12px;
+}
+/* Widget content areas */
+#audio-content,
+#network-content,
+#battery-content,
+#power-menu-content,
+#system-tray-content,
+#utility-content,
+#battery-container,
+#power-menu-container {
+  background: @bg-popup;
+  padding: 16px;
+  border-radius: 12px;
+}
+/* Widget titles */
+#audio-title,
+#network-title,
+#battery-title,
+#power-menu-title,
+#system-tray-title,
+#utility-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: @accent-yellow;
+  margin-bottom: 12px;
+}
+/* Tooltips */
+tooltip {
+  background: @bg-tooltip;
+  border: 1px solid @accent-pink-dim;
+  border-radius: 8px;
+  color: @text-light;
+  padding: 8px 12px;
+}

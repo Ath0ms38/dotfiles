@@ -1,0 +1,18 @@
+# Python virtual environment
+venv/
+*.pyc
+__pycache__/
+
+# User data
+notes.json
+reminders.json
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
