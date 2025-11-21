@@ -17,7 +17,7 @@
   --accent-teal: rgba(134, 181, 169, 0.7);
   --discord-purple: rgba(179, 157, 219, 0.9);
   --vscode-orange: rgba(255, 138, 101, 1.0);
-  --minecraft-green: rgba(102, 153, 204, 1.0);
+  --minecraft-green: rgba(76, 175, 80, 1.0);
   --steam-blue: rgba(102, 153, 204, 1.0);
   --text-light: rgba(245, 240, 232, 1.0);
   --text-medium: rgba(243, 229, 171, 1.0);
@@ -156,7 +156,6 @@ button:hover {
 
 #special-workspaces > button {
   background: var(--button-bg);
-  color: var(--button-text);
   font-size: 18px;
   min-width: 40px;
   padding: 6px 12px;
@@ -164,132 +163,172 @@ button:hover {
   margin: 2px;
 }
 
+#special-workspaces > button label {
+  color: var(--button-text);
+}
+
+/* Discord button states */
 #special-workspaces > button#special-discord.active {
   background: var(--discord-purple);
+  box-shadow: 0 0 0 4px var(--discord-purple);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-discord.active label {
   color: var(--white);
+}
+
+#special-workspaces > button#special-discord.active:hover {
+  background: var(--discord-purple);
   box-shadow: 0 0 0 4px var(--discord-purple);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-discord.idle {
-  background: var(--accent-pink);
-  color: var(--text-dark);
-  box-shadow: 0 0 0 2px var(--accent-pink);
+  background: var(--discord-purple);
+  box-shadow: 0 0 0 2px var(--discord-purple);
+}
+
+#special-workspaces > button#special-discord.idle label {
+  color: var(--white);
 }
 
 #special-workspaces > button#special-discord.idle:hover {
-  background: var(--accent-pink);
-  box-shadow: 0 0 0 3px var(--accent-pink);
-  opacity: 0.95;
+  background: var(--discord-purple);
+  box-shadow: 0 0 0 4px var(--discord-purple);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-discord.empty {
   background: var(--workspace-empty);
-  color: var(--text-medium);
   border: 2px solid transparent;
 }
 
-#special-workspaces > button#special-discord.active:hover {
-  background: var(--discord-purple);
-  box-shadow: 0 0 0 3px var(--discord-purple);
-  opacity: 0.95;
+#special-workspaces > button#special-discord.empty label {
+  color: var(--text-medium);
 }
 
+/* VS Code button states */
 #special-workspaces > button#special-vscode.active {
   background: var(--vscode-orange);
+  box-shadow: 0 0 0 4px var(--vscode-orange);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-vscode.active label {
   color: var(--white);
+}
+
+#special-workspaces > button#special-vscode.active:hover {
+  background: var(--vscode-orange);
   box-shadow: 0 0 0 4px var(--vscode-orange);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-vscode.idle {
-  background: var(--accent-pink);
-  color: var(--text-dark);
-  box-shadow: 0 0 0 2px var(--accent-pink);
+  background: var(--vscode-orange);
+  box-shadow: 0 0 0 2px var(--vscode-orange);
+}
+
+#special-workspaces > button#special-vscode.idle label {
+  color: var(--white);
 }
 
 #special-workspaces > button#special-vscode.idle:hover {
-  background: var(--accent-pink);
-  box-shadow: 0 0 0 3px var(--accent-pink);
-  opacity: 0.95;
+  background: var(--vscode-orange);
+  box-shadow: 0 0 0 4px var(--vscode-orange);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-vscode.empty {
   background: var(--workspace-empty);
-  color: var(--text-medium);
   border: 2px solid transparent;
 }
 
-#special-workspaces > button#special-vscode.active:hover {
-  background: var(--vscode-orange);
-  box-shadow: 0 0 0 3px var(--vscode-orange);
-  opacity: 0.95;
+#special-workspaces > button#special-vscode.empty label {
+  color: var(--text-medium);
 }
 
+/* Minecraft button states */
 #special-workspaces > button#special-minecraft.active {
-  background: var(--accent-yellow);
-  color: var(--text-dark);
-  box-shadow: 0 0 0 4px var(--accent-yellow);
+  background: var(--minecraft-green);
+  box-shadow: 0 0 0 4px var(--minecraft-green);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-minecraft.active label {
+  color: var(--white);
+}
+
+#special-workspaces > button#special-minecraft.active:hover {
+  background: var(--minecraft-green);
+  box-shadow: 0 0 0 4px var(--minecraft-green);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-minecraft.idle {
-  background: var(--accent-pink);
-  color: var(--text-dark);
-  box-shadow: 0 0 0 2px var(--accent-pink);
+  background: var(--minecraft-green);
+  box-shadow: 0 0 0 2px var(--minecraft-green);
+}
+
+#special-workspaces > button#special-minecraft.idle label {
+  color: var(--white);
 }
 
 #special-workspaces > button#special-minecraft.idle:hover {
-  background: var(--accent-pink);
-  box-shadow: 0 0 0 3px var(--accent-pink);
-  opacity: 0.95;
+  background: var(--minecraft-green);
+  box-shadow: 0 0 0 4px var(--minecraft-green);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-minecraft.empty {
   background: var(--workspace-empty);
-  color: var(--text-medium);
   border: 2px solid transparent;
 }
 
-#special-workspaces > button#special-minecraft.active:hover {
-  background: var(--accent-yellow);
-  box-shadow: 0 0 0 3px var(--accent-yellow);
-  opacity: 0.95;
+#special-workspaces > button#special-minecraft.empty label {
+  color: var(--text-medium);
 }
 
+/* Steam button states */
 #special-workspaces > button#special-steam.active {
   background: var(--steam-blue);
+  box-shadow: 0 0 0 4px var(--steam-blue);
+  font-weight: bold;
+}
+
+#special-workspaces > button#special-steam.active label {
   color: var(--white);
+}
+
+#special-workspaces > button#special-steam.active:hover {
+  background: var(--steam-blue);
   box-shadow: 0 0 0 4px var(--steam-blue);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-steam.idle {
-  background: var(--accent-pink);
-  color: var(--text-dark);
-  box-shadow: 0 0 0 2px var(--accent-pink);
+  background: var(--steam-blue);
+  box-shadow: 0 0 0 2px var(--steam-blue);
+}
+
+#special-workspaces > button#special-steam.idle label {
+  color: var(--white);
 }
 
 #special-workspaces > button#special-steam.idle:hover {
-  background: var(--accent-pink);
-  box-shadow: 0 0 0 3px var(--accent-pink);
-  opacity: 0.95;
+  background: var(--steam-blue);
+  box-shadow: 0 0 0 4px var(--steam-blue);
   font-weight: bold;
 }
 
 #special-workspaces > button#special-steam.empty {
   background: var(--workspace-empty);
-  color: var(--text-medium);
   border: 2px solid transparent;
 }
 
-#special-workspaces > button#special-steam.active:hover {
-  background: var(--steam-blue);
-  box-shadow: 0 0 0 3px var(--steam-blue);
-  opacity: 0.95;
+#special-workspaces > button#special-steam.empty label {
+  color: var(--text-medium);
 }
 
 /* Active window */

@@ -83,9 +83,20 @@ class WorkspaceManagerService(Service):
         """Get list of all windows"""
         try:
             result = Hyprland.send_command("clients")
-            if result.is_ok:
-                return json.loads(result.reply)
-        except Exception:
+            print(f"[DEBUG] get_windows result.is_ok: {result.is_ok if result else 'None'}")
+            if result and result.is_ok:
+                windows = json.loads(result.reply)
+                print(f"[DEBUG] get_windows parsed {len(windows)} windows")
+                return windows
+            else:
+                print(f"[DEBUG] get_windows failed, trying subprocess")
+                # Fallback to subprocess
+                output = subprocess.check_output(["hyprctl", "clients", "-j"], text=True)
+                windows = json.loads(output)
+                print(f"[DEBUG] get_windows subprocess got {len(windows)} windows")
+                return windows
+        except Exception as e:
+            print(f"[DEBUG] get_windows error: {e}")
             pass
         return []
 
@@ -143,13 +154,18 @@ class WorkspaceManagerService(Service):
 
         if self.is_app_running_in_workspace(app_name):
             if active_workspace == app.workspace_id:
-                return "active"  # App running in workspace and user is on that workspace
-            return "idle"  # App running in workspace but user is on different workspace
+                status = "active"
+            else:
+                status = "idle"
+            print(f"[DEBUG] {app_name} status: {status} (in workspace {app.workspace_id}, active: {active_workspace})")
+            return status
 
         if self.is_app_running_elsewhere(app_name):
-            return "idle"  # App running outside designated workspace (will be moved on click)
+            print(f"[DEBUG] {app_name} status: idle (running elsewhere)")
+            return "idle"
 
-        return "empty"  # App not running
+        print(f"[DEBUG] {app_name} status: empty")
+        return "empty"
 
     def toggle_app(self, app_name: str):
         """
@@ -160,19 +176,32 @@ class WorkspaceManagerService(Service):
 
         app = self.apps[app_name]
 
+        # Debug: Log current windows
+        windows = self.get_windows()
+        print(f"\n[DEBUG] Toggle {app_name} ({app.window_class})")
+        print(f"[DEBUG] Total windows: {len(windows)}")
+        for w in windows:
+            print(f"[DEBUG]   - class: {w.get('class')}, workspace: {w.get('workspace', {}).get('id')}")
+
         # Check if app is running anywhere
-        if self.is_app_running(app_name):
+        is_running = self.is_app_running(app_name)
+        print(f"[DEBUG] is_app_running: {is_running}")
+
+        if is_running:
             # App is running - move it to designated workspace if not already there
             if not self.is_app_running_in_workspace(app_name):
-                windows = self.get_windows()
+                print(f"[DEBUG] Moving {app_name} to workspace {app.workspace_id}")
                 for window in windows:
                     if window.get("class") == app.window_class:
                         address = window.get("address", "")
                         if address:
                             # Move window to designated workspace
                             Hyprland.send_command(f"dispatch movetoworkspacesilent {app.workspace_id},address:{address}")
+            else:
+                print(f"[DEBUG] {app_name} already in workspace {app.workspace_id}")
         else:
             # App is not running - launch it in designated workspace
+            print(f"[DEBUG] Launching {app_name} in workspace {app.workspace_id}")
             subprocess.Popen(
                 ["hyprctl", "dispatch", "exec", f"[workspace {app.workspace_id}] {app.command}"],
                 stdout=subprocess.DEVNULL,

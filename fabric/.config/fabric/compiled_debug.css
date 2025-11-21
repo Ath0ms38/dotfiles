@@ -10,7 +10,7 @@
   @define-color accent-teal rgba(134, 181, 169, 0.7);
   @define-color discord-purple rgba(179, 157, 219, 0.9);
   @define-color vscode-orange rgba(255, 138, 101, 1.0);
-  @define-color minecraft-green rgba(102, 153, 204, 1.0);
+  @define-color minecraft-green rgba(76, 175, 80, 1.0);
   @define-color steam-blue rgba(102, 153, 204, 1.0);
   @define-color text-light rgba(245, 240, 232, 1.0);
   @define-color text-medium rgba(243, 229, 171, 1.0);
@@ -134,120 +134,146 @@ button:hover {
 }
 #special-workspaces > button {
   background: @button-bg;
-  color: @button-text;
   font-size: 18px;
   min-width: 40px;
   padding: 6px 12px;
   border-radius: 12px;
   margin: 2px;
 }
+#special-workspaces > button label {
+  color: @button-text;
+}
+/* Discord button states */
 #special-workspaces > button#special-discord.active {
   background: @discord-purple;
+  box-shadow: 0 0 0 4px @discord-purple;
+  font-weight: bold;
+}
+#special-workspaces > button#special-discord.active label {
   color: @white;
+}
+#special-workspaces > button#special-discord.active:hover {
+  background: @discord-purple;
   box-shadow: 0 0 0 4px @discord-purple;
   font-weight: bold;
 }
 #special-workspaces > button#special-discord.idle {
-  background: @accent-pink;
-  color: @text-dark;
-  box-shadow: 0 0 0 2px @accent-pink;
+  background: @discord-purple;
+  box-shadow: 0 0 0 2px @discord-purple;
+}
+#special-workspaces > button#special-discord.idle label {
+  color: @white;
 }
 #special-workspaces > button#special-discord.idle:hover {
-  background: @accent-pink;
-  box-shadow: 0 0 0 3px @accent-pink;
-  opacity: 0.95;
+  background: @discord-purple;
+  box-shadow: 0 0 0 4px @discord-purple;
   font-weight: bold;
 }
 #special-workspaces > button#special-discord.empty {
   background: @workspace-empty;
-  color: @text-medium;
   border: 2px solid transparent;
 }
-#special-workspaces > button#special-discord.active:hover {
-  background: @discord-purple;
-  box-shadow: 0 0 0 3px @discord-purple;
-  opacity: 0.95;
+#special-workspaces > button#special-discord.empty label {
+  color: @text-medium;
 }
+/* VS Code button states */
 #special-workspaces > button#special-vscode.active {
   background: @vscode-orange;
+  box-shadow: 0 0 0 4px @vscode-orange;
+  font-weight: bold;
+}
+#special-workspaces > button#special-vscode.active label {
   color: @white;
+}
+#special-workspaces > button#special-vscode.active:hover {
+  background: @vscode-orange;
   box-shadow: 0 0 0 4px @vscode-orange;
   font-weight: bold;
 }
 #special-workspaces > button#special-vscode.idle {
-  background: @accent-pink;
-  color: @text-dark;
-  box-shadow: 0 0 0 2px @accent-pink;
+  background: @vscode-orange;
+  box-shadow: 0 0 0 2px @vscode-orange;
+}
+#special-workspaces > button#special-vscode.idle label {
+  color: @white;
 }
 #special-workspaces > button#special-vscode.idle:hover {
-  background: @accent-pink;
-  box-shadow: 0 0 0 3px @accent-pink;
-  opacity: 0.95;
+  background: @vscode-orange;
+  box-shadow: 0 0 0 4px @vscode-orange;
   font-weight: bold;
 }
 #special-workspaces > button#special-vscode.empty {
   background: @workspace-empty;
-  color: @text-medium;
   border: 2px solid transparent;
 }
-#special-workspaces > button#special-vscode.active:hover {
-  background: @vscode-orange;
-  box-shadow: 0 0 0 3px @vscode-orange;
-  opacity: 0.95;
+#special-workspaces > button#special-vscode.empty label {
+  color: @text-medium;
 }
+/* Minecraft button states */
 #special-workspaces > button#special-minecraft.active {
-  background: @accent-yellow;
-  color: @text-dark;
-  box-shadow: 0 0 0 4px @accent-yellow;
+  background: @minecraft-green;
+  box-shadow: 0 0 0 4px @minecraft-green;
+  font-weight: bold;
+}
+#special-workspaces > button#special-minecraft.active label {
+  color: @white;
+}
+#special-workspaces > button#special-minecraft.active:hover {
+  background: @minecraft-green;
+  box-shadow: 0 0 0 4px @minecraft-green;
   font-weight: bold;
 }
 #special-workspaces > button#special-minecraft.idle {
-  background: @accent-pink;
-  color: @text-dark;
-  box-shadow: 0 0 0 2px @accent-pink;
+  background: @minecraft-green;
+  box-shadow: 0 0 0 2px @minecraft-green;
+}
+#special-workspaces > button#special-minecraft.idle label {
+  color: @white;
 }
 #special-workspaces > button#special-minecraft.idle:hover {
-  background: @accent-pink;
-  box-shadow: 0 0 0 3px @accent-pink;
-  opacity: 0.95;
+  background: @minecraft-green;
+  box-shadow: 0 0 0 4px @minecraft-green;
   font-weight: bold;
 }
 #special-workspaces > button#special-minecraft.empty {
   background: @workspace-empty;
-  color: @text-medium;
   border: 2px solid transparent;
 }
-#special-workspaces > button#special-minecraft.active:hover {
-  background: @accent-yellow;
-  box-shadow: 0 0 0 3px @accent-yellow;
-  opacity: 0.95;
+#special-workspaces > button#special-minecraft.empty label {
+  color: @text-medium;
 }
+/* Steam button states */
 #special-workspaces > button#special-steam.active {
   background: @steam-blue;
+  box-shadow: 0 0 0 4px @steam-blue;
+  font-weight: bold;
+}
+#special-workspaces > button#special-steam.active label {
   color: @white;
+}
+#special-workspaces > button#special-steam.active:hover {
+  background: @steam-blue;
   box-shadow: 0 0 0 4px @steam-blue;
   font-weight: bold;
 }
 #special-workspaces > button#special-steam.idle {
-  background: @accent-pink;
-  color: @text-dark;
-  box-shadow: 0 0 0 2px @accent-pink;
+  background: @steam-blue;
+  box-shadow: 0 0 0 2px @steam-blue;
+}
+#special-workspaces > button#special-steam.idle label {
+  color: @white;
 }
 #special-workspaces > button#special-steam.idle:hover {
-  background: @accent-pink;
-  box-shadow: 0 0 0 3px @accent-pink;
-  opacity: 0.95;
+  background: @steam-blue;
+  box-shadow: 0 0 0 4px @steam-blue;
   font-weight: bold;
 }
 #special-workspaces > button#special-steam.empty {
   background: @workspace-empty;
-  color: @text-medium;
   border: 2px solid transparent;
 }
-#special-workspaces > button#special-steam.active:hover {
-  background: @steam-blue;
-  box-shadow: 0 0 0 3px @steam-blue;
-  opacity: 0.95;
+#special-workspaces > button#special-steam.empty label {
+  color: @text-medium;
 }
 /* Active window */
 #active-window {
