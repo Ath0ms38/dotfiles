@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "Stopping Fabric bar..."
 
 # Method 1: Kill by exact path match
-pkill -f "python.*${SCRIPT_DIR}/fabric-bar.py" 2>/dev/null && echo "Killed process matching: python.*${SCRIPT_DIR}/fabric-bar.py"
+pkill -f "fabric-bar.py" 2>/dev/null && echo "Killed process matching: fabric-bar.py"
 
 # Method 2: Kill any python process in this directory running fabric-bar.py
 pgrep -f "${SCRIPT_DIR}/fabric-bar.py" | xargs -r kill 2>/dev/null && echo "Killed remaining processes"

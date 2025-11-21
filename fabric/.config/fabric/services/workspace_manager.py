@@ -75,20 +75,18 @@ class WorkspaceManagerService(Service):
             if result and result.is_ok:
                 data = json.loads(result.reply)
                 workspace_id = data.get("id", 1)
-                print(f"[DEBUG get_active_workspace_id] Got workspace ID via Hyprland: {workspace_id}")
                 return workspace_id
-        except Exception as e:
-            print(f"[DEBUG get_active_workspace_id] Hyprland.send_command failed: {e}")
+        except Exception:
+            pass
 
         # Fallback to direct hyprctl call
         try:
             output = subprocess.check_output(["hyprctl", "activeworkspace", "-j"], text=True)
             data = json.loads(output)
             workspace_id = data.get("id", 1)
-            print(f"[DEBUG get_active_workspace_id] Got workspace ID via subprocess: {workspace_id}")
             return workspace_id
-        except Exception as e:
-            print(f"[DEBUG get_active_workspace_id] Subprocess failed: {e}")
+        except Exception:
+            pass
 
         return 1
 
@@ -158,8 +156,6 @@ class WorkspaceManagerService(Service):
         app = self.apps[app_name]
         active_workspace = self.get_active_workspace_id()
         app_in_workspace = self.is_app_running_in_workspace(app_name)
-
-        print(f"[DEBUG get_app_status] {app_name}: active_ws={active_workspace}, app_ws={app.workspace_id}, in_workspace={app_in_workspace}")
 
         if app_in_workspace:
             if active_workspace == app.workspace_id:
