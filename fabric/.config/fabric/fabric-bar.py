@@ -199,37 +199,37 @@ class MainBar(WaylandWindow):
             spacing=4,
             children=[
                 Button(
-                    label="🔊",
+                    label="󰕾",  # Nerd Font: volume icon
                     name="audio-button",
                     tooltip_text="Audio Control",
                     on_clicked=lambda *_: get_audio_widget().toggle()
                 ),
                 Button(
-                    label="📡",
+                    label="󰖩",  # Nerd Font: wifi icon
                     name="network-button",
                     tooltip_text="Network & Bluetooth",
                     on_clicked=lambda *_: get_network_widget().toggle()
                 ),
                 Button(
-                    label="🔋",
+                    label="󰁹",  # Nerd Font: battery icon
                     name="battery-button",
                     tooltip_text="Battery & Power",
                     on_clicked=lambda *_: get_battery_widget().toggle()
                 ),
                 Button(
-                    label="📋",
+                    label="󰀻",  # Nerd Font: tray/grid icon
                     name="tray-button",
                     tooltip_text="System Tray",
                     on_clicked=lambda *_: get_system_tray_widget().toggle()
                 ),
                 Button(
-                    label="⚙️",
+                    label="󰒓",  # Nerd Font: settings/gear icon
                     name="utility-button",
                     tooltip_text="Utilities",
                     on_clicked=lambda *_: get_utility_widget().toggle()
                 ),
                 Button(
-                    label="⏻",
+                    label="󰐥",  # Nerd Font: power icon
                     name="power-button",
                     tooltip_text="Power Menu",
                     on_clicked=lambda *_: get_power_menu_widget().toggle()
