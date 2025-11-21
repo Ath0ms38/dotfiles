@@ -18,8 +18,9 @@
   @define-color text-very-dark rgba(42, 31, 29, 1.0);
   @define-color button-bg rgba(141, 110, 99, 0.9);
   @define-color button-text rgba(243, 229, 171, 1.0);
-  @define-color workspace-occupied rgba(179, 157, 219, 0.9);
+  @define-color workspace-occupied rgba(141, 110, 99, 0.8);
   @define-color workspace-empty rgba(141, 110, 99, 0.9);
+  @define-color idle-pink rgba(255, 183, 186, 0.6);
   @define-color urgent-red rgba(240, 71, 71, 0.8);
   @define-color white rgba(255, 255, 255, 1.0);
   @define-color transparent rgba(0, 0, 0, 0);
@@ -75,10 +76,9 @@ button:hover {
   padding: 2px;
   margin: 0 8px 0 0;
 }
-/* Default workspace button - occupied workspace (has windows, not active) */
+/* Default workspace button - empty workspace (no windows) */
 #workspaces > button {
-  background: @workspace-occupied;
-  color: @text-light;
+  background: @workspace-empty;
   border: 1px solid transparent;
   border-radius: 12px;
   padding: 6px 10px;
@@ -86,7 +86,10 @@ button:hover {
   min-width: 20px;
   min-height: 20px;
 }
-/* Hover state for all workspace buttons */
+#workspaces > button label {
+  color: @text-medium;
+}
+/* Hover state for workspace buttons */
 #workspaces > button:hover {
   background: @accent-pink;
   box-shadow: 0 0 0 2px @accent-pink;
@@ -95,7 +98,7 @@ button:hover {
 #workspaces > button:hover label {
   color: @text-dark;
 }
-/* Active workspace - highest priority */
+/* Active workspace - highest priority (currently viewing this workspace) */
 #workspaces > button.active {
   background: @accent-yellow;
   font-weight: bold;
@@ -105,21 +108,11 @@ button:hover {
 #workspaces > button.active label {
   color: @text-very-dark;
 }
-/* Empty workspace - no windows */
-#workspaces > button.empty {
-  background: @workspace-empty;
-  border: 1px solid transparent;
+/* Occupied workspace - has windows but not active (idle) */
+#workspaces > button:not(.empty):not(.active) {
+  background: @idle-pink;
 }
-#workspaces > button.empty label {
-  color: @text-medium;
-}
-/* Empty workspace on hover */
-#workspaces > button.empty:hover {
-  background: @accent-pink;
-  box-shadow: 0 0 0 2px @accent-pink;
-  font-weight: bold;
-}
-#workspaces > button.empty:hover label {
+#workspaces > button:not(.empty):not(.active) label {
   color: @text-dark;
 }
 #workspaces > button.urgent {
@@ -146,15 +139,25 @@ button:hover {
 /* Discord button states */
 #special-workspaces > button#special-discord.active {
   background: @discord-purple;
+  border: 1px solid transparent;
   font-weight: bold;
+  box-shadow: 0 0 0 3px @discord-purple;
 }
 #special-workspaces > button#special-discord.active label {
   color: @white;
 }
 #special-workspaces > button#special-discord.idle {
-  background: @discord-purple;
+  background: @idle-pink;
 }
 #special-workspaces > button#special-discord.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-discord.idle:hover {
+  background: @discord-purple;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @discord-purple;
+}
+#special-workspaces > button#special-discord.idle:hover label {
   color: @white;
 }
 #special-workspaces > button#special-discord.empty {
@@ -166,6 +169,7 @@ button:hover {
 #special-workspaces > button#special-discord.empty:hover {
   background: @discord-purple;
   font-weight: bold;
+  box-shadow: 0 0 0 2px @discord-purple;
 }
 #special-workspaces > button#special-discord.empty:hover label {
   color: @white;
@@ -173,15 +177,25 @@ button:hover {
 /* VS Code button states */
 #special-workspaces > button#special-vscode.active {
   background: @vscode-orange;
+  border: 1px solid transparent;
   font-weight: bold;
+  box-shadow: 0 0 0 3px @vscode-orange;
 }
 #special-workspaces > button#special-vscode.active label {
   color: @white;
 }
 #special-workspaces > button#special-vscode.idle {
-  background: @vscode-orange;
+  background: @idle-pink;
 }
 #special-workspaces > button#special-vscode.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-vscode.idle:hover {
+  background: @vscode-orange;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @vscode-orange;
+}
+#special-workspaces > button#special-vscode.idle:hover label {
   color: @white;
 }
 #special-workspaces > button#special-vscode.empty {
@@ -193,6 +207,7 @@ button:hover {
 #special-workspaces > button#special-vscode.empty:hover {
   background: @vscode-orange;
   font-weight: bold;
+  box-shadow: 0 0 0 2px @vscode-orange;
 }
 #special-workspaces > button#special-vscode.empty:hover label {
   color: @white;
@@ -200,15 +215,25 @@ button:hover {
 /* Minecraft button states */
 #special-workspaces > button#special-minecraft.active {
   background: @minecraft-green;
+  border: 1px solid transparent;
   font-weight: bold;
+  box-shadow: 0 0 0 3px @minecraft-green;
 }
 #special-workspaces > button#special-minecraft.active label {
   color: @white;
 }
 #special-workspaces > button#special-minecraft.idle {
-  background: @minecraft-green;
+  background: @idle-pink;
 }
 #special-workspaces > button#special-minecraft.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-minecraft.idle:hover {
+  background: @minecraft-green;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @minecraft-green;
+}
+#special-workspaces > button#special-minecraft.idle:hover label {
   color: @white;
 }
 #special-workspaces > button#special-minecraft.empty {
@@ -220,6 +245,7 @@ button:hover {
 #special-workspaces > button#special-minecraft.empty:hover {
   background: @minecraft-green;
   font-weight: bold;
+  box-shadow: 0 0 0 2px @minecraft-green;
 }
 #special-workspaces > button#special-minecraft.empty:hover label {
   color: @white;
@@ -227,15 +253,25 @@ button:hover {
 /* Steam button states */
 #special-workspaces > button#special-steam.active {
   background: @steam-blue;
+  border: 1px solid transparent;
   font-weight: bold;
+  box-shadow: 0 0 0 3px @steam-blue;
 }
 #special-workspaces > button#special-steam.active label {
   color: @white;
 }
 #special-workspaces > button#special-steam.idle {
-  background: @steam-blue;
+  background: @idle-pink;
 }
 #special-workspaces > button#special-steam.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-steam.idle:hover {
+  background: @steam-blue;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @steam-blue;
+}
+#special-workspaces > button#special-steam.idle:hover label {
   color: @white;
 }
 #special-workspaces > button#special-steam.empty {
@@ -247,6 +283,7 @@ button:hover {
 #special-workspaces > button#special-steam.empty:hover {
   background: @steam-blue;
   font-weight: bold;
+  box-shadow: 0 0 0 2px @steam-blue;
 }
 #special-workspaces > button#special-steam.empty:hover label {
   color: @white;

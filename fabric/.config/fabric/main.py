@@ -49,6 +49,7 @@ class SpecialWorkspaceButton(Button):
     def update_status(self):
         """Update button appearance based on app status"""
         status = self.workspace_manager.get_app_status(self.app_name)
+        print(f"[DEBUG] {self.app_name} status: {status}")
 
         # Remove all state classes
         self.remove_style_class("active")
@@ -60,14 +61,17 @@ class SpecialWorkspaceButton(Button):
             # App running and user is on that workspace
             self.set_label(f"{self.app.icon} ●")
             self.add_style_class("active")
+            print(f"[DEBUG] Added 'active' class to {self.app_name}")
         elif status == "idle":
             # App running but user is on different workspace
             self.set_label(f"{self.app.icon} ●")
             self.add_style_class("idle")
+            print(f"[DEBUG] Added 'idle' class to {self.app_name}")
         else:  # empty
             # App not running
             self.set_label(f"{self.app.icon}")
             self.add_style_class("empty")
+            print(f"[DEBUG] Added 'empty' class to {self.app_name}")
 
     def on_clicked(self, *args):
         """Handle button click"""
