@@ -111,15 +111,22 @@ class BasePopup(WaylandWindow):
         # Refresh content before showing
         self.on_open()
 
+        # Ensure revealer starts collapsed for slide down animation
+        self.revealer.set_reveal_child(False)
+
         # Show window
         self.show_all()
 
-        # Start reveal animation
+        # Start reveal animation after a small delay to ensure window is mapped
         self.is_animating = True
-        GLib.idle_add(self._start_reveal_animation)
+        GLib.timeout_add(10, self._start_reveal_animation)
 
     def _start_reveal_animation(self):
         """Start the reveal animation (called from idle)"""
+        # Ensure slide down animation is set for opening
+        self.revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+        self.revealer.set_transition_duration(250)
+
         self.revealer.set_reveal_child(True)
 
         # Mark animation as complete after transition duration
@@ -139,6 +146,13 @@ class BasePopup(WaylandWindow):
         """Close popup with animation"""
         if self.is_animating:
             return
+
+        # Call on_close hook for cleanup before animation starts
+        self.on_close()
+
+        # Keep slide down for closing (it will slide up)
+        self.revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+        self.revealer.set_transition_duration(250)
 
         # Start hide animation
         self.is_animating = True
@@ -172,6 +186,13 @@ class BasePopup(WaylandWindow):
         """
         Called when popup is about to open
         Override this in subclasses to refresh content
+        """
+        pass
+
+    def on_close(self):
+        """
+        Called when popup is about to close (before animation)
+        Override this in subclasses to cleanup (stop timers, collapse content, etc.)
         """
         pass
 

@@ -664,6 +664,9 @@ class ApplicationAudioGroup(Box):
     def toggle_expand(self, *args):
         """Toggle expanded state"""
         self.is_expanded = not self.is_expanded
+
+        # Ensure animation is enabled (in case it was disabled during close)
+        self.revealer.set_transition_duration(200)
         self.revealer.set_reveal_child(self.is_expanded)
 
         # Update button label with expand indicator
@@ -807,7 +810,7 @@ class AudioWidget(BasePopup):
         super().__init__(
             name="audio-widget",
             anchor="top right",
-            margin="50px 20px 0px 0px",
+            margin="8px 20px 0px 0px",  # Closer to top (8px instead of 50px)
             width=500,
             **kwargs
         )
@@ -919,12 +922,21 @@ class AudioWidget(BasePopup):
         if not self.update_timeout_id:
             self.update_timeout_id = GLib.timeout_add(500, self.update_streams)
 
-    def close(self):
-        """Override close to stop updates"""
+    def on_close(self):
+        """Called before close animation - cleanup and freeze content"""
+        # Stop the update timer
         if self.update_timeout_id:
             GLib.source_remove(self.update_timeout_id)
             self.update_timeout_id = None
-        super().close()
+
+        # Instantly collapse all groups WITHOUT animation to freeze the state
+        # Set transition duration to 0 to prevent nested animations during close
+        for app_name, group in self.app_groups.items():
+            if group.is_expanded:
+                # Disable animation for this revealer
+                group.revealer.set_transition_duration(0)
+                group.revealer.set_reveal_child(False)
+                group.is_expanded = False
 
     def close_immediate(self):
         """Override close_immediate to stop updates"""
