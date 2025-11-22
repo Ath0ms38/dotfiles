@@ -77,11 +77,12 @@ class SpecialWorkspaceButton(Button):
 class MainBar(WaylandWindow):
     """Main status bar window"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, monitor=None, **kwargs):
         super().__init__(
             layer="top",
             anchor="left top right",
             exclusivity="auto",
+            monitor=monitor,
             name="main-bar",
             visible=True,
             **kwargs
@@ -247,11 +248,12 @@ if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     style_file = os.path.join(script_dir, "style.css")
 
-    # Create the main bar
-    bar = MainBar()
+    # Create a bar for each monitor
+    bar_monitor_0 = MainBar(monitor=0)
+    bar_monitor_1 = MainBar(monitor=1)
 
-    # Create the application
-    app = Application("fabric-bar", bar)
+    # Create the application with both bars
+    app = Application("fabric-bar", bar_monitor_0, bar_monitor_1)
 
     # Load and compile stylesheet if it exists
     if os.path.exists(style_file):
