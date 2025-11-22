@@ -413,6 +413,15 @@ button:hover {
   border-radius: 12px;
 }
 
+/* Blur effect for popup widgets (Kitty-style) */
+.popup-blur {
+  background: rgba(60, 45, 41, 0.85);
+  border: 2px solid var(--accent-pink-border);
+  border-radius: 12px;
+  /* Note: True blur requires compositor support */
+  /* On Hyprland, configure blur in hyprland.conf for layerrule */
+}
+
 /* Widget content areas */
 #audio-content,
 #network-content,
