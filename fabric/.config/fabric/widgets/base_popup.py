@@ -8,8 +8,7 @@ Provides common functionality for all popup widgets:
 """
 
 from fabric.widgets.wayland import WaylandWindow
-from fabric.widgets.revealer import Revealer
-from gi.repository import Gtk, GLib
+from gi.repository import GLib
 
 
 # Global widget manager to ensure only one popup is open at a time
@@ -67,23 +66,21 @@ class BasePopup(WaylandWindow):
         # Store width for sizing
         self.popup_width = width
 
+        # Store original margin for animation
+        self._original_margin = margin
+
+        # Track if we're open (simple flag, no complex state management)
+        self._is_open = False
+
         # Animation state
-        self.is_animating = False
-        self.animation_timeout_id = None
+        self._animation_progress = 0.0
+        self._animation_timeout_id = None
+        self._animation_slide_distance = 30  # Slide down 30px (more visible)
+        self._animation_duration_ms = 400  # 400ms duration (slower)
 
-        # Create revealer for animation
-        self.revealer = Revealer(
-            transition_type=Gtk.RevealerTransitionType.SLIDE_DOWN,
-            transition_duration=250,  # 250ms animation
-            reveal_child=False
-        )
-
-        # Build content (to be overridden by subclasses)
+        # Build content directly (no revealer wrapper)
         content = self.build_content()
-        self.revealer.add(content)
-
-        # Set revealer as child
-        self.add(self.revealer)
+        self.add(content)
 
         # Add blur style class
         self.add_style_class("popup-blur")
@@ -94,16 +91,18 @@ class BasePopup(WaylandWindow):
         return Label(label="Base Popup Widget")
 
     def toggle(self):
-        """Toggle popup visibility with animation"""
-        if self.get_visible():
+        """Toggle popup visibility"""
+        print(f"[TOGGLE] _is_open={self._is_open}")
+        if self._is_open:
             self.close()
         else:
             self.open()
 
     def open(self):
-        """Open popup with animation"""
-        if self.is_animating:
-            return
+        """Open popup"""
+        print(f"[OPEN] Called, _is_open={self._is_open}")
+        self._is_open = True
+        print(f"[OPEN] Setting _is_open=True")
 
         # Register with popup manager (closes other popups)
         popup_manager.register_popup(self)
@@ -111,76 +110,147 @@ class BasePopup(WaylandWindow):
         # Refresh content before showing
         self.on_open()
 
-        # Ensure revealer starts collapsed for slide down animation
-        self.revealer.set_reveal_child(False)
+        # Reset animation state
+        self._animation_progress = 0.0
+
+        # Parse original margin to get the target top margin
+        parts = self._original_margin.split()
+        if len(parts) == 4:
+            self._target_top_margin = int(parts[0].replace('px', ''))
+        else:
+            self._target_top_margin = 50
+
+        # Start above the target position
+        start_margin = self._target_top_margin - self._animation_slide_distance
+        print(f"[ANIMATION] Starting at {start_margin}px, target {self._target_top_margin}px")
+        self._update_animation_margin(start_margin)
 
         # Show window
         self.show_all()
 
-        # Start reveal animation after a small delay to ensure window is mapped
-        self.is_animating = True
-        GLib.timeout_add(10, self._start_reveal_animation)
+        # Start animation
+        GLib.idle_add(self._start_slide_animation)
 
-    def _start_reveal_animation(self):
-        """Start the reveal animation (called from idle)"""
-        # Ensure slide down animation is set for opening
-        self.revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-        self.revealer.set_transition_duration(250)
+    def _start_slide_animation(self):
+        """Start the slide-down animation"""
+        if self._animation_timeout_id:
+            GLib.source_remove(self._animation_timeout_id)
 
-        self.revealer.set_reveal_child(True)
-
-        # Mark animation as complete after transition duration
-        self.animation_timeout_id = GLib.timeout_add(
-            300,  # Slightly longer than transition for safety
-            self._on_animation_complete
-        )
+        self._animation_start_time = GLib.get_monotonic_time()
+        self._animation_timeout_id = GLib.timeout_add(16, self._animate_slide_frame)  # ~60 FPS
         return False
 
-    def _on_animation_complete(self):
-        """Called when animation completes"""
-        self.is_animating = False
-        self.animation_timeout_id = None
-        return False
+    def _animate_slide_frame(self):
+        """Animate one frame of the slide-down effect"""
+        if not self._is_open:
+            self._animation_timeout_id = None
+            return False
+
+        # Calculate progress (0.0 to 1.0)
+        elapsed_ms = (GLib.get_monotonic_time() - self._animation_start_time) / 1000
+        progress = min(1.0, elapsed_ms / self._animation_duration_ms)
+
+        # Apply easing (ease-out)
+        eased_progress = 1 - (1 - progress) ** 3
+
+        # Calculate current margin (interpolate from start to target)
+        start_margin = self._target_top_margin - self._animation_slide_distance
+        current_margin = start_margin + (self._animation_slide_distance * eased_progress)
+        self._update_animation_margin(int(current_margin))
+
+        # Debug every frame to see if loop is running
+        print(f"[ANIMATION] Frame - Progress: {progress:.3f}, Elapsed: {elapsed_ms:.1f}ms, Margin: {int(current_margin)}px")
+
+        # Continue or finish animation
+        if progress >= 1.0:
+            self._animation_timeout_id = None
+            print(f"[ANIMATION] Complete")
+            return False
+
+        return True  # Continue animation
+
+    def _update_animation_margin(self, margin_top):
+        """Update the window margin for animation"""
+        # Parse original margin to keep other values
+        parts = self._original_margin.split()
+        if len(parts) == 4:
+            new_margin = f"{margin_top}px {parts[1]} {parts[2]} {parts[3]}"
+        else:
+            new_margin = f"{margin_top}px 20px 0px 0px"
+
+        self.set_margin(new_margin)
 
     def close(self):
-        """Close popup with animation"""
-        if self.is_animating:
-            return
+        """Close popup with slide-up animation"""
+        print(f"[CLOSE] Called, _is_open={self._is_open}")
+        self._is_open = False
+        print(f"[CLOSE] Setting _is_open=False")
 
-        # Call on_close hook for cleanup before animation starts
+        # Stop opening animation if running
+        if self._animation_timeout_id:
+            GLib.source_remove(self._animation_timeout_id)
+            self._animation_timeout_id = None
+
+        # Call on_close hook for cleanup
         self.on_close()
 
-        # Keep slide down for closing (it will slide up)
-        self.revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
-        self.revealer.set_transition_duration(250)
+        # Start slide-up closing animation
+        GLib.idle_add(self._start_close_animation)
 
-        # Start hide animation
-        self.is_animating = True
-        self.revealer.set_reveal_child(False)
+    def _start_close_animation(self):
+        """Start the slide-up closing animation"""
+        # Parse original margin to get the current top margin
+        parts = self._original_margin.split()
+        if len(parts) == 4:
+            self._target_top_margin = int(parts[0].replace('px', ''))
+        else:
+            self._target_top_margin = 50
 
-        # Hide window after animation completes
-        self.animation_timeout_id = GLib.timeout_add(
-            300,  # Wait for animation
-            self._finish_close
-        )
-
-    def _finish_close(self):
-        """Finish closing after animation"""
-        self.hide()
-        self.is_animating = False
-        self.animation_timeout_id = None
-        popup_manager.unregister_popup(self)
+        self._animation_start_time = GLib.get_monotonic_time()
+        self._animation_timeout_id = GLib.timeout_add(16, self._animate_close_frame)  # ~60 FPS
         return False
+
+    def _animate_close_frame(self):
+        """Animate one frame of the slide-up closing effect"""
+        # Use shorter duration for closing (feels snappier)
+        close_duration_ms = self._animation_duration_ms * 0.6  # 60% of opening duration
+
+        # Calculate progress (0.0 to 1.0)
+        elapsed_ms = (GLib.get_monotonic_time() - self._animation_start_time) / 1000
+        progress = min(1.0, elapsed_ms / close_duration_ms)
+
+        # Apply same ease-out for natural feel
+        eased_progress = 1 - (1 - progress) ** 3
+
+        # Calculate current margin (interpolate from target to above)
+        current_margin = self._target_top_margin - (self._animation_slide_distance * eased_progress)
+        self._update_animation_margin(int(current_margin))
+
+        # Debug every frame
+        print(f"[CLOSE ANIM] Frame - Progress: {progress:.3f}, Elapsed: {elapsed_ms:.1f}ms, Margin: {int(current_margin)}px")
+
+        # Continue or finish animation
+        if progress >= 1.0:
+            self._animation_timeout_id = None
+            print(f"[CLOSE ANIM] Complete - hiding window")
+            # Actually hide the window now
+            self.hide()
+            popup_manager.unregister_popup(self)
+            return False
+
+        return True  # Continue animation
 
     def close_immediate(self):
         """Close immediately without animation (used when opening another popup)"""
-        if self.animation_timeout_id:
-            GLib.source_remove(self.animation_timeout_id)
-            self.animation_timeout_id = None
+        self._is_open = False
 
-        self.revealer.set_reveal_child(False)
+        # Stop animation if running
+        if self._animation_timeout_id:
+            GLib.source_remove(self._animation_timeout_id)
+            self._animation_timeout_id = None
+
         self.hide()
-        self.is_animating = False
+        popup_manager.unregister_popup(self)
 
     def on_open(self):
         """
@@ -202,14 +272,14 @@ class BasePopup(WaylandWindow):
         Override this in subclasses if content needs to be rebuilt
         """
         # Remove old content
-        old_child = self.revealer.get_child()
+        old_child = self.get_child()
         if old_child:
-            self.revealer.remove(old_child)
+            self.remove(old_child)
 
-        # Build new content
+        # Build new content and add directly
         content = self.build_content()
-        self.revealer.add(content)
+        self.add(content)
 
-        # Show new content if revealer is revealed
-        if self.revealer.get_reveal_child():
+        # Show new content if popup is open
+        if self._is_open:
             content.show_all()

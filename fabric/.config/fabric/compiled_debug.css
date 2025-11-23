@@ -352,6 +352,25 @@ button:hover {
   /* Note: True blur requires compositor support */
   /* On Hyprland, configure blur in hyprland.conf for layerrule */
 }
+/* Slide-down animation for popup widgets */
+/* Note: GTK CSS has limited transition support, only opacity works reliably */
+.popup-slide-down {
+  transition: opacity 250ms ease-out;
+}
+.popup-slide-down-start {
+  opacity: 0;
+}
+.popup-slide-down-end {
+  opacity: 1;
+}
+/* Smooth opacity transitions for popup content */
+.popup-content-fade {
+  transition: opacity 150ms ease-in-out;
+}
+/* Smooth opacity transition for entire popup window (used for closing) */
+.popup-window-fade {
+  transition: opacity 200ms ease-in-out;
+}
 /* Widget content areas */
 #audio-content,
 #network-content,
