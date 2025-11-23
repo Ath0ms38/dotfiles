@@ -125,11 +125,27 @@ class BasePopup(WaylandWindow):
         print(f"[ANIMATION] Starting at {start_margin}px, target {self._target_top_margin}px")
         self._update_animation_margin(start_margin)
 
-        # Show window
-        self.show_all()
+        # Show all content first to get proper sizing
+        content = self.get_child()
+        if content:
+            content.show_all()
 
-        # Start animation
+        # Hide children with opacity (they still take space)
+        self._children_to_reveal = self._hide_and_collect_children()
+        self._current_reveal_index = 0
+
+        # Set fixed width to prevent horizontal resizing
+        self.set_size_request(self.popup_width, -1)
+
+        # Show window itself (children are invisible but taking space)
+        self.show()
+
+        # Start animation and progressive content reveal simultaneously
         GLib.idle_add(self._start_slide_animation)
+
+        # Start revealing content during slide (with a small initial delay)
+        if self._children_to_reveal:
+            GLib.timeout_add(150, self._reveal_next_child_during_slide)
 
     def _start_slide_animation(self):
         """Start the slide-down animation"""
@@ -168,6 +184,63 @@ class BasePopup(WaylandWindow):
             return False
 
         return True  # Continue animation
+
+    def _hide_and_collect_children(self):
+        """Hide all children and return them as a list for progressive reveal"""
+        content = self.get_child()
+        if not content or not hasattr(content, 'get_children'):
+            return []
+
+        children = content.get_children()
+        for child in children:
+            # Keep them visible so they take up space, but make them invisible
+            child.set_opacity(0)
+
+        print(f"[CONTENT] Collected {len(children)} children for progressive reveal")
+        return list(children)
+
+    def _reveal_next_child_during_slide(self):
+        """Reveal next child during the slide animation"""
+        if not self._is_open or not self._children_to_reveal:
+            return False
+
+        if self._current_reveal_index >= len(self._children_to_reveal):
+            print(f"[CONTENT REVEAL] All {len(self._children_to_reveal)} elements revealed")
+            return False
+
+        # Fade in the next child (already taking up space, just invisible)
+        child = self._children_to_reveal[self._current_reveal_index]
+        print(f"[CONTENT REVEAL] Revealing element {self._current_reveal_index + 1}/{len(self._children_to_reveal)}")
+
+        # Animate opacity from 0 to 1 (child already has its size allocated)
+        self._animate_child_opacity(child, 0.0, 1.0, 200)
+
+        self._current_reveal_index += 1
+
+        # Schedule next child reveal with longer delay
+        if self._current_reveal_index < len(self._children_to_reveal):
+            GLib.timeout_add(150, self._reveal_next_child_during_slide)
+            return False
+
+        return False
+
+    def _animate_child_opacity(self, child, start_opacity, end_opacity, duration_ms):
+        """Animate a child's opacity"""
+        start_time = GLib.get_monotonic_time()
+
+        def animate_frame():
+            if not self._is_open:
+                return False
+
+            elapsed_ms = (GLib.get_monotonic_time() - start_time) / 1000
+            progress = min(1.0, elapsed_ms / duration_ms)
+
+            current_opacity = start_opacity + (end_opacity - start_opacity) * progress
+            child.set_opacity(current_opacity)
+
+            return progress < 1.0
+
+        GLib.timeout_add(16, animate_frame)
 
     def _update_animation_margin(self, margin_top):
         """Update the window margin for animation"""
