@@ -1,14 +1,17 @@
+/* Import Matugen-generated colors */
+@import url("colors.css");
+
 .control-center {
-  background-color: rgba(77, 62, 42, 0.95);
-  border: 2px solid #5084ae;
+  background-color: var(--matugen-surface);
+  border: 2px solid var(--matugen-primary);
   border-radius: 12px;
   padding: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .control-center .widget-title {
-  background-color: #5084ae;
-  color: white;
+  background-color: var(--matugen-primary);
+  color: var(--matugen-on-primary);
   border-radius: 8px;
   padding: 8px 16px;
   margin-bottom: 12px;
@@ -20,8 +23,8 @@
 }
 
 .control-center .widget-title > button {
-  background-color: #7bb4c8;
-  color: #4d3e2a;
+  background-color: var(--matugen-secondary);
+  color: var(--matugen-on-background);
   border: none;
   border-radius: 6px;
   padding: 4px 12px;
@@ -29,12 +32,12 @@
 }
 
 .control-center .widget-title > button:hover {
-  background-color: #d7a46a;
+  background-color: var(--matugen-tertiary);
 }
 
 .notification-row {
-  background-color: rgba(215, 164, 106, 0.15);
-  border: 1px solid #7bb4c8;
+  background-color: var(--matugen-surface-bright);
+  border: 1px solid var(--matugen-outline);
   border-radius: 8px;
   margin: 6px 0;
   padding: 12px;
@@ -42,34 +45,34 @@
 }
 
 .notification-row:hover {
-  background-color: rgba(215, 164, 106, 0.25);
-  border-color: #5084ae;
+  background-color: var(--matugen-surface);
+  border-color: var(--matugen-primary);
 }
 
 .notification-row .notification-content {
-  color: #7bb4c8;
+  color: var(--matugen-on-surface);
 }
 
 .notification-row .notification-content .summary {
-  color: #d7a46a;
+  color: var(--matugen-primary);
   font-weight: bold;
   font-size: 1.1em;
 }
 
 .notification-row .notification-content .body {
-  color: #7bb4c8;
+  color: var(--matugen-on-surface);
   margin-top: 4px;
 }
 
 .notification-row .notification-content .app-name {
-  color: #5084ae;
+  color: var(--matugen-secondary);
   font-size: 0.9em;
   font-style: italic;
 }
 
 .notification {
-  background-color: rgba(77, 62, 42, 0.95);
-  border: 2px solid #5084ae;
+  background-color: var(--matugen-surface);
+  border: 2px solid var(--matugen-primary);
   border-radius: 10px;
   padding: 12px;
   margin: 8px;
@@ -77,22 +80,22 @@
 }
 
 .notification .notification-content {
-  color: #7bb4c8;
+  color: var(--matugen-on-surface);
 }
 
 .notification .notification-content .summary {
-  color: #d7a46a;
+  color: var(--matugen-primary);
   font-weight: bold;
 }
 
 .notification .notification-content .body {
-  color: #7bb4c8;
+  color: var(--matugen-on-surface);
   margin-top: 4px;
 }
 
 .notification .notification-action {
-  background-color: #5084ae;
-  color: white;
+  background-color: var(--matugen-primary);
+  color: var(--matugen-on-primary);
   border: none;
   border-radius: 6px;
   padding: 6px 12px;
@@ -100,12 +103,12 @@
 }
 
 .notification .notification-action:hover {
-  background-color: #7bb4c8;
+  background-color: var(--matugen-secondary);
 }
 
 .notification .close-button {
-  background-color: #d7a46a;
-  color: #4d3e2a;
+  background-color: var(--matugen-tertiary);
+  color: var(--matugen-on-background);
   border: none;
   border-radius: 50%;
   width: 24px;
@@ -114,25 +117,25 @@
 }
 
 .notification .close-button:hover {
-  background-color: #ff6b6b;
+  background-color: var(--matugen-error);
   color: white;
 }
 
 .widget-dnd {
-  background-color: rgba(215, 164, 106, 0.2);
-  border: 1px solid #d7a46a;
+  background-color: var(--matugen-surface-bright);
+  border: 1px solid var(--matugen-outline);
   border-radius: 8px;
   padding: 8px 12px;
   margin: 8px 0;
 }
 
 .widget-dnd > switch {
-  background-color: #5084ae;
+  background-color: var(--matugen-outline);
   border-radius: 12px;
 }
 
 .widget-dnd > switch:checked {
-  background-color: #7bb4c8;
+  background-color: var(--matugen-primary);
 }
 
 .widget-dnd > switch slider {
@@ -141,6 +144,6 @@
 }
 
 .widget-dnd .widget-label {
-  color: #d7a46a;
+  color: var(--matugen-primary);
   font-weight: bold;
 }

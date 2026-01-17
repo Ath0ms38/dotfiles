@@ -4,6 +4,7 @@ A custom bar for Hyprland using the Fabric framework
 """
 
 import os
+from gi.repository import Gio, GLib
 from fabric import Application
 from fabric.utils import compile_css
 from fabric.widgets.box import Box
@@ -20,6 +21,7 @@ from widgets.battery import get_battery_widget
 from widgets.power_menu import get_power_menu_widget
 from widgets.system_tray import get_system_tray_widget
 from widgets.utility import get_utility_widget
+from widgets.wallpaper import get_wallpaper_widget
 
 
 class SpecialWorkspaceButton(Button):
@@ -200,6 +202,12 @@ class MainBar(WaylandWindow):
             spacing=4,
             children=[
                 Button(
+                    label="󰸉",  # Nerd Font: wallpaper/image icon
+                    name="wallpaper-button",
+                    tooltip_text="Wallpapers",
+                    on_clicked=lambda *_: get_wallpaper_widget().toggle()
+                ),
+                Button(
                     label="󰕾",  # Nerd Font: volume icon
                     name="audio-button",
                     tooltip_text="Audio Control",
@@ -255,8 +263,37 @@ if __name__ == "__main__":
     # Create the application with both bars
     #app = Application("fabric-bar", bar_monitor_0, bar_monitor_1)
     app = Application("fabric-bar", bar_monitor_0)
-    
-    # Load and compile stylesheet if it exists
+
+    # Define CSS reload function
+    def set_css():
+        """Reload CSS from style.css"""
+        if os.path.exists(style_file):
+            with open(style_file, 'r') as f:
+                css_content = f.read()
+            compiled_css = compile_css(css_content, base_path=os.path.dirname(style_file))
+            app.set_stylesheet_from_string(compiled_css)
+            print("CSS reloaded successfully")
+
+    # Expose set_css on app object
+    app.set_css = set_css
+
+    # Set up file watcher for colors.css to auto-reload on changes
+    colors_file = os.path.join(script_dir, "colors.css")
+    if os.path.exists(colors_file):
+        gfile = Gio.File.new_for_path(colors_file)
+        monitor = gfile.monitor_file(Gio.FileMonitorFlags.NONE, None)
+
+        def on_colors_changed(monitor, file, other_file, event_type):
+            if event_type == Gio.FileMonitorEvent.CHANGES_DONE_HINT:
+                print("colors.css changed, reloading CSS...")
+                GLib.idle_add(set_css)
+
+        monitor.connect("changed", on_colors_changed)
+        # Keep reference to prevent garbage collection
+        app._css_monitor = monitor
+        print(f"Watching {colors_file} for changes")
+
+    # Initial CSS load
     if os.path.exists(style_file):
         with open(style_file, 'r') as f:
             css_content = f.read()

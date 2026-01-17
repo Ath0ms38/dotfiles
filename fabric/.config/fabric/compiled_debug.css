@@ -1,34 +1,53 @@
-@define-color bg-primary rgba(141, 110, 99, 0.8);
-  @define-color bg-secondary rgba(141, 110, 99, 0.7);
-  @define-color bg-popup rgba(80, 65, 61, 0.50);  /* Lighter and more transparent for blur visibility */
-  @define-color bg-tooltip rgba(61, 45, 41, 0.95);
-  @define-color accent-pink rgba(255, 183, 186, 0.9);
-  @define-color accent-pink-border rgba(255, 183, 186, 0.5);
-  @define-color accent-pink-dim rgba(255, 183, 186, 0.3);
-  @define-color accent-light-pink rgba(255, 200, 203, 0.7);
-  @define-color accent-yellow rgba(255, 204, 92, 0.9);
-  @define-color accent-teal rgba(134, 181, 169, 0.7);
-  @define-color discord-purple rgba(179, 157, 219, 0.9);
-  @define-color vscode-orange rgba(255, 138, 101, 1.0);
-  @define-color minecraft-green rgba(76, 175, 80, 1.0);
-  @define-color steam-blue rgba(102, 153, 204, 1.0);
-  @define-color text-light rgba(245, 240, 232, 1.0);
-  @define-color text-medium rgba(243, 229, 171, 1.0);
-  @define-color text-dark rgba(61, 45, 41, 1.0);
-  @define-color text-very-dark rgba(42, 31, 29, 1.0);
-  @define-color button-bg rgba(141, 110, 99, 0.9);
-  @define-color button-text rgba(243, 229, 171, 1.0);
-  @define-color workspace-occupied rgba(141, 110, 99, 0.8);
-  @define-color workspace-empty rgba(141, 110, 99, 0.9);
-  @define-color idle-pink rgba(255, 183, 186, 0.6);
-  @define-color urgent-red rgba(240, 71, 71, 0.8);
-  @define-color white rgba(255, 255, 255, 1.0);
+/* Primary backgrounds */
+  @define-color bg-primary #251e17;
+  @define-color bg-secondary #302921;
+  @define-color bg-popup #211a13;
+  @define-color bg-tooltip #130d07;
+  /* Accent colors */
+  @define-color accent-pink #bbcd9e;
+  @define-color accent-pink-border rgba(187, 205, 158, 0.5);
+  @define-color accent-pink-dim rgba(187, 205, 158, 0.3);
+  @define-color accent-light-pink rgba(187, 205, 158, 0.7);
+  @define-color accent-yellow #f8bb71;
+  @define-color accent-teal #dfc2a2;
+  /* App-specific colors (keep distinct for recognition) */
+  @define-color discord-purple #bbcd9e;
+  @define-color vscode-orange #dfc2a2;
+  @define-color minecraft-green #b7d085;
+  @define-color steam-blue #cebdfe;
+  /* Text colors */
+  @define-color text-light #eee0d4;
+  @define-color text-medium #eee0d4;
+  @define-color text-dark #472a00;
+  @define-color text-very-dark #000000;
+  /* Button colors */
+  @define-color button-bg #302921;
+  @define-color button-text #eee0d4;
+  /* Workspace colors */
+  @define-color workspace-occupied #251e17;
+  @define-color workspace-empty #302921;
+  @define-color workspace-active #f8bb71;
+  @define-color idle-pink rgba(223, 194, 162, 0.6);
+  @define-color urgent-red #ffb4ab;
+  /* Utility colors */
+  @define-color white #82d3e0;
   @define-color transparent rgba(0, 0, 0, 0);
+  /* Semantic colors */
+  @define-color red #ffb595;
+  @define-color green #b7d085;
+  @define-color yellow #dec56e;
+  @define-color blue #cebdfe;
+  @define-color magenta #fcb0d5;
+  @define-color cyan #84d5c4;
 /**
  * Fabric Bar Stylesheet
- * Matching Waybar Warm Anime Room Aesthetic
+ * Dynamic theming via Matugen (wallpaper-based colors)
  */
-/* Color Variables */
+/* Import Matugen-generated colors */
+/**
+ * Matugen-generated colors for Fabric Bar
+ * Auto-generated from wallpaper - do not edit manually
+ */
 /* Base styles */
 * {
   font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", "Font Awesome";
@@ -117,7 +136,7 @@ button:hover {
 }
 #workspaces > button.urgent {
   background: @urgent-red;
-  color: @white;
+  color: @text-dark;
 }
 /* Special workspace buttons */
 #special-workspaces {
@@ -144,7 +163,7 @@ button:hover {
   box-shadow: 0 0 0 3px @discord-purple;
 }
 #special-workspaces > button#special-discord.active label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-discord.idle {
   background: @idle-pink;
@@ -158,7 +177,7 @@ button:hover {
   box-shadow: 0 0 0 3px @discord-purple;
 }
 #special-workspaces > button#special-discord.idle:hover label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-discord.empty {
   background: @workspace-empty;
@@ -172,7 +191,7 @@ button:hover {
   box-shadow: 0 0 0 2px @discord-purple;
 }
 #special-workspaces > button#special-discord.empty:hover label {
-  color: @white;
+  color: @text-dark;
 }
 /* VS Code button states */
 #special-workspaces > button#special-vscode.active {
@@ -182,7 +201,7 @@ button:hover {
   box-shadow: 0 0 0 3px @vscode-orange;
 }
 #special-workspaces > button#special-vscode.active label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-vscode.idle {
   background: @idle-pink;
@@ -196,7 +215,7 @@ button:hover {
   box-shadow: 0 0 0 3px @vscode-orange;
 }
 #special-workspaces > button#special-vscode.idle:hover label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-vscode.empty {
   background: @workspace-empty;
@@ -210,7 +229,7 @@ button:hover {
   box-shadow: 0 0 0 2px @vscode-orange;
 }
 #special-workspaces > button#special-vscode.empty:hover label {
-  color: @white;
+  color: @text-dark;
 }
 /* Minecraft button states */
 #special-workspaces > button#special-minecraft.active {
@@ -220,7 +239,7 @@ button:hover {
   box-shadow: 0 0 0 3px @minecraft-green;
 }
 #special-workspaces > button#special-minecraft.active label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-minecraft.idle {
   background: @idle-pink;
@@ -234,7 +253,7 @@ button:hover {
   box-shadow: 0 0 0 3px @minecraft-green;
 }
 #special-workspaces > button#special-minecraft.idle:hover label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-minecraft.empty {
   background: @workspace-empty;
@@ -248,7 +267,7 @@ button:hover {
   box-shadow: 0 0 0 2px @minecraft-green;
 }
 #special-workspaces > button#special-minecraft.empty:hover label {
-  color: @white;
+  color: @text-dark;
 }
 /* Steam button states */
 #special-workspaces > button#special-steam.active {
@@ -258,7 +277,7 @@ button:hover {
   box-shadow: 0 0 0 3px @steam-blue;
 }
 #special-workspaces > button#special-steam.active label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-steam.idle {
   background: @idle-pink;
@@ -272,7 +291,7 @@ button:hover {
   box-shadow: 0 0 0 3px @steam-blue;
 }
 #special-workspaces > button#special-steam.idle:hover label {
-  color: @white;
+  color: @text-dark;
 }
 #special-workspaces > button#special-steam.empty {
   background: @workspace-empty;
@@ -286,7 +305,7 @@ button:hover {
   box-shadow: 0 0 0 2px @steam-blue;
 }
 #special-workspaces > button#special-steam.empty:hover label {
-  color: @white;
+  color: @text-dark;
 }
 /* Active window */
 #active-window {
@@ -311,6 +330,7 @@ button:hover {
   font-size: 18px;
   padding: 6px 12px;
 }
+#wallpaper-button,
 #audio-button,
 #network-button,
 #battery-button,
@@ -339,7 +359,8 @@ button:hover {
 #battery-widget,
 #power-menu-widget,
 #system-tray-widget,
-#utility-widget {
+#utility-widget,
+#wallpaper-widget {
   background: @bg-popup;
   border: 2px solid @accent-pink-border;
   border-radius: 12px;
@@ -403,4 +424,61 @@ tooltip {
   border-radius: 8px;
   color: @text-light;
   padding: 8px 12px;
+}
+/* Wallpaper Widget Styles */
+#wallpaper-widget {
+  background: @bg-popup;
+  border: 2px solid @accent-pink-border;
+  border-radius: 12px;
+}
+#wallpaper-content {
+  padding: 16px;
+}
+#wallpaper-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: @accent-yellow;
+  margin-bottom: 8px;
+}
+#wallpaper-controls {
+  margin-bottom: 8px;
+}
+#scheme-dropdown {
+  background: @bg-secondary;
+  border: 1px solid @accent-pink-dim;
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: @text-light;
+  min-width: 120px;
+}
+#random-wallpaper-btn {
+  background: @accent-yellow;
+  color: @text-dark;
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+#random-wallpaper-btn:hover {
+  background: @accent-pink;
+}
+#wallpaper-scroll {
+  background: transparent;
+}
+#wallpaper-item {
+  background: @bg-secondary;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+#wallpaper-item:hover {
+  border-color: @accent-pink;
+}
+#wallpaper-item:selected {
+  border-color: @accent-yellow;
+  background: @accent-yellow;
+}
+flowboxchild {
+  padding: 4px;
+}
+flowboxchild:selected #wallpaper-item {
+  border-color: @accent-yellow;
 }

@@ -1,37 +1,10 @@
 /**
  * Fabric Bar Stylesheet
- * Matching Waybar Warm Anime Room Aesthetic
+ * Dynamic theming via Matugen (wallpaper-based colors)
  */
 
-/* Color Variables */
-:vars {
-  --bg-primary: rgba(141, 110, 99, 0.8);
-  --bg-secondary: rgba(141, 110, 99, 0.7);
-  --bg-popup: rgba(80, 65, 61, 0.50);  /* Lighter and more transparent for blur visibility */
-  --bg-tooltip: rgba(61, 45, 41, 0.95);
-  --accent-pink: rgba(255, 183, 186, 0.9);
-  --accent-pink-border: rgba(255, 183, 186, 0.5);
-  --accent-pink-dim: rgba(255, 183, 186, 0.3);
-  --accent-light-pink: rgba(255, 200, 203, 0.7);
-  --accent-yellow: rgba(255, 204, 92, 0.9);
-  --accent-teal: rgba(134, 181, 169, 0.7);
-  --discord-purple: rgba(179, 157, 219, 0.9);
-  --vscode-orange: rgba(255, 138, 101, 1.0);
-  --minecraft-green: rgba(76, 175, 80, 1.0);
-  --steam-blue: rgba(102, 153, 204, 1.0);
-  --text-light: rgba(245, 240, 232, 1.0);
-  --text-medium: rgba(243, 229, 171, 1.0);
-  --text-dark: rgba(61, 45, 41, 1.0);
-  --text-very-dark: rgba(42, 31, 29, 1.0);
-  --button-bg: rgba(141, 110, 99, 0.9);
-  --button-text: rgba(243, 229, 171, 1.0);
-  --workspace-occupied: rgba(141, 110, 99, 0.8);
-  --workspace-empty: rgba(141, 110, 99, 0.9);
-  --idle-pink: rgba(255, 183, 186, 0.6);
-  --urgent-red: rgba(240, 71, 71, 0.8);
-  --white: rgba(255, 255, 255, 1.0);
-  --transparent: rgba(0, 0, 0, 0);
-}
+/* Import Matugen-generated colors */
+@import url("colors.css");
 
 /* Base styles */
 * {
@@ -136,7 +109,7 @@ button:hover {
 
 #workspaces > button.urgent {
   background: var(--urgent-red);
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 /* Special workspace buttons */
@@ -168,7 +141,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-discord.active label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-discord.idle {
@@ -186,7 +159,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-discord.idle:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-discord.empty {
@@ -204,7 +177,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-discord.empty:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 /* VS Code button states */
@@ -216,7 +189,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-vscode.active label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-vscode.idle {
@@ -234,7 +207,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-vscode.idle:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-vscode.empty {
@@ -252,7 +225,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-vscode.empty:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 /* Minecraft button states */
@@ -264,7 +237,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-minecraft.active label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-minecraft.idle {
@@ -282,7 +255,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-minecraft.idle:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-minecraft.empty {
@@ -300,7 +273,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-minecraft.empty:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 /* Steam button states */
@@ -312,7 +285,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-steam.active label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-steam.idle {
@@ -330,7 +303,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-steam.idle:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 #special-workspaces > button#special-steam.empty {
@@ -348,7 +321,7 @@ button:hover {
 }
 
 #special-workspaces > button#special-steam.empty:hover label {
-  color: var(--white);
+  color: var(--text-dark);
 }
 
 /* Active window */
@@ -377,6 +350,7 @@ button:hover {
   padding: 6px 12px;
 }
 
+#wallpaper-button,
 #audio-button,
 #network-button,
 #battery-button,
@@ -407,7 +381,8 @@ button:hover {
 #battery-widget,
 #power-menu-widget,
 #system-tray-widget,
-#utility-widget {
+#utility-widget,
+#wallpaper-widget {
   background: var(--bg-popup);
   border: 2px solid var(--accent-pink-border);
   border-radius: 12px;
@@ -480,4 +455,74 @@ tooltip {
   border-radius: 8px;
   color: var(--text-light);
   padding: 8px 12px;
+}
+
+/* Wallpaper Widget Styles */
+#wallpaper-widget {
+  background: var(--bg-popup);
+  border: 2px solid var(--accent-pink-border);
+  border-radius: 12px;
+}
+
+#wallpaper-content {
+  padding: 16px;
+}
+
+#wallpaper-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent-yellow);
+  margin-bottom: 8px;
+}
+
+#wallpaper-controls {
+  margin-bottom: 8px;
+}
+
+#scheme-dropdown {
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: var(--text-light);
+  min-width: 120px;
+}
+
+#random-wallpaper-btn {
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+
+#random-wallpaper-btn:hover {
+  background: var(--accent-pink);
+}
+
+#wallpaper-scroll {
+  background: transparent;
+}
+
+#wallpaper-item {
+  background: var(--bg-secondary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+#wallpaper-item:hover {
+  border-color: var(--accent-pink);
+}
+
+#wallpaper-item:selected {
+  border-color: var(--accent-yellow);
+  background: var(--accent-yellow);
+}
+
+flowboxchild {
+  padding: 4px;
+}
+
+flowboxchild:selected #wallpaper-item {
+  border-color: var(--accent-yellow);
 }

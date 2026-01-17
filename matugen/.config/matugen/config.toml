@@ -1,0 +1,35 @@
+[config]
+reload_apps = true
+
+# Wallpaper is set via post_hook in hyprland template instead
+# hyprpaper requires preload + wallpaper commands in sequence
+
+[config.custom_colors]
+red = { color = "#FF0000", blend = true }
+green = { color = "#00FF00", blend = true }
+yellow = { color = "#FFFF00", blend = true }
+blue = { color = "#0000FF", blend = true }
+magenta = { color = "#FF00FF", blend = true }
+cyan = { color = "#00FFFF", blend = true }
+white = { color = "#FFFFFF", blend = true }
+
+[templates.fabric]
+input_path = "/home/athoms/.config/matugen/templates/fabric-colors.css"
+output_path = "/home/athoms/.config/fabric/colors.css"
+
+[templates.hyprland]
+input_path = "/home/athoms/.config/matugen/templates/hyprland-colors.conf"
+output_path = "/home/athoms/.config/hypr/conf/colors.conf"
+
+[templates.kitty]
+input_path = "/home/athoms/.config/matugen/templates/kitty-colors.conf"
+output_path = "/home/athoms/.config/kitty/colors.conf"
+
+[templates.swaync]
+input_path = "/home/athoms/.config/matugen/templates/swaync-colors.css"
+output_path = "/home/athoms/.config/swaync/colors.css"
+
+[templates.starship]
+input_path = "/home/athoms/.config/matugen/templates/starship.toml"
+output_path = "/home/athoms/.config/starship.toml"
+post_hook = "/home/athoms/.config/matugen/post-matugen.sh '{{image}}'"
