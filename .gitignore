@@ -16,3 +16,5 @@ ags/.config/ags/.tsbuildinfo
 *.swo
 *.bak
 *.tmp
+
+ax-shell-exemple/

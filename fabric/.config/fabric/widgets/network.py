@@ -1,317 +1,564 @@
 """
-Network & Bluetooth Management Widget
-Controls WiFi and Bluetooth connections
+Network & WiFi Management Widget
+Comprehensive network control with:
+- WiFi toggle and scanning with password support
+- Access point list with signal strength and security info
+- Ethernet connection information
+- Real-time connection status with speed/frequency
+- Progressive content reveal animation
 """
 
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from fabric.widgets.button import Button
+from fabric.widgets.centerbox import CenterBox
+from fabric.widgets.image import Image
 from fabric.widgets.scrolledwindow import ScrolledWindow
-from fabric.widgets.wayland import WaylandWindow
-from fabric.bluetooth.service import BluetoothClient
-import subprocess
+from fabric.widgets.entry import Entry
+from gi.repository import GLib, Gtk
+from .base_popup import BasePopup
+from services.network import NetworkClient
 
 
-class WiFiNetworkItem(Box):
-    """A WiFi network list item"""
+class PasswordEntryRow(Box):
+    """Inline password entry that appears below the access point"""
 
-    def __init__(self, ssid: str, signal: int, security: str, in_use: bool = False, **kwargs):
+    def __init__(self, ssid: str, on_connect_callback, on_cancel_callback, **kwargs):
         super().__init__(
-            orientation="h",
+            orientation="v",
             spacing=8,
-            name="wifi-item",
+            name="password-entry-row",
             **kwargs
         )
-
         self.ssid = ssid
-        self.signal = signal
-        self.security = security
-        self.in_use = in_use
+        self.on_connect_callback = on_connect_callback
+        self.on_cancel_callback = on_cancel_callback
 
-        # Signal strength icon
-        if signal >= 75:
-            signal_icon = "󰤨"
-        elif signal >= 50:
-            signal_icon = "󰤥"
-        elif signal >= 25:
-            signal_icon = "󰤢"
-        else:
-            signal_icon = "󰤟"
+        # Password entry
+        self.password_entry = Entry(
+            placeholder=f"Password for {ssid}...",
+            h_expand=True,
+            visibility=False,  # Hide password
+            on_activate=self._on_connect
+        )
+
+        # Buttons
+        connect_btn = Button(
+            label="Connect",
+            name="password-connect-btn",
+            on_clicked=self._on_connect
+        )
+
+        cancel_btn = Button(
+            label="Cancel",
+            name="password-cancel-btn",
+            on_clicked=lambda *_: self.on_cancel_callback()
+        )
+
+        # Layout
+        button_box = Box(
+            orientation="h",
+            spacing=8,
+            h_align="end",
+            children=[cancel_btn, connect_btn]
+        )
+
+        self.add(self.password_entry)
+        self.add(button_box)
+
+    def _on_connect(self, *args):
+        password = self.password_entry.get_text()
+        if password:
+            self.on_connect_callback(password)
+            self.password_entry.set_text("")  # Clear password
+
+    def grab_entry_focus(self):
+        self.password_entry.grab_focus()
+
+
+class WifiAccessPointSlot(Box):
+    """WiFi access point list item with detailed info and inline password entry"""
+
+    def __init__(self, ap_data: dict, network_service: NetworkClient, wifi_service, **kwargs):
+        super().__init__(orientation="v", spacing=8, name="wifi-ap-slot", **kwargs)
+        self.ap_data = ap_data
+        self.network_service = network_service
+        self.wifi_service = wifi_service
+
+        ssid = ap_data.get("ssid", "Unknown SSID")
+        icon_name = ap_data.get("icon-name", "network-wireless-signal-none-symbolic")
+        strength = ap_data.get("strength", 0)
+        frequency = ap_data.get("frequency", 0)
+        security = ap_data.get("security", "Unknown")
+        self.requires_password = ap_data.get("requires_password", False)
+        self.ssid = ssid
+
+        # Truncate very long SSIDs for better display
+        display_ssid = ssid if len(ssid) <= 25 else ssid[:22] + "..."
+
+        # Check if this is the active AP
+        self.is_active = False
+        active_ap_details = ap_data.get("active-ap")
+        if active_ap_details and hasattr(active_ap_details, 'get_bssid') and active_ap_details.get_bssid() == ap_data.get("bssid"):
+            self.is_active = True
+
+        # Icon
+        self.ap_icon = Image(icon_name=icon_name, pixel_size=24)
 
         # Security icon
-        security_icon = "󰌾" if security != "--" else ""
-
-        # In use indicator
-        in_use_indicator = "✓ " if in_use else "  "
-
-        # Network info
-        info_label = Label(
-            label=f"{in_use_indicator}{signal_icon} {ssid} {signal}% {security_icon}",
-            h_expand=True,
-            h_align="start"
-        )
-
-        # Connect button
-        connect_btn = Button(
-            label="Disconnect" if in_use else "Connect",
-            on_clicked=lambda *_: self.toggle_connection()
-        )
-
-        self.add(info_label)
-        self.add(connect_btn)
-
-    def toggle_connection(self):
-        """Toggle WiFi connection"""
-        try:
-            if self.in_use:
-                subprocess.run(["nmcli", "connection", "down", self.ssid], check=False)
-            else:
-                subprocess.run(["nmcli", "device", "wifi", "connect", self.ssid], check=False)
-        except Exception as e:
-            print(f"Error toggling WiFi connection: {e}")
-
-
-class BluetoothDeviceItem(Box):
-    """A Bluetooth device list item"""
-
-    def __init__(self, device, **kwargs):
-        super().__init__(
-            orientation="h",
-            spacing=8,
-            name="bluetooth-item",
-            **kwargs
-        )
-
-        self.device = device
-
-        # Device info
-        icon = device.icon_name or "bluetooth"
-        name = device.name or device.address
-        status = "Connected" if device.connected else "Paired" if device.paired else "Available"
-
-        info_label = Label(
-            label=f"󰂯 {name} ({status})",
-            h_expand=True,
-            h_align="start"
-        )
-
-        # Connect button
-        if device.paired:
-            btn_label = "Disconnect" if device.connected else "Connect"
-            connect_btn = Button(
-                label=btn_label,
-                on_clicked=lambda *_: device.connect_device(not device.connected)
-            )
+        if security != "Open":
+            security_icon = "󰌾"
         else:
-            connect_btn = Button(
-                label="Pair",
-                on_clicked=lambda *_: print("Pairing not yet implemented")
-            )
+            security_icon = "󰿆"
 
-        self.add(info_label)
-        self.add(connect_btn)
+        # Frequency band
+        freq_band = "5GHz" if frequency > 5000 else "2.4GHz"
 
-        # Listen for device changes
-        device.connect("changed", self.on_device_changed)
-
-    def on_device_changed(self, device):
-        """Handle device property changes"""
-        # Rebuild the item when device state changes
-        # For simplicity, we'll just update in the parent widget
-
-
-class NetworkWidget(WaylandWindow):
-    """Network & Bluetooth management popup widget"""
-
-    def __init__(self, **kwargs):
-        super().__init__(
-            layer="overlay",
-            anchor="top right",
-            margin="50px 20px 0px 0px",
-            keyboard_mode="on-demand",
-            name="network-widget",
-            visible=False,
-            **kwargs
+        # SSID label with detailed info
+        info_text = f"{display_ssid}\n<small>{strength}% • {freq_band} • {security}</small>"
+        self.ap_label = Label(
+            markup=info_text,
+            h_expand=True,
+            h_align="start",
+            use_markup=True,
+            ellipsize="end",  # Ellipsize at end if still too long
+            max_width_chars=30
         )
 
-        # Initialize Bluetooth service
-        try:
-            self.bluetooth = BluetoothClient()
-            self.bluetooth.connect("device-added", lambda *_: self.rebuild_content())
-            self.bluetooth.connect("device-removed", lambda *_: self.rebuild_content())
-            self.bluetooth.connect("changed", lambda *_: self.rebuild_content())
-        except Exception as e:
-            print(f"Error initializing Bluetooth: {e}")
-            self.bluetooth = None
+        # Connect button
+        self.connect_button = Button(
+            name="wifi-connect-button",
+            label="Connected" if self.is_active else "Connect",
+            sensitive=not self.is_active,
+            on_clicked=self._on_connect_clicked,
+        )
 
-        # Build widget
-        self.children = self.build_content()
+        if self.is_active:
+            self.connect_button.add_style_class("connected")
 
-    def build_content(self):
-        """Build the widget content"""
-        content = Box(
-            orientation="v",
-            spacing=16,
-            name="network-content",
+        # Top row with icon, label, and connect button
+        info_box = Box(
+            spacing=12,
+            h_expand=True,
+            h_align="fill",
             children=[
-                Label(
-                    label="󰀂 Network & Bluetooth",
-                    name="network-title",
-                    style="font-size: 16px; font-weight: bold;"
-                ),
-                self.build_wifi_section(),
-                self.build_bluetooth_section(),
+                self.ap_icon,
+                self.ap_label,
             ]
         )
 
-        return ScrolledWindow(
-            min_content_size=(450, 100),
-            max_content_size=(450, 600),
-            child=content
+        top_row = CenterBox(
+            name="wifi-ap-top-row",
+            start_children=[info_box],
+            end_children=[self.connect_button]
         )
 
-    def build_wifi_section(self):
-        """Build WiFi control section"""
-        children = [
-            Box(
-                orientation="h",
-                spacing=8,
-                children=[
-                    Label(
-                        label="WiFi",
-                        name="section-title",
-                        style="font-size: 14px; font-weight: bold;",
-                        h_expand=True,
-                        h_align="start"
-                    ),
-                    Button(
-                        label="Refresh",
-                        on_clicked=lambda *_: self.rebuild_content()
-                    ),
-                ]
-            )
-        ]
+        self.add(top_row)
 
-        # Get WiFi networks
-        try:
-            result = subprocess.run(
-                ["nmcli", "-t", "-f", "IN-USE,SSID,SIGNAL,SECURITY", "device", "wifi", "list"],
-                capture_output=True,
-                text=True,
-                check=True
-            )
+        # Password entry row (hidden by default)
+        self.password_entry_row = None
+        self.password_entry_visible = False
 
-            networks = []
-            for line in result.stdout.strip().split('\n'):
-                if line:
-                    parts = line.split(':')
-                    if len(parts) >= 4:
-                        in_use = parts[0] == '*'
-                        ssid = parts[1]
-                        signal = int(parts[2]) if parts[2].isdigit() else 0
-                        security = parts[3] if parts[3] else "--"
-
-                        if ssid:  # Skip hidden networks
-                            networks.append(
-                                WiFiNetworkItem(ssid, signal, security, in_use)
-                            )
-
-            if networks:
-                children.extend(networks[:10])  # Limit to 10 networks
+    def _on_connect_clicked(self, _):
+        if not self.is_active:
+            if self.requires_password:
+                # Show inline password entry
+                self._show_password_entry()
             else:
-                children.append(
-                    Label(
-                        label="No WiFi networks found",
-                        name="empty-message",
-                        style="opacity: 0.7; font-style: italic;"
-                    )
-                )
+                # Open network, connect directly
+                self._connect_with_password(None)
 
-        except Exception as e:
-            children.append(
-                Label(
-                    label=f"Error loading WiFi networks: {e}",
-                    name="error-message",
-                    style="color: #ff6b6b; font-style: italic;"
-                )
+    def _show_password_entry(self):
+        if not self.password_entry_visible:
+            self.password_entry_row = PasswordEntryRow(
+                self.ssid,
+                self._connect_with_password,
+                self._hide_password_entry
             )
+            self.add(self.password_entry_row)
+            self.password_entry_row.show_all()
+            self.password_entry_row.grab_entry_focus()
+            self.password_entry_visible = True
 
-        return Box(
+    def _hide_password_entry(self):
+        if self.password_entry_visible and self.password_entry_row:
+            self.remove(self.password_entry_row)
+            self.password_entry_row.destroy()
+            self.password_entry_row = None
+            self.password_entry_visible = False
+
+    def _connect_with_password(self, password):
+        bssid = self.ap_data.get("bssid")
+        if bssid:
+            self.connect_button.set_label("Connecting...")
+            self.connect_button.set_sensitive(False)
+            self._hide_password_entry()
+            self.network_service.connect_wifi_bssid(bssid, password)
+
+
+class NetworkWidget(BasePopup):
+    """Network management popup with WiFi and Ethernet info"""
+
+    def __init__(self, **kwargs):
+        self.network_client = NetworkClient()
+        self.status_label = None
+        self.wifi_toggle_button = None
+        self.wifi_toggle_icon = None
+        self.refresh_button = None
+        self.ap_list_box = None
+        self.ethernet_info_box = None
+        self.current_connection_box = None
+
+        super().__init__(
+            name="network-widget",
+            anchor="top right",
+            margin="8px 20px 0px 0px",
+            width=550,
+            **kwargs
+        )
+
+    def build_content(self):
+        """Build the network widget content"""
+        # Current connection info
+        self.current_connection_box = Box(
+            orientation="v",
+            spacing=4,
+            name="current-connection-box"
+        )
+
+        # Status label (shown during scanning)
+        self.status_label = Label(
+            label="Initializing network...",
+            h_expand=True,
+            h_align="center",
+            name="network-status"
+        )
+
+        # WiFi toggle button
+        self.wifi_toggle_icon = Label(markup="󰤨", name="wifi-toggle-icon")
+        self.wifi_toggle_button = Button(
+            name="wifi-toggle-button",
+            child=self.wifi_toggle_icon,
+            tooltip_text="Toggle Wi-Fi",
+            on_clicked=self._toggle_wifi,
+            sensitive=False
+        )
+
+        # Refresh button
+        refresh_icon = Label(markup="󰑓", name="network-refresh-icon")
+        self.refresh_button = Button(
+            name="network-refresh",
+            child=refresh_icon,
+            tooltip_text="Scan for Wi-Fi networks",
+            on_clicked=self._refresh_access_points,
+            sensitive=False
+        )
+
+        # Header
+        header_box = CenterBox(
+            name="network-header",
+            start_children=[
+                Label(
+                    label="󰀂 Network",
+                    name="network-title",
+                    style="font-size: 16px; font-weight: bold;"
+                )
+            ],
+            end_children=[
+                Box(
+                    orientation="h",
+                    spacing=8,
+                    children=[self.refresh_button, self.wifi_toggle_button]
+                )
+            ]
+        )
+
+        # Ethernet section
+        self.ethernet_info_box = Box(
             orientation="v",
             spacing=8,
-            name="wifi-section",
-            children=children
+            name="ethernet-section"
         )
 
-    def build_bluetooth_section(self):
-        """Build Bluetooth control section"""
-        children = [
-            Box(
-                orientation="h",
-                spacing=8,
-                children=[
-                    Label(
-                        label="Bluetooth",
-                        name="section-title",
-                        style="font-size: 14px; font-weight: bold;",
-                        h_expand=True,
-                        h_align="start"
-                    ),
-                    Button(
-                        label="Scan" if self.bluetooth and not self.bluetooth.scanning else "Stop",
-                        on_clicked=lambda *_: self.bluetooth.toggle_scan() if self.bluetooth else None
-                    ) if self.bluetooth else Label(label=""),
-                    Button(
-                        label="Power Off" if self.bluetooth and self.bluetooth.powered else "Power On",
-                        on_clicked=lambda *_: self.bluetooth.toggle_power() if self.bluetooth else None
-                    ) if self.bluetooth else Label(label=""),
-                ]
-            )
-        ]
-
-        if self.bluetooth:
-            # Add Bluetooth devices
-            if self.bluetooth.devices:
-                for device in self.bluetooth.devices[:10]:  # Limit to 10 devices
-                    children.append(BluetoothDeviceItem(device))
-            else:
-                children.append(
-                    Label(
-                        label="No Bluetooth devices found" + (" - Scanning..." if self.bluetooth.scanning else ""),
-                        name="empty-message",
-                        style="opacity: 0.7; font-style: italic;"
-                    )
-                )
-        else:
-            children.append(
-                Label(
-                    label="Bluetooth service unavailable",
-                    name="error-message",
-                    style="color: #ff6b6b; font-style: italic;"
-                )
-            )
-
-        return Box(
+        # Access points list
+        self.ap_list_box = Box(
             orientation="v",
-            spacing=8,
-            name="bluetooth-section",
-            children=children
+            spacing=4,
+            name="ap-list-box"
         )
 
-    def rebuild_content(self):
-        """Rebuild the widget content"""
-        self.children = self.build_content()
+        # WiFi section with scrollable list
+        wifi_label = Label(
+            label="Available Networks",
+            name="section-title",
+            h_align="start",
+            style="font-size: 14px; font-weight: bold; margin-top: 8px;"
+        )
 
-    def toggle(self):
-        """Toggle widget visibility"""
-        if self.get_visible():
-            self.hide()
+        scrolled_window = ScrolledWindow(
+            name="network-ap-scrolled-window",
+            child=self.ap_list_box,
+            h_expand=True,
+            v_expand=True,
+            min_content_size=(530, 100),
+            max_content_size=(530, 400),
+        )
+
+        # Main content
+        content = Box(
+            orientation="v",
+            spacing=12,
+            name="network-content",
+            children=[
+                header_box,
+                self.current_connection_box,
+                self.ethernet_info_box,
+                wifi_label,
+                self.status_label,
+                scrolled_window,
+            ]
+        )
+
+        # Set up network client callbacks
+        self.network_client.connect("device-ready", self._on_device_ready)
+
+        return content
+
+    def _on_device_ready(self, _client):
+        """Called when network device is ready"""
+        # Set up WiFi
+        if self.network_client.wifi_device:
+            self.network_client.wifi_device.connect("changed", self._on_wifi_changed)
+            self.network_client.wifi_device.connect("notify::enabled", self._update_wifi_status_ui)
+            self._update_wifi_status_ui()
+
+            if self.network_client.wifi_device.enabled:
+                self._load_access_points()
         else:
-            self.rebuild_content()  # Refresh when opening
-            self.show_all()
+            self.wifi_toggle_button.set_sensitive(False)
+            self.refresh_button.set_sensitive(False)
+
+        # Set up Ethernet
+        if self.network_client.ethernet_device:
+            self.network_client.ethernet_device.connect("changed", self._update_ethernet_info)
+            self._update_ethernet_info()
+
+        self._update_current_connection()
+
+    def _update_current_connection(self):
+        """Update current connection information"""
+        for child in self.current_connection_box.get_children():
+            child.destroy()
+
+        if self.network_client.wifi_device and self.network_client.wifi_device.internet == "activated":
+            ssid = self.network_client.wifi_device.ssid
+            strength = self.network_client.wifi_device.strength
+            frequency = self.network_client.wifi_device.frequency
+            bandwidth = self.network_client.wifi_device.bandwidth
+            freq_band = "5GHz" if frequency > 5000 else "2.4GHz"
+
+            info_label = Label(
+                markup=f"<b>󰤨 Connected to:</b> {ssid}\n<small>Signal: {strength}% • {freq_band} ({frequency} MHz) • {bandwidth}</small>",
+                name="current-connection-info",
+                h_align="start",
+                use_markup=True
+            )
+            self.current_connection_box.add(info_label)
+            self.current_connection_box.show_all()
+
+            # Set up bandwidth update only once
+            if not hasattr(self, '_bandwidth_update_id'):
+                self._bandwidth_update_id = GLib.timeout_add(1000, self._update_current_connection_bandwidth)
+
+            return False  # Don't continue if called from timeout
+        else:
+            self.current_connection_box.hide()
+            # Stop bandwidth updates if disconnected
+            if hasattr(self, '_bandwidth_update_id'):
+                GLib.source_remove(self._bandwidth_update_id)
+                delattr(self, '_bandwidth_update_id')
+            return False
+
+    def _update_current_connection_bandwidth(self):
+        """Update only the bandwidth information without recreating widgets"""
+        if self.network_client.wifi_device and self.network_client.wifi_device.internet == "activated":
+            # Just update the existing label
+            for child in self.current_connection_box.get_children():
+                if isinstance(child, Label):
+                    ssid = self.network_client.wifi_device.ssid
+                    strength = self.network_client.wifi_device.strength
+                    frequency = self.network_client.wifi_device.frequency
+                    bandwidth = self.network_client.wifi_device.bandwidth
+                    freq_band = "5GHz" if frequency > 5000 else "2.4GHz"
+
+                    child.set_markup(f"<b>󰤨 Connected to:</b> {ssid}\n<small>Signal: {strength}% • {freq_band} ({frequency} MHz) • {bandwidth}</small>")
+            return True  # Continue timeout
+        else:
+            # Disconnected, stop updates
+            if hasattr(self, '_bandwidth_update_id'):
+                delattr(self, '_bandwidth_update_id')
+            return False
+
+    def _update_ethernet_info(self, *args):
+        """Update Ethernet connection information"""
+        for child in self.ethernet_info_box.get_children():
+            child.destroy()
+
+        if self.network_client.ethernet_device:
+            state = self.network_client.ethernet_device.state
+            speed = self.network_client.ethernet_device.speed
+            bandwidth = self.network_client.ethernet_device.bandwidth
+
+            if state == "activated":
+                icon = "󰈁"
+                status_text = f"<b>{icon} Ethernet:</b> Connected"
+                if speed > 0:
+                    status_text += f"\n<small>Link: {speed} Mb/s • {bandwidth}</small>"
+
+                eth_label = Label(
+                    markup=status_text,
+                    name="ethernet-info",
+                    h_align="start",
+                    use_markup=True
+                )
+                self.ethernet_info_box.add(eth_label)
+                self.ethernet_info_box.show_all()
+
+                # Set up bandwidth update for Ethernet only once
+                if not hasattr(self, '_eth_bandwidth_update_id'):
+                    self._eth_bandwidth_update_id = GLib.timeout_add(1000, self._update_ethernet_bandwidth)
+
+                return False  # Don't continue if called from timeout
+            else:
+                self.ethernet_info_box.hide()
+                # Stop bandwidth updates if disconnected
+                if hasattr(self, '_eth_bandwidth_update_id'):
+                    GLib.source_remove(self._eth_bandwidth_update_id)
+                    delattr(self, '_eth_bandwidth_update_id')
+                return False
+        else:
+            self.ethernet_info_box.hide()
+            return False
+
+    def _update_ethernet_bandwidth(self):
+        """Update only Ethernet bandwidth without recreating widgets"""
+        if self.network_client.ethernet_device and self.network_client.ethernet_device.state == "activated":
+            # Just update the existing label
+            for child in self.ethernet_info_box.get_children():
+                if isinstance(child, Label):
+                    speed = self.network_client.ethernet_device.speed
+                    bandwidth = self.network_client.ethernet_device.bandwidth
+                    icon = "󰈁"
+                    status_text = f"<b>{icon} Ethernet:</b> Connected"
+                    if speed > 0:
+                        status_text += f"\n<small>Link: {speed} Mb/s • {bandwidth}</small>"
+
+                    child.set_markup(status_text)
+            return True  # Continue timeout
+        else:
+            # Disconnected, stop updates
+            if hasattr(self, '_eth_bandwidth_update_id'):
+                delattr(self, '_eth_bandwidth_update_id')
+            return False
+
+    def _on_wifi_changed(self, *args):
+        """Handle WiFi changes"""
+        self._load_access_points()
+        self._update_current_connection()
+
+    def _update_wifi_status_ui(self, *args):
+        """Update UI based on WiFi status"""
+        if self.network_client.wifi_device:
+            enabled = self.network_client.wifi_device.enabled
+            self.wifi_toggle_button.set_sensitive(True)
+            self.refresh_button.set_sensitive(enabled)
+
+            if enabled:
+                self.wifi_toggle_icon.set_markup("󰤨")
+            else:
+                self.wifi_toggle_icon.set_markup("󰤭")
+                self.status_label.set_label("Wi-Fi disabled.")
+                self.status_label.set_visible(True)
+                self._clear_ap_list()
+
+            if enabled and not self.ap_list_box.get_children():
+                GLib.idle_add(self._refresh_access_points)
+        else:
+            self.wifi_toggle_button.set_sensitive(False)
+            self.refresh_button.set_sensitive(False)
+
+    def _toggle_wifi(self, _):
+        """Toggle WiFi on/off"""
+        if self.network_client.wifi_device:
+            self.network_client.wifi_device.toggle_wifi()
+
+    def _refresh_access_points(self, _=None):
+        """Scan for WiFi networks"""
+        if self.network_client.wifi_device and self.network_client.wifi_device.enabled:
+            self.status_label.set_label("Scanning for Wi-Fi networks...")
+            self.status_label.set_visible(True)
+            self._clear_ap_list()
+            self.network_client.wifi_device.scan()
+        return False
+
+    def _clear_ap_list(self):
+        """Clear access points list"""
+        for child in self.ap_list_box.get_children():
+            child.destroy()
+
+    def _load_access_points(self, *args):
+        """Load and display access points"""
+        if not self.network_client.wifi_device or not self.network_client.wifi_device.enabled:
+            self._clear_ap_list()
+            self.status_label.set_label("Wi-Fi disabled.")
+            self.status_label.set_visible(True)
+            return
+
+        self._clear_ap_list()
+
+        access_points = self.network_client.wifi_device.access_points
+
+        if not access_points:
+            self.status_label.set_label("No Wi-Fi networks found.")
+            self.status_label.set_visible(True)
+        else:
+            self.status_label.set_visible(False)
+            # Sort by signal strength
+            sorted_aps = sorted(access_points, key=lambda x: x.get("strength", 0), reverse=True)
+
+            # Remove duplicates (same SSID, keep strongest)
+            seen_ssids = set()
+            unique_aps = []
+            for ap in sorted_aps:
+                ssid = ap.get("ssid", "")
+                if ssid and ssid not in seen_ssids:
+                    seen_ssids.add(ssid)
+                    unique_aps.append(ap)
+
+            # Add access points
+            for ap_data in unique_aps:
+                slot = WifiAccessPointSlot(
+                    ap_data,
+                    self.network_client,
+                    self.network_client.wifi_device
+                )
+                self.ap_list_box.add(slot)
+
+        self.ap_list_box.show_all()
+
+    def on_open(self):
+        """Called when widget opens"""
+        if self.network_client.wifi_device and self.network_client.wifi_device.enabled:
+            self._refresh_access_points()
+        self._update_current_connection()
+        self._update_ethernet_info()
+
+    def on_close(self):
+        """Called before close animation"""
+        pass
 
 
-# Create singleton instance
+# Singleton instance
 network_widget = None
 
 

@@ -1,0 +1,3 @@
+git+https://github.com/Fabric-Development/fabric.git
+psutil
+PyGObject

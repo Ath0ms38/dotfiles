@@ -253,8 +253,9 @@ if __name__ == "__main__":
     bar_monitor_1 = MainBar(monitor=1)
 
     # Create the application with both bars
-    app = Application("fabric-bar", bar_monitor_0, bar_monitor_1)
-
+    #app = Application("fabric-bar", bar_monitor_0, bar_monitor_1)
+    app = Application("fabric-bar", bar_monitor_0)
+    
     # Load and compile stylesheet if it exists
     if os.path.exists(style_file):
         with open(style_file, 'r') as f:
