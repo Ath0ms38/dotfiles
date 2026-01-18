@@ -1,7 +1,8 @@
 """
-Control Sliders - Volume, Microphone with proper mute state handling
+Control Sliders - Volume, Microphone using wpctl (avoids Cvc bugs)
 """
 
+import subprocess
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from fabric.widgets.button import Button
@@ -10,12 +11,50 @@ from gi.repository import GLib
 
 from . import icons
 
-# Try to import audio service
-try:
-    from fabric.audio.service import Audio
-    HAS_AUDIO = True
-except ImportError:
-    HAS_AUDIO = False
+
+def _run_wpctl(*args):
+    """Run wpctl command and return output"""
+    try:
+        result = subprocess.run(
+            ["wpctl", *args],
+            capture_output=True,
+            text=True,
+            timeout=2,
+        )
+        return result.stdout.strip()
+    except Exception:
+        return ""
+
+
+def _get_volume(sink_type: str) -> tuple[float, bool]:
+    """Get volume and mute state for @DEFAULT_AUDIO_SINK@ or @DEFAULT_AUDIO_SOURCE@"""
+    try:
+        output = _run_wpctl("get-volume", sink_type)
+        # Output format: "Volume: 0.50" or "Volume: 0.50 [MUTED]"
+        if not output:
+            return 50.0, False
+
+        muted = "[MUTED]" in output
+        # Extract volume value
+        parts = output.replace("[MUTED]", "").split()
+        if len(parts) >= 2:
+            vol = float(parts[1]) * 100
+            return vol, muted
+        return 50.0, False
+    except Exception:
+        return 50.0, False
+
+
+def _set_volume(sink_type: str, volume: float):
+    """Set volume for @DEFAULT_AUDIO_SINK@ or @DEFAULT_AUDIO_SOURCE@"""
+    # wpctl expects 0-1.5 range (150% max)
+    vol_normalized = volume / 100.0
+    _run_wpctl("set-volume", sink_type, str(vol_normalized))
+
+
+def _toggle_mute(sink_type: str):
+    """Toggle mute for @DEFAULT_AUDIO_SINK@ or @DEFAULT_AUDIO_SOURCE@"""
+    _run_wpctl("set-mute", sink_type, "toggle")
 
 
 class ControlSlider(Box):
@@ -44,6 +83,9 @@ class ControlSlider(Box):
         self.icon_muted = icon_muted or icon
         self._is_muted = False
         self._value_handler = on_value_changed
+        self._updating = False  # Prevent feedback loops
+        self._dragging = False  # Track if user is dragging
+        self._last_value = 0.0  # Track last known value
 
         # Header row: Label + Value
         header_row = Box(
@@ -98,15 +140,39 @@ class ControlSlider(Box):
         if on_value_changed:
             self.slider.connect("value-changed", on_value_changed)
 
+        # Track drag state to prevent polling interference
+        self.slider.connect("button-press-event", self._on_drag_start)
+        self.slider.connect("button-release-event", self._on_drag_end)
+
         slider_row.add(self.icon_btn)
         slider_row.add(self.slider)
 
         self.add(header_row)
         self.add(slider_row)
 
+    def _on_drag_start(self, widget, event):
+        """Called when user starts dragging the slider"""
+        self._dragging = True
+        return False  # Allow event to propagate
+
+    def _on_drag_end(self, widget, event):
+        """Called when user stops dragging the slider"""
+        self._dragging = False
+        return False  # Allow event to propagate
+
+    def is_dragging(self) -> bool:
+        """Check if user is currently dragging"""
+        return self._dragging
+
     def set_value(self, value: float, muted: bool = False):
         """Set slider value (0-100) and update display"""
+        # Don't update while user is dragging
+        if self._dragging:
+            return
+
         self._is_muted = muted
+        self._updating = True
+        self._last_value = value
 
         # Update slider
         self.slider.set_value(value / 100.0)
@@ -128,6 +194,8 @@ class ControlSlider(Box):
             self.remove_style_class("muted")
             self.icon_btn.remove_style_class("muted")
 
+        self._updating = False
+
     def _update_icon(self, value: float, muted: bool):
         """Update icon based on state"""
         if muted:
@@ -139,9 +207,13 @@ class ControlSlider(Box):
         """Return current mute state"""
         return self._is_muted
 
+    def is_updating(self) -> bool:
+        """Check if currently updating from external source"""
+        return self._updating
+
 
 class ControlSliders(Box):
-    """Container for volume and microphone sliders"""
+    """Container for volume and microphone sliders using wpctl"""
 
     def __init__(self, **kwargs):
         super().__init__(
@@ -175,115 +247,59 @@ class ControlSliders(Box):
         self.add(self.volume_slider)
         self.add(self.mic_slider)
 
-        # Connect to audio service
-        if HAS_AUDIO:
-            self.audio = Audio()
-            self._setup_audio_bindings()
-        else:
-            self.audio = None
-
-    def disable_audio_service(self):
-        """Disable the audio service temporarily to avoid Cvc crashes during BT profile switch"""
-        if self.audio:
-            try:
-                # Close the underlying Cvc MixerControl to disconnect from PulseAudio/PipeWire
-                if hasattr(self.audio, '_control') and self.audio._control:
-                    self.audio._control.close()
-            except Exception:
-                pass
-            self.audio = None
-
-    def enable_audio_service(self):
-        """Re-enable the audio service after BT profile switch"""
-        if HAS_AUDIO and not self.audio:
-            try:
-                self.audio = Audio()
-                self._setup_audio_bindings()
-            except Exception:
-                pass
-
-    def _setup_audio_bindings(self):
-        """Connect to audio service signals"""
-        if not self.audio:
-            return
-
-        # Initial values after a small delay to ensure service is ready
+        # Initial update
         GLib.timeout_add(100, self._update_volume)
         GLib.timeout_add(100, self._update_mic)
 
-        # Connect to speaker/mic property changes
-        self.audio.connect("notify::speaker", lambda *_: GLib.idle_add(self._update_volume))
-        self.audio.connect("notify::microphone", lambda *_: GLib.idle_add(self._update_mic))
+        # Poll for changes periodically (every 1 second)
+        GLib.timeout_add(1000, self._poll_audio_state)
 
-        # Also connect to the stream objects directly when available
-        GLib.timeout_add(200, self._connect_stream_signals)
-
-    def _connect_stream_signals(self):
-        """Connect to individual stream change signals"""
-        if self.audio and self.audio.speaker:
-            try:
-                self.audio.speaker.connect("changed", lambda *_: GLib.idle_add(self._update_volume))
-            except Exception:
-                pass
-
-        if self.audio and self.audio.microphone:
-            try:
-                self.audio.microphone.connect("changed", lambda *_: GLib.idle_add(self._update_mic))
-            except Exception:
-                pass
-
-        return False  # Don't repeat
+    def _poll_audio_state(self):
+        """Poll audio state periodically"""
+        self._update_volume()
+        self._update_mic()
+        return True  # Continue polling
 
     def _update_volume(self):
-        """Update volume slider from audio service"""
-        if self.audio and self.audio.speaker:
-            try:
-                vol = self.audio.speaker.volume
-                muted = self.audio.speaker.muted
-                self.volume_slider.set_value(vol, muted)
-            except Exception:
-                pass
+        """Update volume slider from wpctl"""
+        vol, muted = _get_volume("@DEFAULT_AUDIO_SINK@")
+        self.volume_slider.set_value(vol, muted)
         return False
 
     def _update_mic(self):
-        """Update mic slider from audio service"""
-        if self.audio and self.audio.microphone:
-            try:
-                vol = self.audio.microphone.volume
-                muted = self.audio.microphone.muted
-                self.mic_slider.set_value(vol, muted)
-            except Exception:
-                pass
+        """Update mic slider from wpctl"""
+        vol, muted = _get_volume("@DEFAULT_AUDIO_SOURCE@")
+        self.mic_slider.set_value(vol, muted)
         return False
 
     def _on_volume_changed(self, scale):
         """Handle volume slider change"""
-        if self.audio and self.audio.speaker:
-            value = scale.get_value() * 100
-            self.audio.speaker.volume = value
-            # Update label immediately for responsiveness
-            if not self.volume_slider.get_muted():
-                self.volume_slider.value_label.set_label(f"{int(value)}%")
+        if self.volume_slider.is_updating():
+            return
+        value = scale.get_value() * 100
+        _set_volume("@DEFAULT_AUDIO_SINK@", value)
+        # Update label immediately for responsiveness
+        if not self.volume_slider.get_muted():
+            self.volume_slider.value_label.set_label(f"{int(value)}%")
 
     def _on_volume_mute(self, btn):
         """Toggle volume mute"""
-        if self.audio and self.audio.speaker:
-            self.audio.speaker.muted = not self.audio.speaker.muted
-            # Force immediate update
-            GLib.idle_add(self._update_volume)
+        _toggle_mute("@DEFAULT_AUDIO_SINK@")
+        # Force immediate update
+        GLib.idle_add(self._update_volume)
 
     def _on_mic_changed(self, scale):
         """Handle mic slider change"""
-        if self.audio and self.audio.microphone:
-            value = scale.get_value() * 100
-            self.audio.microphone.volume = value
-            # Update label immediately for responsiveness
-            if not self.mic_slider.get_muted():
-                self.mic_slider.value_label.set_label(f"{int(value)}%")
+        if self.mic_slider.is_updating():
+            return
+        value = scale.get_value() * 100
+        _set_volume("@DEFAULT_AUDIO_SOURCE@", value)
+        # Update label immediately for responsiveness
+        if not self.mic_slider.get_muted():
+            self.mic_slider.value_label.set_label(f"{int(value)}%")
 
     def _on_mic_mute(self, btn):
         """Toggle mic mute"""
-        if self.audio and self.audio.microphone:
-            self.audio.microphone.muted = not self.audio.microphone.muted
-            # Force immediate update
-            GLib.idle_add(self._update_mic)
+        _toggle_mute("@DEFAULT_AUDIO_SOURCE@")
+        # Force immediate update
+        GLib.idle_add(self._update_mic)

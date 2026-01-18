@@ -18,7 +18,7 @@ from .connectivity import Connectivity
 class BluetoothCodecSelector(Box):
     """Bluetooth audio codec selector for headsets (mSBC for voice, SBC-XQ for music)"""
 
-    def __init__(self, controls=None, **kwargs):
+    def __init__(self, **kwargs):
         import subprocess
 
         super().__init__(
@@ -30,7 +30,6 @@ class BluetoothCodecSelector(Box):
         )
 
         self._subprocess = subprocess
-        self._controls = controls  # Reference to ControlSliders for audio service management
 
         # Header
         header = Label(
@@ -59,33 +58,10 @@ class BluetoothCodecSelector(Box):
         self.solo_btn.connect("clicked", self._on_solo_clicked)
         self.add(self.solo_btn)
 
-    def _get_bt_headset_card(self):
-        """Get the Bluetooth headset card name from pactl"""
-        try:
-            result = self._subprocess.run(
-                ["pactl", "list", "cards", "short"],
-                capture_output=True,
-                text=True,
-                timeout=5,
-            )
-            for line in result.stdout.strip().split("\n"):
-                if "bluez" in line.lower():
-                    parts = line.split()
-                    if len(parts) >= 2:
-                        return parts[1]
-            return None
-        except Exception:
-            return None
-
     def _set_profile(self, profile_type):
-        """Set Bluetooth profile by disabling audio service first.
-
-        Disables Fabric's Audio service before switching to prevent Cvc crash,
-        then re-enables it after the switch completes.
-        """
+        """Set Bluetooth profile using pw-cli."""
         try:
             import re
-            import os
 
             # Find the Bluetooth device ID using wpctl
             result = self._subprocess.run(
@@ -116,27 +92,13 @@ class BluetoothCodecSelector(Box):
             else:
                 return False
 
-            # Disable audio service BEFORE switching to prevent Cvc crash
-            if self._controls:
-                self._controls.disable_audio_service()
-
-            # Delay the profile switch to let Cvc fully disconnect
-            def do_switch():
-                # Use subprocess.Popen to run completely detached
-                self._subprocess.Popen(
-                    ["pw-cli", "set-param", device_id, "Profile", f"{{ index: {profile_index} }}"],
-                    stdout=self._subprocess.DEVNULL,
-                    stderr=self._subprocess.DEVNULL,
-                    start_new_session=True,
-                )
-                return False
-
-            # Schedule the switch after 1s delay
-            GLib.timeout_add(1000, do_switch)
-
-            # NOTE: Audio service is NOT restored automatically due to Cvc bug
-            # Volume sliders will stop working until bar restart
-            # This is a known Fabric/Cvc limitation with Bluetooth profile switching
+            # Run the profile switch directly (no Cvc to worry about now)
+            self._subprocess.Popen(
+                ["pw-cli", "set-param", device_id, "Profile", f"{{ index: {profile_index} }}"],
+                stdout=self._subprocess.DEVNULL,
+                stderr=self._subprocess.DEVNULL,
+                start_new_session=True,
+            )
 
             return True
 
@@ -174,11 +136,11 @@ class Widgets(Box):
 
         self.notch = notch
 
-        # Create widgets (controls first so bt_codec can reference it)
+        # Create widgets
         self.player = Player()
         self.calendar = Calendar()
         self.controls = ControlSliders()
-        self.bt_codec = BluetoothCodecSelector(controls=self.controls)
+        self.bt_codec = BluetoothCodecSelector()
         self.metrics = Metrics()
         self.connectivity = Connectivity()
 
