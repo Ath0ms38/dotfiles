@@ -22,11 +22,17 @@ from . import icons
 
 # Try to import MPRIS services
 try:
+    import sys
+    import os
+    # Add parent directory to path to find services module
+    _parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _parent_dir not in sys.path:
+        sys.path.insert(0, _parent_dir)
     from services.mpris import MprisPlayer, MprisPlayerManager
     HAS_MPRIS = True
-except ImportError:
+except ImportError as e:
     HAS_MPRIS = False
-    print("MPRIS service not available, player will be disabled")
+    print(f"MPRIS service not available: {e}")
 
 
 def get_player_icon(player_name: str) -> str:
@@ -51,7 +57,8 @@ class PlayerBox(Box):
             orientation="v",
             spacing=4,
             h_align="fill",
-            v_expand=True,
+            v_expand=False,  # Don't expand - use natural height
+            v_align="start",
             **kwargs,
         )
 
@@ -280,7 +287,8 @@ class Player(Box):
             orientation="v",
             spacing=0,
             h_align="fill",
-            v_expand=True,
+            v_expand=False,  # Don't expand - use natural height
+            v_align="start",
             **kwargs,
         )
 
@@ -288,7 +296,8 @@ class Player(Box):
             name="ax-player-stack",
             transition_type="slide-left-right",
             transition_duration=300,
-            v_expand=True,
+            v_expand=False,
+            v_align="start",
         )
 
         self.switcher = Gtk.StackSwitcher(
@@ -333,11 +342,13 @@ class Player(Box):
         self.player_stack.add_titled(pb, mp.player_name, mp.player_name)
         GLib.idle_add(self._replace_switcher_labels)
 
-    def _on_player_vanished(self, manager, player_name):
+    def _on_player_vanished(self, manager, bus_name):
         """Handle player disappearing"""
         for child in self.player_stack.get_children():
             if hasattr(child, "mpris_player") and child.mpris_player:
-                if child.mpris_player.player_name == player_name:
+                # Check both bus_name and player_name
+                if (child.mpris_player.bus_name == bus_name or
+                    child.mpris_player.player_name == bus_name):
                     self.player_stack.remove(child)
                     break
 

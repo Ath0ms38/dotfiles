@@ -165,7 +165,7 @@ class CompactBar(CenterBox):
             formatters=[
                 self.config.clock_format,
                 "%A",
-                "%m-%d-%Y"
+                "%d-%m-%Y"
             ],
             interval=self.config.clock_update_interval,
             name="clock",

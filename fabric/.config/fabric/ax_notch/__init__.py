@@ -8,6 +8,11 @@ from .widgets import Widgets
 from .wallpapers import WallpaperSelector
 from .player import Player, PlayerSmall
 from .metrics import Metrics
+from .calendar_widget import Calendar
+from .controls import ControlSliders
+from .mixer import Mixer
+from .connectivity import Connectivity
+from .utilities import Utilities
 
 __all__ = [
     "AxNotch",
@@ -18,4 +23,9 @@ __all__ = [
     "Player",
     "PlayerSmall",
     "Metrics",
+    "Calendar",
+    "ControlSliders",
+    "Mixer",
+    "Connectivity",
+    "Utilities",
 ]

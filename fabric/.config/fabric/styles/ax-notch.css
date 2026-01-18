@@ -3,7 +3,7 @@
    Ax-Shell style center notch with dashboard
    Following Ax-Shell's blur approach:
    - Outer containers use solid/shadow colors
-   - Inner widgets use alpha(black, 0.5) for blur
+   - Inner widgets use alpha(var(--bg-primary), 0.5) for blur
    ============================================ */
 
 /* ============================================
@@ -94,6 +94,7 @@
 
 #ax-dashboard-stack {
   background: transparent;
+  /* Height adapts to content */
 }
 
 /* Tab Switcher */
@@ -129,15 +130,6 @@
   color: var(--text-light);
 }
 
-/* Closing state - dim the selected button to match others */
-#ax-notch-box.closing #ax-switcher button:checked {
-  background: transparent;
-}
-
-#ax-notch-box.closing #ax-switcher button:checked label {
-  color: var(--text-light);
-}
-
 /* ============================================
    WIDGETS SECTION
    ============================================ */
@@ -145,12 +137,18 @@
 #ax-widgets {
   background: transparent;
   padding: 8px;
-  min-width: 850px;
-  min-height: 380px;
+  min-width: 900px;
+  /* Height adapts to content */
 }
 
-#ax-widgets-center {
+#ax-widgets-top,
+#ax-widgets-calendar,
+#ax-widgets-right {
   background: transparent;
+}
+
+#ax-widgets-right {
+  min-width: 220px;
 }
 
 /* ============================================
@@ -311,132 +309,187 @@
 }
 
 /* ============================================
-   METRICS WIDGET
+   METRICS WIDGET (NEW CIRCULAR DESIGN)
    ============================================ */
 
 #ax-metrics {
   background: alpha(var(--bg-primary), 0.5);
   border-radius: 16px;
   border: 4px solid var(--bg-secondary);
-  padding: 8px;
+  padding: 16px;
 }
 
 #ax-metric-cpu,
 #ax-metric-ram,
 #ax-metric-disk,
 #ax-metric-gpu {
-  min-width: 40px;
+  padding: 8px;
 }
 
-#ax-cpu-scale,
-#ax-ram-scale,
-#ax-disk-scale,
-#ax-gpu-scale {
-  min-width: 8px;
+#ax-metric-cpu-name,
+#ax-metric-ram-name,
+#ax-metric-disk-name,
+#ax-metric-gpu-name {
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 4px;
 }
 
-#ax-cpu-scale trough,
-#ax-ram-scale trough,
-#ax-disk-scale trough,
-#ax-gpu-scale trough {
-  background: var(--bg-secondary);
-  border-radius: 4px;
-  min-width: 8px;
+#ax-metric-cpu-percent,
+#ax-metric-ram-percent,
+#ax-metric-disk-percent,
+#ax-metric-gpu-percent {
+  font-size: 13px;
+  font-weight: bold;
 }
 
-#ax-cpu-scale trough highlight {
-  background: var(--accent-pink);
-  border-radius: 4px;
+#ax-metric-cpu-value,
+#ax-metric-ram-value,
+#ax-metric-disk-value,
+#ax-metric-gpu-value {
+  font-size: 9px;
+  opacity: 0.7;
 }
 
-#ax-ram-scale trough highlight {
-  background: var(--accent-yellow);
-  border-radius: 4px;
-}
-
-#ax-disk-scale trough highlight {
-  background: var(--cyan);
-  border-radius: 4px;
-}
-
-#ax-gpu-scale trough highlight {
-  background: var(--green);
-  border-radius: 4px;
-}
-
-#ax-cpu-icon,
-#ax-ram-icon,
-#ax-disk-icon,
-#ax-gpu-icon {
-  font-size: 14px;
-}
-
-#ax-cpu-icon {
-  color: var(--accent-pink);
-}
-
-#ax-ram-icon {
-  color: var(--accent-yellow);
-}
-
-#ax-disk-icon {
-  color: var(--cyan);
-}
-
-#ax-gpu-icon {
-  color: var(--green);
+#ax-metric-cpu-icon,
+#ax-metric-ram-icon,
+#ax-metric-disk-icon,
+#ax-metric-gpu-icon {
+  font-size: 18px;
 }
 
 /* ============================================
-   CALENDAR WIDGET
+   CALENDAR WIDGET (NEW DESIGN)
    ============================================ */
 
 #ax-calendar {
   background: alpha(var(--bg-primary), 0.5);
   border-radius: 16px;
   border: 4px solid var(--bg-secondary);
-  padding: 8px;
+  padding: 10px;
 }
 
-#ax-calendar-header {
-  font-size: 14px;
+#ax-calendar-top {
+  margin-bottom: 4px;
+}
+
+#ax-calendar-date {
+  font-size: 12px;
   font-weight: bold;
-  margin-bottom: 8px;
 }
 
-#ax-calendar-widget {
-  background: transparent;
-  color: var(--text-light);
-}
-
-#ax-calendar-widget.header {
-  color: var(--text-light);
-}
-
-#ax-calendar-widget.day-name {
+#ax-calendar-time {
+  font-size: 20px;
+  font-weight: bold;
   color: var(--accent-pink);
 }
 
-#ax-calendar-widget:selected {
+#ax-calendar-nav {
+  margin-bottom: 4px;
+}
+
+#ax-calendar-prev,
+#ax-calendar-next,
+#ax-calendar-today {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+#ax-calendar-prev:hover,
+#ax-calendar-next:hover,
+#ax-calendar-today:hover {
   background: var(--accent-pink);
+}
+
+#ax-calendar-prev:hover label,
+#ax-calendar-next:hover label,
+#ax-calendar-today:hover label {
   color: var(--text-dark);
+}
+
+#ax-calendar-month {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+#ax-calendar-weekdays {
+  margin-bottom: 4px;
+}
+
+#ax-calendar-weekday {
+  font-size: 10px;
+  font-weight: bold;
+  opacity: 0.6;
+  padding: 4px;
+}
+
+#ax-calendar-week {
+  padding: 2px 0;
+}
+
+#ax-calendar-day {
+  background: transparent;
   border-radius: 50%;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 1px;
+  transition: all 0.2s ease;
+}
+
+#ax-calendar-day:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-calendar-day.today {
+  background: var(--accent-pink);
+}
+
+#ax-calendar-day.today label {
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+#ax-calendar-day.other-month {
+  opacity: 0.3;
+}
+
+#ax-calendar-day label {
+  font-size: 11px;
 }
 
 /* ============================================
-   CONTROLS (Volume/Brightness)
+   CONTROLS (Volume/Mic)
    ============================================ */
 
 #ax-controls {
   background: alpha(var(--bg-primary), 0.5);
   border-radius: 16px;
   border: 4px solid var(--bg-secondary);
-  padding: 8px;
+  padding: 12px;
 }
 
 #ax-control-volume,
 #ax-control-mic {
   padding: 4px;
+}
+
+#ax-control-volume-header,
+#ax-control-mic-header {
+  margin-bottom: 4px;
+}
+
+#ax-control-volume-label,
+#ax-control-mic-label {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#ax-control-volume-value,
+#ax-control-mic-value {
+  font-size: 11px;
+  opacity: 0.8;
 }
 
 #ax-control-volume-icon,
@@ -445,6 +498,7 @@
   border-radius: 8px;
   padding: 8px;
   min-width: 32px;
+  transition: all 0.2s ease;
 }
 
 #ax-control-volume-icon:hover,
@@ -454,6 +508,16 @@
 
 #ax-control-volume-icon:hover label,
 #ax-control-mic-icon:hover label {
+  color: var(--text-dark);
+}
+
+#ax-control-volume-icon.muted,
+#ax-control-mic-icon.muted {
+  background: var(--red);
+}
+
+#ax-control-volume-icon.muted label,
+#ax-control-mic-icon.muted label {
   color: var(--text-dark);
 }
 
@@ -484,21 +548,474 @@
   margin: -4px;
 }
 
-#ax-control-volume-value,
-#ax-control-mic-value {
-  font-size: 11px;
-  min-width: 36px;
+.muted #ax-control-volume-slider trough highlight,
+.muted #ax-control-mic-slider trough highlight {
+  background: var(--red);
+  opacity: 0.5;
+}
+
+/* ============================================
+   CONNECTIVITY WIDGET (Compact horizontal bar)
+   ============================================ */
+
+#ax-connectivity {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 12px;
+  border: 4px solid var(--bg-secondary);
+  padding: 8px 16px;
+}
+
+#ax-connectivity-separator {
+  background: var(--bg-secondary);
+  margin: 0 8px;
+}
+
+#ax-wifi-box,
+#ax-bluetooth-box {
+  padding: 4px 0;
+}
+
+#ax-wifi-icon,
+#ax-bluetooth-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+#ax-wifi-status,
+#ax-bluetooth-status {
+  font-size: 12px;
+}
+
+#ax-wifi-toggle,
+#ax-wifi-settings,
+#ax-bluetooth-toggle,
+#ax-bluetooth-settings {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin-left: 4px;
+  transition: all 0.2s ease;
+}
+
+#ax-wifi-toggle:hover,
+#ax-wifi-settings:hover,
+#ax-bluetooth-toggle:hover,
+#ax-bluetooth-settings:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-wifi-toggle.active,
+#ax-bluetooth-toggle.active {
+  background: var(--green);
+}
+
+#ax-wifi-toggle.active label,
+#ax-bluetooth-toggle.active label {
+  color: var(--text-dark);
+}
+
+/* ============================================
+   MIXER SECTION
+   ============================================ */
+
+#ax-mixer {
+  background: transparent;
+  padding: 12px;
+  min-width: 900px;
+  /* Height adapts to content */
+}
+
+#ax-mixer-header-box {
+  margin-bottom: 12px;
+}
+
+#ax-mixer-header {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#ax-mixer-pavucontrol {
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+#ax-mixer-pavucontrol:hover {
+  background: var(--accent-pink);
+}
+
+#ax-mixer-pavucontrol:hover label {
+  color: var(--text-dark);
+}
+
+/* Visualizer */
+#ax-visualizer-box {
+  margin: 12px 0;
+}
+
+#ax-visualizer-label {
+  font-size: 12px;
+  margin-bottom: 4px;
   opacity: 0.8;
 }
 
-.muted #ax-control-volume-slider trough highlight,
-.muted #ax-control-mic-slider trough highlight {
-  background: var(--bg-secondary);
+#ax-visualizer {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 12px;
+  min-height: 60px;
 }
 
-.muted #ax-control-volume-slider slider,
-.muted #ax-control-mic-slider slider {
+/* App volumes */
+#ax-mixer-apps {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 14px;
+  border: 4px solid var(--bg-secondary);
+  padding: 10px;
+  margin-top: 8px;
+}
+
+#ax-mixer-apps-header-box {
+  margin-bottom: 8px;
+}
+
+#ax-mixer-apps-header {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+#ax-mixer-refresh {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+#ax-mixer-refresh:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-app-volume {
+  padding: 6px 8px;
+  background: alpha(var(--bg-primary), 0.3);
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+#ax-app-volume-icon {
+  font-size: 14px;
+}
+
+#ax-app-volume-name {
+  font-size: 11px;
+}
+
+#ax-app-volume-slider trough {
   background: var(--bg-secondary);
+  border-radius: 4px;
+  min-height: 6px;
+}
+
+#ax-app-volume-slider trough highlight {
+  background: var(--accent-pink);
+  border-radius: 4px;
+}
+
+#ax-app-volume-slider slider {
+  background: var(--accent-pink);
+  border-radius: 50%;
+  min-width: 12px;
+  min-height: 12px;
+  margin: -3px;
+}
+
+#ax-app-volume-value {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+#ax-app-volume-mute {
+  background: transparent;
+  border-radius: 6px;
+  padding: 4px;
+  transition: all 0.2s ease;
+}
+
+#ax-app-volume-mute:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-app-volume.muted #ax-app-volume-mute {
+  background: var(--red);
+}
+
+/* ============================================
+   UTILITIES SECTION
+   ============================================ */
+
+#ax-utilities {
+  background: transparent;
+  padding: 12px;
+  min-width: 900px;
+  /* Height adapts to content */
+}
+
+/* Quick Toggles */
+#ax-utilities-toggles {
+  margin-bottom: 12px;
+}
+
+#ax-toggle-dnd,
+#ax-toggle-night,
+#ax-toggle-airplane,
+#ax-toggle-record {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 12px;
+  border: 4px solid var(--bg-secondary);
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+#ax-toggle-dnd:hover,
+#ax-toggle-night:hover,
+#ax-toggle-airplane:hover,
+#ax-toggle-record:hover {
+  background: alpha(var(--bg-primary), 0.7);
+}
+
+#ax-toggle-dnd.active,
+#ax-toggle-night.active,
+#ax-toggle-airplane.active,
+#ax-toggle-record.active {
+  background: var(--accent-pink);
+}
+
+#ax-toggle-dnd.active label,
+#ax-toggle-night.active label,
+#ax-toggle-airplane.active label,
+#ax-toggle-record.active label {
+  color: var(--text-dark);
+}
+
+#ax-toggle-dnd-icon,
+#ax-toggle-night-icon,
+#ax-toggle-airplane-icon,
+#ax-toggle-record-icon {
+  font-size: 20px;
+}
+
+#ax-toggle-dnd-label,
+#ax-toggle-night-label,
+#ax-toggle-airplane-label,
+#ax-toggle-record-label {
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+/* Power Mode */
+#ax-power-mode {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 16px;
+  border: 4px solid var(--bg-secondary);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+#ax-power-mode-header {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+#ax-power-modes {
+  margin-top: 4px;
+}
+
+#ax-power-mode-power-saver,
+#ax-power-mode-balanced,
+#ax-power-mode-performance {
+  background: transparent;
+  border-radius: 10px;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+
+#ax-power-mode-power-saver:hover,
+#ax-power-mode-balanced:hover,
+#ax-power-mode-performance:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-power-mode-power-saver.active {
+  background: var(--green);
+}
+
+#ax-power-mode-balanced.active {
+  background: var(--accent-yellow);
+}
+
+#ax-power-mode-performance.active {
+  background: var(--red);
+}
+
+#ax-power-mode-power-saver.active label,
+#ax-power-mode-balanced.active label,
+#ax-power-mode-performance.active label {
+  color: var(--text-dark);
+}
+
+#ax-power-mode-power-saver-icon,
+#ax-power-mode-balanced-icon,
+#ax-power-mode-performance-icon {
+  font-size: 20px;
+}
+
+#ax-power-mode-power-saver-name,
+#ax-power-mode-balanced-name,
+#ax-power-mode-performance-name {
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+/* Timers */
+#ax-utilities-timers {
+  margin-bottom: 12px;
+}
+
+#ax-timer,
+#ax-stopwatch {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 16px;
+  border: 4px solid var(--bg-secondary);
+  padding: 12px;
+}
+
+#ax-timer-header,
+#ax-stopwatch-header {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+#ax-timer-display,
+#ax-stopwatch-display {
+  font-size: 28px;
+  font-weight: bold;
+  font-family: monospace;
+  margin: 8px 0;
+}
+
+#ax-timer-presets {
+  margin-bottom: 8px;
+}
+
+#ax-timer-preset {
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+
+#ax-timer-preset:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-timer-preset label {
+  font-size: 11px;
+}
+
+#ax-timer-controls,
+#ax-stopwatch-controls {
+  margin-top: 8px;
+}
+
+#ax-timer-start,
+#ax-timer-reset,
+#ax-stopwatch-start,
+#ax-stopwatch-reset {
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  padding: 10px;
+  min-width: 40px;
+  min-height: 40px;
+  transition: all 0.2s ease;
+}
+
+#ax-timer-start:hover,
+#ax-stopwatch-start:hover {
+  background: var(--green);
+}
+
+#ax-timer-start:hover label,
+#ax-stopwatch-start:hover label {
+  color: var(--text-dark);
+}
+
+#ax-timer-start.running,
+#ax-stopwatch-start.running {
+  background: var(--accent-pink);
+}
+
+#ax-timer-start.running label,
+#ax-stopwatch-start.running label {
+  color: var(--text-dark);
+}
+
+#ax-timer-reset:hover,
+#ax-stopwatch-reset:hover {
+  background: var(--red);
+}
+
+#ax-timer-reset:hover label,
+#ax-stopwatch-reset:hover label {
+  color: var(--text-dark);
+}
+
+/* Notes */
+#ax-notes {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 16px;
+  border: 4px solid var(--bg-secondary);
+  padding: 12px;
+}
+
+#ax-notes-header {
+  margin-bottom: 8px;
+}
+
+#ax-notes-title {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#ax-notes-clear {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+
+#ax-notes-clear:hover {
+  background: var(--red);
+}
+
+#ax-notes-clear:hover label {
+  color: var(--text-dark);
+}
+
+#ax-notes-scroll {
+  background: alpha(var(--bg-primary), 0.3);
+  border-radius: 10px;
+}
+
+#ax-notes-text {
+  background: transparent;
+  color: var(--text-light);
+  font-size: 12px;
+}
+
+#ax-notes-text text {
+  background: transparent;
 }
 
 /* ============================================
@@ -508,8 +1025,8 @@
 #ax-wallpapers {
   background: transparent;
   padding: 8px;
-  min-width: 850px;
-  min-height: 380px;
+  min-width: 900px;
+  /* Height adapts to content */
 }
 
 #ax-wall-header {
@@ -574,93 +1091,4 @@
 #ax-wall-icons *:selected {
   background: var(--accent-pink);
   border-radius: 12px;
-}
-
-/* ============================================
-   MIXER SECTION
-   ============================================ */
-
-#ax-mixer {
-  background: transparent;
-  padding: 16px;
-  min-width: 850px;
-  min-height: 380px;
-}
-
-#ax-mixer-header {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-#ax-mixer-apps {
-  background: alpha(var(--bg-primary), 0.5);
-  border-radius: 14px;
-  border: 4px solid var(--bg-secondary);
-  padding: 10px;
-  margin-top: 6px;
-}
-
-#ax-mixer-apps-header {
-  font-size: 13px;
-  opacity: 0.8;
-  margin-bottom: 8px;
-}
-
-#ax-mixer-placeholder {
-  font-size: 12px;
-  padding: 20px;
-}
-
-/* ============================================
-   SHORTCUTS SECTION
-   ============================================ */
-
-#ax-shortcuts {
-  background: transparent;
-  padding: 16px;
-  min-width: 850px;
-  min-height: 380px;
-}
-
-#ax-shortcuts-header {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 16px;
-}
-
-#ax-shortcuts-grid {
-  background: transparent;
-}
-
-#ax-shortcut-btn {
-  background: alpha(var(--bg-primary), 0.5);
-  border-radius: 12px;
-  border: 4px solid var(--bg-secondary);
-  padding: 12px;
-  min-width: 64px;
-  min-height: 64px;
-  transition: all 0.2s ease;
-}
-
-#ax-shortcut-btn:hover {
-  background: var(--accent-pink);
-}
-
-#ax-shortcut-btn:hover label {
-  color: var(--text-dark);
-}
-
-#ax-shortcut-btn:active {
-  background: var(--accent-pink);
-}
-
-#ax-shortcut-icon {
-  font-size: 22px;
-  margin-bottom: 2px;
-}
-
-#ax-shortcut-name {
-  font-size: 10px;
-  opacity: 0.8;
 }

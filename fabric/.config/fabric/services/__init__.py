@@ -6,6 +6,7 @@ from .config import Config, get_config, load_config, save_config
 from .monitor_manager import MonitorManager, Monitor, get_monitor_manager
 from .metrics import MetricsProvider, get_metrics_provider, NetworkStats, DiskStats, BatteryStats
 from .workspace_manager import WorkspaceManagerService
+from .mpris import MprisPlayer, MprisPlayerManager
 
 __all__ = [
     # Animator
@@ -29,4 +30,7 @@ __all__ = [
     "BatteryStats",
     # Workspace Manager
     "WorkspaceManagerService",
+    # MPRIS
+    "MprisPlayer",
+    "MprisPlayerManager",
 ]

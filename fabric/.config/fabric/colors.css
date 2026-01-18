@@ -7,7 +7,6 @@
   /* Primary backgrounds */
   --bg-primary: #1c2024;
   --bg-secondary: #262a2e;
-  --bg-tertiary: #32363a;
   --bg-popup: #181c20;
   --bg-tooltip: #0a0f12;
 
@@ -15,12 +14,9 @@
   --accent-pink: #ccc0e9;
   --accent-pink-border: rgba(204, 192, 233, 0.5);
   --accent-pink-dim: rgba(204, 192, 233, 0.3);
-  --accent-pink-bright: #e0d6f5;
   --accent-light-pink: rgba(204, 192, 233, 0.7);
   --accent-yellow: #92cef6;
   --accent-teal: #b6c9d8;
-  --accent-cyan: #82d3e2;
-  --accent-green: #95d5a7;
 
   /* App-specific colors (keep distinct for recognition) */
   --discord-purple: #ccc0e9;
@@ -29,8 +25,6 @@
   --steam-blue: #afc6ff;
 
   /* Text colors */
-  --text-primary: #dfe3e7;
-  --text-secondary: #a8adb3;
   --text-light: #dfe3e7;
   --text-medium: #dfe3e7;
   --text-dark: #00344c;

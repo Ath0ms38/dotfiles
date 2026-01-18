@@ -1,6 +1,6 @@
 """
 Dashboard - Main expanded view of the notch
-Contains: Widgets, Wallpapers, Mixer, Shortcuts
+Contains: Widgets, Wallpapers, Mixer, Utilities
 """
 
 from fabric.widgets.box import Box
@@ -34,30 +34,31 @@ class Dashboard(Box):
         from .widgets import Widgets
         from .wallpapers import WallpaperSelector
         from .mixer import Mixer
-        from .shortcuts import Shortcuts
+        from .utilities import Utilities
 
         # Create sections
         self.widgets = Widgets(notch=notch)
         self.wallpapers = WallpaperSelector(notch=notch)
         self.mixer = Mixer(notch=notch)
-        self.shortcuts = Shortcuts(notch=notch)
+        self.utilities = Utilities(notch=notch)
 
         # Create stack for sections
         self.stack = Stack(
             name="ax-dashboard-stack",
-            transition_type="slide-left-right",
-            transition_duration=300,
-            v_expand=True,
-            v_align="fill",
+            transition_type="crossfade",
+            transition_duration=150,
+            v_expand=False,  # Don't force expand - adapt to content
+            v_align="start",  # Anchor to top
             h_expand=True,
             h_align="fill",
         )
-        self.stack.set_homogeneous(True)
+        self.stack.set_homogeneous(False)  # Allow different page sizes
+        self.stack.set_interpolate_size(True)  # Smoothly animate size changes
 
         self.stack.add_titled(self.widgets, "widgets", "Widgets")
         self.stack.add_titled(self.wallpapers, "wallpapers", "Wallpapers")
         self.stack.add_titled(self.mixer, "mixer", "Mixer")
-        self.stack.add_titled(self.shortcuts, "shortcuts", "Shortcuts")
+        self.stack.add_titled(self.utilities, "utilities", "Utilities")
 
         # Create tab switcher
         self.switcher = Gtk.StackSwitcher(
@@ -99,7 +100,7 @@ class Dashboard(Box):
             "Widgets": icons.widgets,
             "Wallpapers": icons.wallpapers,
             "Mixer": icons.speaker,
-            "Shortcuts": icons.pins,
+            "Utilities": icons.settings,
         }
 
         buttons = self.switcher.get_children()
@@ -126,7 +127,7 @@ class Dashboard(Box):
             "widgets": self.widgets,
             "wallpapers": self.wallpapers,
             "mixer": self.mixer,
-            "shortcuts": self.shortcuts,
+            "utilities": self.utilities,
         }
         if section_name in section_map:
             self.stack.set_visible_child(section_map[section_name])
