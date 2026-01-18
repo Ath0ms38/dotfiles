@@ -1,0 +1,75 @@
+{
+  "bar_position": "top",
+  "bar_margin": 4,
+  "bar_monitor": -1,
+
+  "widgets_visible": {
+    "wallpaper": true,
+    "audio": true,
+    "network": true,
+    "battery": true,
+    "system_tray": true,
+    "utility": true,
+    "power_menu": true
+  },
+
+  "special_workspaces": {
+    "discord": {
+      "enabled": true,
+      "workspace": 11,
+      "icon": "󰙯",
+      "command": "discord",
+      "color": "#5865f2"
+    },
+    "vscode": {
+      "enabled": true,
+      "workspace": 12,
+      "icon": "",
+      "command": "code",
+      "color": "#ff9f43"
+    },
+    "minecraft": {
+      "enabled": true,
+      "workspace": 13,
+      "icon": "󰍳",
+      "command": "prismlauncher",
+      "color": "#1abc9c"
+    },
+    "steam": {
+      "enabled": true,
+      "workspace": 14,
+      "icon": "󰓓",
+      "command": "steam",
+      "color": "#1e88e5"
+    }
+  },
+
+  "animation_duration": 300,
+  "animation_easing": "ease_out_back",
+  "animation_fps": 60,
+  "enable_animations": true,
+
+  "popup_width": 400,
+  "popup_margin_top": 8,
+  "popup_margin_right": 20,
+  "popup_slide_distance": 30,
+
+  "clock_format": "%H:%M:%S",
+  "clock_show_date": true,
+  "clock_date_format": "%A, %B %d",
+  "clock_update_interval": 100,
+
+  "workspaces_count": 5,
+  "workspaces_dynamic_max": 10,
+
+  "wallpapers_dir": "~/dotfiles/wallpapers",
+  "matugen_scheme": "scheme-tonal-spot",
+
+  "slider_debounce_ms": 50,
+
+  "font_family": "JetBrainsMono Nerd Font",
+  "font_size": 13,
+  "icon_size": 18,
+  "border_radius": 12,
+  "opacity": 0.85
+}

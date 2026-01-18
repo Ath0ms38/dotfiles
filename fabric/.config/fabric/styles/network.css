@@ -1,0 +1,118 @@
+/**
+ * Network Widget Styles
+ * WiFi, ethernet, connection management
+ */
+
+/* Network status header */
+#network-status {
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+#network-icon {
+  font-size: 24px;
+  min-width: 40px;
+}
+
+#connection-name {
+  font-weight: bold;
+}
+
+#connection-details {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* Bandwidth display */
+#bandwidth-display {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+#bandwidth-up,
+#bandwidth-down {
+  min-width: 80px;
+}
+
+/* WiFi access point list */
+#wifi-list {
+  margin-top: 8px;
+}
+
+#wifi-ap-slot {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 2px 0;
+}
+
+#wifi-ap-slot:hover {
+  background: var(--accent-pink-dim);
+}
+
+#wifi-ap-slot.connected {
+  background: var(--accent-teal);
+  color: var(--text-dark);
+}
+
+#wifi-ssid {
+  font-weight: 500;
+}
+
+#wifi-signal {
+  font-size: 16px;
+  min-width: 24px;
+}
+
+#wifi-security {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* Password entry */
+#password-entry-row {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 8px;
+  margin: 4px 0;
+}
+
+#password-entry {
+  background: var(--bg-popup);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 6px;
+  padding: 6px 8px;
+  min-width: 150px;
+}
+
+#password-entry:focus {
+  border-color: var(--accent-pink);
+}
+
+#connect-button {
+  background: var(--accent-teal);
+  color: var(--text-dark);
+  padding: 6px 12px;
+}
+
+#connect-button:hover {
+  background: var(--accent-pink);
+}
+
+/* Ethernet info */
+#ethernet-info {
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+#ethernet-status {
+  font-weight: bold;
+}
+
+#ethernet-ip {
+  font-size: 11px;
+  opacity: 0.8;
+}

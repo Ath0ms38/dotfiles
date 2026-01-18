@@ -209,11 +209,12 @@ class Wifi(Service):
             rsn_flags = ap.get_rsn_flags()
 
             # Check security flags (0 means NONE)
+            # NM._80211ApFlags.PRIVACY = 0x1
             if rsn_flags != 0:
                 security = "WPA2"
             elif wpa_flags != 0:
                 security = "WPA"
-            elif flags & NM.AccessPointFlags.PRIVACY:
+            elif flags & 0x1:  # PRIVACY flag
                 security = "WEP"
             else:
                 security = "Open"

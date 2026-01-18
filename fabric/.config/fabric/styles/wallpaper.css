@@ -1,0 +1,107 @@
+/**
+ * Wallpaper Widget Styles
+ * Wallpaper grid, scheme selector, controls
+ */
+
+#wallpaper-widget {
+  background: var(--bg-popup);
+  border: 2px solid var(--accent-pink-border);
+  border-radius: 12px;
+}
+
+#wallpaper-content {
+  padding: 16px;
+}
+
+#wallpaper-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent-yellow);
+  margin-bottom: 8px;
+}
+
+#wallpaper-controls {
+  margin-bottom: 8px;
+}
+
+#scheme-dropdown {
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: var(--text-light);
+  min-width: 120px;
+}
+
+#random-wallpaper-btn {
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+
+#random-wallpaper-btn:hover {
+  background: var(--accent-pink);
+}
+
+#wallpaper-scroll {
+  background: transparent;
+}
+
+#wallpaper-grid {
+  padding: 4px;
+}
+
+#wallpaper-item {
+  background: var(--bg-secondary);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+#wallpaper-item:hover {
+  border-color: var(--accent-pink);
+}
+
+#wallpaper-item:selected {
+  border-color: var(--accent-yellow);
+  background: var(--accent-yellow);
+}
+
+flowboxchild {
+  padding: 4px;
+}
+
+flowboxchild:selected #wallpaper-item {
+  border-color: var(--accent-yellow);
+}
+
+/* Wallpaper thumbnail */
+#wallpaper-thumbnail {
+  border-radius: 6px;
+  min-width: 100px;
+  min-height: 60px;
+}
+
+/* Scheme selector */
+#scheme-selector {
+  margin-bottom: 8px;
+}
+
+#scheme-button {
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin: 2px;
+}
+
+#scheme-button:hover {
+  background: var(--accent-pink-dim);
+}
+
+#scheme-button.active {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+  border-color: var(--accent-pink);
+}

@@ -1,0 +1,87 @@
+/**
+ * Popup Styles
+ * Common popup window and animation styles
+ * Using ax-shell style CSS transitions with GTK Revealer
+ */
+
+/* Widget Popups base styles */
+#audio-widget,
+#network-widget,
+#battery-widget,
+#power-menu-widget,
+#system-tray-widget,
+#utility-widget,
+#wallpaper-widget {
+  background: var(--bg-popup);
+  border: 2px solid var(--accent-pink-border);
+  border-radius: 16px;
+}
+
+/* Blur effect for popup widgets - outer container */
+.popup-blur {
+  background: var(--bg-popup);
+  border: 2px solid var(--accent-pink-border);
+  border-radius: 16px;
+  /* ax-shell bounce curve for polish */
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Popup content wrapper - handles scale/transform animations */
+.popup-content {
+  padding: 14px;
+  border-radius: 14px;
+  background: transparent;
+  /* Smooth transitions for open/close */
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Open state - triggers CSS transition polish */
+.popup-content.open {
+  /* CSS transitions will animate to this state */
+}
+
+/* Widget content areas */
+#audio-content,
+#network-content,
+#battery-content,
+#power-menu-content,
+#system-tray-content,
+#utility-content,
+#battery-container,
+#power-menu-container {
+  background: transparent;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+/* Widget titles */
+#audio-title,
+#network-title,
+#battery-title,
+#power-menu-title,
+#system-tray-title,
+#utility-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent-yellow);
+  margin-bottom: 12px;
+}
+
+/* Section titles within popups */
+#section-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* Popup scrolled windows */
+.popup-scroll {
+  background: transparent;
+}
+
+/* Empty state message */
+#empty-message {
+  opacity: 0.7;
+  font-style: italic;
+  margin: 12px 0;
+}

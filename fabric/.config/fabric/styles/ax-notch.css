@@ -1,0 +1,666 @@
+/* ============================================
+   AX-NOTCH STYLES
+   Ax-Shell style center notch with dashboard
+   Following Ax-Shell's blur approach:
+   - Outer containers use solid/shadow colors
+   - Inner widgets use alpha(black, 0.5) for blur
+   ============================================ */
+
+/* ============================================
+   NOTCH WINDOW & CONTAINER
+   ============================================ */
+
+#ax-notch {
+  background: transparent;
+}
+
+#ax-notch-box {
+  background: transparent;
+  border-radius: 0 0 14px 14px;
+  padding: 1px;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#ax-notch-box.open {
+  background: transparent;
+  border-radius: 0 0 24px 24px;
+  padding: 6px;
+}
+
+#ax-notch-content {
+  background: transparent;
+}
+
+#ax-notch-revealer {
+  background: transparent;
+}
+
+/* ============================================
+   COMPACT VIEW
+   ============================================ */
+
+#ax-compact-box {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 0 0 14px 14px;
+  padding: 4px 10px;
+  min-width: 100px;
+  box-shadow: 0 0 3px alpha(var(--bg-primary), 0.7);
+}
+
+#ax-compact {
+  background: transparent;
+  padding: 1px 6px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+#ax-compact:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-compact-stack {
+  background: transparent;
+}
+
+#ax-compact-user {
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+#ax-active-window {
+  font-size: 13px;
+  min-width: 180px;
+}
+
+#ax-active-window label {
+  color: var(--text-light);
+}
+
+/* ============================================
+   DASHBOARD
+   ============================================ */
+
+#ax-dashboard {
+  background: transparent;
+  padding: 0;
+}
+
+#ax-dashboard-bg {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 0 0 20px 20px;
+  padding: 12px;
+  box-shadow: 0 0 3px alpha(var(--bg-primary), 0.7);
+}
+
+#ax-dashboard-stack {
+  background: transparent;
+}
+
+/* Tab Switcher */
+#ax-switcher {
+  background: transparent;
+  border-radius: 12px;
+  padding: 3px;
+  margin-bottom: 10px;
+}
+
+#ax-switcher button {
+  background: transparent;
+  border-radius: 10px;
+  padding: 6px 14px;
+  min-width: 40px;
+  transition: all 0.2s ease;
+}
+
+#ax-switcher button:hover {
+  background: alpha(white, 0.1);
+}
+
+#ax-switcher button:checked {
+  background: var(--accent-pink);
+}
+
+#ax-switcher button:checked label {
+  color: var(--text-dark);
+}
+
+#ax-switcher button label {
+  font-size: 16px;
+  color: var(--text-light);
+}
+
+/* Closing state - dim the selected button to match others */
+#ax-notch-box.closing #ax-switcher button:checked {
+  background: transparent;
+}
+
+#ax-notch-box.closing #ax-switcher button:checked label {
+  color: var(--text-light);
+}
+
+/* ============================================
+   WIDGETS SECTION
+   ============================================ */
+
+#ax-widgets {
+  background: transparent;
+  padding: 8px;
+  min-width: 850px;
+  min-height: 380px;
+}
+
+#ax-widgets-center {
+  background: transparent;
+}
+
+/* ============================================
+   PLAYER WIDGET
+   ============================================ */
+
+#ax-player {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 16px;
+  border: 4px solid var(--bg-secondary);
+  padding: 8px;
+  min-width: 200px;
+}
+
+#ax-player-stack {
+  background: transparent;
+}
+
+#ax-player-box {
+  background: transparent;
+}
+
+#ax-player-cover-placeholder {
+  background: var(--bg-secondary);
+  border-radius: 50%;
+}
+
+#ax-player-progress {
+  background: transparent;
+}
+
+#ax-player-progress trough {
+  background: var(--bg-secondary);
+}
+
+#ax-player-progress trough highlight {
+  background: var(--accent-pink);
+}
+
+#ax-player-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+#ax-player-artist {
+  font-size: 12px;
+  color: var(--accent-pink);
+}
+
+#ax-player-album {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+#ax-player-time {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+
+#ax-player-controls {
+  margin-top: 8px;
+}
+
+#ax-player-btn {
+  background: transparent;
+  border-radius: 50%;
+  padding: 8px;
+  min-width: 32px;
+  min-height: 32px;
+  transition: all 0.2s ease;
+}
+
+#ax-player-btn:hover {
+  background: var(--accent-pink);
+}
+
+#ax-player-btn:hover label {
+  color: var(--text-dark);
+}
+
+#ax-player-btn-play {
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  padding: 10px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+#ax-player-btn-play:hover {
+  background: var(--accent-pink);
+}
+
+#ax-player-btn-play.playing {
+  background: var(--accent-pink);
+}
+
+#ax-player-btn-play.playing label {
+  color: var(--text-dark);
+}
+
+#ax-player-switcher {
+  margin-top: 8px;
+}
+
+#ax-player-switcher button {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+#ax-player-switcher button:checked {
+  background: var(--accent-pink);
+}
+
+/* Compact Player */
+#ax-player-small {
+  background: transparent;
+  padding: 4px 8px;
+}
+
+#ax-compact-mpris-icon {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+#ax-compact-mpris-icon:hover {
+  background: var(--accent-pink);
+}
+
+#ax-compact-mpris-icon:hover label {
+  color: var(--text-dark);
+}
+
+#ax-compact-mpris-icon label {
+  color: var(--accent-pink);
+}
+
+#ax-compact-mpris-label {
+  font-size: 12px;
+  padding: 0 8px;
+}
+
+#ax-compact-mpris-btn {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+#ax-compact-mpris-btn:hover {
+  background: var(--accent-pink);
+}
+
+#ax-compact-mpris-btn:hover label {
+  color: var(--text-dark);
+}
+
+/* ============================================
+   METRICS WIDGET
+   ============================================ */
+
+#ax-metrics {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 16px;
+  border: 4px solid var(--bg-secondary);
+  padding: 8px;
+}
+
+#ax-metric-cpu,
+#ax-metric-ram,
+#ax-metric-disk,
+#ax-metric-gpu {
+  min-width: 40px;
+}
+
+#ax-cpu-scale,
+#ax-ram-scale,
+#ax-disk-scale,
+#ax-gpu-scale {
+  min-width: 8px;
+}
+
+#ax-cpu-scale trough,
+#ax-ram-scale trough,
+#ax-disk-scale trough,
+#ax-gpu-scale trough {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  min-width: 8px;
+}
+
+#ax-cpu-scale trough highlight {
+  background: var(--accent-pink);
+  border-radius: 4px;
+}
+
+#ax-ram-scale trough highlight {
+  background: var(--accent-yellow);
+  border-radius: 4px;
+}
+
+#ax-disk-scale trough highlight {
+  background: var(--cyan);
+  border-radius: 4px;
+}
+
+#ax-gpu-scale trough highlight {
+  background: var(--green);
+  border-radius: 4px;
+}
+
+#ax-cpu-icon,
+#ax-ram-icon,
+#ax-disk-icon,
+#ax-gpu-icon {
+  font-size: 14px;
+}
+
+#ax-cpu-icon {
+  color: var(--accent-pink);
+}
+
+#ax-ram-icon {
+  color: var(--accent-yellow);
+}
+
+#ax-disk-icon {
+  color: var(--cyan);
+}
+
+#ax-gpu-icon {
+  color: var(--green);
+}
+
+/* ============================================
+   CALENDAR WIDGET
+   ============================================ */
+
+#ax-calendar {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 16px;
+  border: 4px solid var(--bg-secondary);
+  padding: 8px;
+}
+
+#ax-calendar-header {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+#ax-calendar-widget {
+  background: transparent;
+  color: var(--text-light);
+}
+
+#ax-calendar-widget.header {
+  color: var(--text-light);
+}
+
+#ax-calendar-widget.day-name {
+  color: var(--accent-pink);
+}
+
+#ax-calendar-widget:selected {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+  border-radius: 50%;
+}
+
+/* ============================================
+   CONTROLS (Volume/Brightness)
+   ============================================ */
+
+#ax-controls {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 16px;
+  border: 4px solid var(--bg-secondary);
+  padding: 8px;
+}
+
+#ax-control-volume,
+#ax-control-mic {
+  padding: 4px;
+}
+
+#ax-control-volume-icon,
+#ax-control-mic-icon {
+  background: transparent;
+  border-radius: 8px;
+  padding: 8px;
+  min-width: 32px;
+}
+
+#ax-control-volume-icon:hover,
+#ax-control-mic-icon:hover {
+  background: var(--accent-pink);
+}
+
+#ax-control-volume-icon:hover label,
+#ax-control-mic-icon:hover label {
+  color: var(--text-dark);
+}
+
+#ax-control-volume-slider,
+#ax-control-mic-slider {
+  min-height: 8px;
+}
+
+#ax-control-volume-slider trough,
+#ax-control-mic-slider trough {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  min-height: 8px;
+}
+
+#ax-control-volume-slider trough highlight,
+#ax-control-mic-slider trough highlight {
+  background: var(--accent-pink);
+  border-radius: 4px;
+}
+
+#ax-control-volume-slider slider,
+#ax-control-mic-slider slider {
+  background: var(--accent-pink);
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+  margin: -4px;
+}
+
+#ax-control-volume-value,
+#ax-control-mic-value {
+  font-size: 11px;
+  min-width: 36px;
+  opacity: 0.8;
+}
+
+.muted #ax-control-volume-slider trough highlight,
+.muted #ax-control-mic-slider trough highlight {
+  background: var(--bg-secondary);
+}
+
+.muted #ax-control-volume-slider slider,
+.muted #ax-control-mic-slider slider {
+  background: var(--bg-secondary);
+}
+
+/* ============================================
+   WALLPAPERS SECTION
+   ============================================ */
+
+#ax-wallpapers {
+  background: transparent;
+  padding: 8px;
+  min-width: 850px;
+  min-height: 380px;
+}
+
+#ax-wall-header {
+  margin-bottom: 8px;
+}
+
+#ax-wall-search {
+  background: alpha(var(--bg-primary), 0.3);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: var(--text-light);
+}
+
+#ax-wall-search:focus {
+  border: 1px solid var(--accent-pink);
+}
+
+#ax-scheme-dropdown {
+  background: alpha(var(--bg-primary), 0.3);
+  border-radius: 12px;
+  padding: 8px;
+  color: var(--text-light);
+}
+
+#ax-matugen-switch {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+}
+
+#ax-matugen-switch:checked {
+  background: var(--accent-pink);
+}
+
+#ax-wall-random {
+  background: alpha(var(--bg-primary), 0.3);
+  border-radius: 12px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+#ax-wall-random:hover {
+  background: var(--accent-pink);
+}
+
+#ax-wall-random:hover label {
+  color: var(--text-dark);
+}
+
+#ax-wall-scrolled {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 14px;
+  border: 4px solid var(--bg-secondary);
+  padding: 6px;
+  min-height: 300px;
+}
+
+#ax-wall-icons {
+  background: transparent;
+  min-height: 280px;
+}
+
+#ax-wall-icons *:selected {
+  background: var(--accent-pink);
+  border-radius: 12px;
+}
+
+/* ============================================
+   MIXER SECTION
+   ============================================ */
+
+#ax-mixer {
+  background: transparent;
+  padding: 16px;
+  min-width: 850px;
+  min-height: 380px;
+}
+
+#ax-mixer-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+#ax-mixer-apps {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 14px;
+  border: 4px solid var(--bg-secondary);
+  padding: 10px;
+  margin-top: 6px;
+}
+
+#ax-mixer-apps-header {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+#ax-mixer-placeholder {
+  font-size: 12px;
+  padding: 20px;
+}
+
+/* ============================================
+   SHORTCUTS SECTION
+   ============================================ */
+
+#ax-shortcuts {
+  background: transparent;
+  padding: 16px;
+  min-width: 850px;
+  min-height: 380px;
+}
+
+#ax-shortcuts-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+#ax-shortcuts-grid {
+  background: transparent;
+}
+
+#ax-shortcut-btn {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 12px;
+  border: 4px solid var(--bg-secondary);
+  padding: 12px;
+  min-width: 64px;
+  min-height: 64px;
+  transition: all 0.2s ease;
+}
+
+#ax-shortcut-btn:hover {
+  background: var(--accent-pink);
+}
+
+#ax-shortcut-btn:hover label {
+  color: var(--text-dark);
+}
+
+#ax-shortcut-btn:active {
+  background: var(--accent-pink);
+}
+
+#ax-shortcut-icon {
+  font-size: 22px;
+  margin-bottom: 2px;
+}
+
+#ax-shortcut-name {
+  font-size: 10px;
+  opacity: 0.8;
+}

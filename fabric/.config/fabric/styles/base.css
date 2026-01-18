@@ -1,0 +1,100 @@
+/**
+ * Base Styles
+ * Global styles, fonts, and resets
+ */
+
+/* Base styles */
+* {
+  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", "Font Awesome";
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* Windows should be transparent by default */
+window {
+  background: transparent;
+}
+
+/* Boxes should be transparent by default */
+box {
+  background: transparent;
+}
+
+/* Common button styles */
+button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 6px 10px;
+  margin: 2px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+button:hover {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 2px var(--accent-pink);
+}
+
+/* Tooltips */
+tooltip {
+  background: var(--bg-tooltip);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 8px;
+  color: var(--text-light);
+  padding: 8px 12px;
+}
+
+/* Separators */
+separator {
+  background: var(--accent-pink-dim);
+  min-height: 1px;
+  margin: 8px 0;
+}
+
+/* Scrollbars */
+scrollbar {
+  background: transparent;
+}
+
+scrollbar slider {
+  background: var(--accent-pink-dim);
+  border-radius: 4px;
+  min-width: 6px;
+  min-height: 6px;
+}
+
+scrollbar slider:hover {
+  background: var(--accent-pink);
+}
+
+/* Scale/Slider base styles */
+scale {
+  padding: 4px 0;
+}
+
+scale trough {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  min-height: 8px;
+}
+
+scale highlight {
+  background: var(--accent-pink);
+  border-radius: 4px;
+}
+
+scale slider {
+  background: var(--accent-yellow);
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+}
+
+scale slider:hover {
+  background: var(--accent-pink);
+}
