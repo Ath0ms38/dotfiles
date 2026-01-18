@@ -182,6 +182,26 @@ class ControlSliders(Box):
         else:
             self.audio = None
 
+    def disable_audio_service(self):
+        """Disable the audio service temporarily to avoid Cvc crashes during BT profile switch"""
+        if self.audio:
+            try:
+                # Close the underlying Cvc MixerControl to disconnect from PulseAudio/PipeWire
+                if hasattr(self.audio, '_control') and self.audio._control:
+                    self.audio._control.close()
+            except Exception:
+                pass
+            self.audio = None
+
+    def enable_audio_service(self):
+        """Re-enable the audio service after BT profile switch"""
+        if HAS_AUDIO and not self.audio:
+            try:
+                self.audio = Audio()
+                self._setup_audio_bindings()
+            except Exception:
+                pass
+
     def _setup_audio_bindings(self):
         """Connect to audio service signals"""
         if not self.audio:

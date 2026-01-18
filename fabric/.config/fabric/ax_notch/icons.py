@@ -58,6 +58,12 @@ pins = "󰐃"
 kanban = "󱃵"
 palette = "󰏘"
 
+# Bluetooth
+bluetooth = "󰂯"
+bluetooth_off = "󰂲"
+headset = "󰋎"
+headset_mic = "󰋎"
+
 # Misc
 dice_1 = "󰇊"
 dice_2 = "󰇋"

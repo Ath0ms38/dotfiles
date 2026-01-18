@@ -14,143 +14,143 @@
       "binaryPrefix": "iec"
     },
     "color": {
-      "keys": "#92cef6",
-      "title": "#ccc0e9",
-      "separator": "#8b9198",
-      "output": "#dfe3e7"
+      "keys": "#{{colors.primary.default.hex_stripped}}",
+      "title": "#{{colors.tertiary.default.hex_stripped}}",
+      "separator": "#{{colors.outline.default.hex_stripped}}",
+      "output": "#{{colors.on_background.default.hex_stripped}}"
     }
   },
   "modules": [
     {
       "type": "custom",
-      "outputColor": "#8b9198",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "╭──────────────────────────────────────────"
     },
     {
       "type": "title",
       "key": "│  ",
-      "keyColor": "#8b9198",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "{user-name}@{host-name}",
       "color": {
-        "user": "#ccc0e9",
-        "at": "#8b9198",
-        "host": "#b6c9d8"
+        "user": "#{{colors.tertiary.default.hex_stripped}}",
+        "at": "#{{colors.outline.default.hex_stripped}}",
+        "host": "#{{colors.secondary.default.hex_stripped}}"
       }
     },
     {
       "type": "custom",
-      "outputColor": "#8b9198",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "├──────────────────────────────────────────"
     },
     {
       "type": "custom",
-      "outputColor": "#92cef6",
+      "outputColor": "#{{colors.primary.default.hex_stripped}}",
       "format": "│    SYSTEM"
     },
     {
       "type": "os",
       "key": "│    ",
-      "keyColor": "#8b9198",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "{pretty-name}"
     },
     {
       "type": "kernel",
       "key": "│   󰌽 ",
-      "keyColor": "#8b9198",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "{release}"
     },
     {
       "type": "uptime",
       "key": "│   󰅐 ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "packages",
       "key": "│   󰏖 ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "custom",
-      "outputColor": "#8b9198",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "│"
     },
     {
       "type": "custom",
-      "outputColor": "#b6c9d8",
+      "outputColor": "#{{colors.secondary.default.hex_stripped}}",
       "format": "│    DESKTOP"
     },
     {
       "type": "wm",
       "key": "│    ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "shell",
       "key": "│    ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "terminal",
       "key": "│    ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "font",
       "key": "│   󰛖 ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "custom",
-      "outputColor": "#8b9198",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "│"
     },
     {
       "type": "custom",
-      "outputColor": "#ccc0e9",
+      "outputColor": "#{{colors.tertiary.default.hex_stripped}}",
       "format": "│   󰍛 HARDWARE"
     },
     {
       "type": "cpu",
       "key": "│   󰻠 ",
-      "keyColor": "#8b9198",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "{name}"
     },
     {
       "type": "gpu",
       "key": "│   󰢮 ",
-      "keyColor": "#8b9198",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "{name}"
     },
     {
       "type": "memory",
       "key": "│   󰍛 ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "disk",
       "key": "│   󰋊 ",
-      "keyColor": "#8b9198",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
       "folders": "/"
     },
     {
       "type": "battery",
       "key": "│   󰁹 ",
-      "keyColor": "#8b9198"
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
     },
     {
       "type": "custom",
-      "outputColor": "#8b9198",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "├──────────────────────────────────────────"
     },
     {
       "type": "colors",
       "key": "│   ",
-      "keyColor": "#8b9198",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
       "symbol": "diamond"
     },
     {
       "type": "custom",
-      "outputColor": "#8b9198",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
       "format": "╰──────────────────────────────────────────"
     }
   ]

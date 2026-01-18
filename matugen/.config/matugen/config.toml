@@ -32,4 +32,8 @@ output_path = "/home/athoms/.config/swaync/colors.css"
 [templates.starship]
 input_path = "/home/athoms/.config/matugen/templates/starship.toml"
 output_path = "/home/athoms/.config/starship.toml"
+
+[templates.fastfetch]
+input_path = "/home/athoms/.config/matugen/templates/fastfetch.jsonc"
+output_path = "/home/athoms/.config/fastfetch/config.jsonc"
 post_hook = "/home/athoms/.config/matugen/post-matugen.sh '{{image}}'"
