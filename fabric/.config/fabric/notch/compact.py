@@ -149,14 +149,28 @@ class CompactBar(CenterBox):
         )
 
     def _build_right_section(self):
-        """Build right section: clock only"""
+        """Build right section: notification button + clock"""
         return Box(
             name="compact-right",
             orientation="h",
             spacing=8,
             children=[
+                self._build_notification_button(),
                 self._build_clock(),
             ]
+        )
+
+    def _build_notification_button(self):
+        """Build notification center button"""
+        import subprocess
+
+        def toggle_notifications(*_):
+            subprocess.Popen(["swaync-client", "-t"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        return Button(
+            name="notification-button",
+            label="󰂚",  # Bell icon
+            on_clicked=toggle_notifications,
         )
 
     def _build_clock(self):

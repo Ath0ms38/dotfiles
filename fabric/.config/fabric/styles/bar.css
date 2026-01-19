@@ -36,6 +36,23 @@
   min-width: 100px;
 }
 
+/* Notification button */
+#notification-button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 2px 4px;
+  font-size: 16px;
+  min-width: 32px;
+  transition: all 0.2s ease;
+}
+
+#notification-button:hover {
+  background: var(--accent-primary);
+  color: var(--bg-dark);
+}
+
 /* Clock */
 #clock {
   background: var(--button-bg);

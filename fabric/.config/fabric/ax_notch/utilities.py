@@ -218,6 +218,7 @@ class Timer(Box):
         self.remaining_seconds = 0
         self.is_running = False
         self.timer_id = None
+        self._editing = False
 
         # Header
         header = Label(
@@ -227,12 +228,38 @@ class Timer(Box):
         )
         self.add(header)
 
-        # Time display
+        # Time display container (switches between label and entry)
+        self.time_container = Box(
+            name="ax-timer-display-container",
+            orientation="h",
+            h_align="center",
+        )
+
+        # Time display label (clickable)
         self.time_label = Label(
             name="ax-timer-display",
             label="00:00:00",
         )
-        self.add(self.time_label)
+
+        # Wrap in event box for click handling
+        self.time_event_box = Gtk.EventBox()
+        self.time_event_box.add(self.time_label)
+        self.time_event_box.connect("button-press-event", self._on_display_clicked)
+        self.time_event_box.set_tooltip_text("Click to enter time manually")
+
+        # Time entry (hidden by default)
+        self.time_entry = Entry(
+            name="ax-timer-entry",
+            placeholder="HH:MM:SS",
+        )
+        self.time_entry.set_max_length(8)
+        self.time_entry.set_width_chars(8)
+        self.time_entry.connect("activate", self._on_entry_activate)
+        self.time_entry.connect("focus-out-event", self._on_entry_focus_out)
+        self.time_entry.connect("key-press-event", self._on_entry_key_press)
+
+        self.time_container.add(self.time_event_box)
+        self.add(self.time_container)
 
         # Preset buttons
         presets_box = Box(
@@ -283,6 +310,93 @@ class Timer(Box):
         """Set timer to preset value"""
         self.remaining_seconds = seconds
         self._update_display()
+
+    def _on_display_clicked(self, widget, event):
+        """Switch to edit mode when display is clicked"""
+        if self.is_running:
+            return False  # Don't allow editing while running
+
+        self._start_editing()
+        return True
+
+    def _start_editing(self):
+        """Switch to entry mode"""
+        if self._editing:
+            return
+
+        self._editing = True
+
+        # Set entry text to current time
+        hours = self.remaining_seconds // 3600
+        minutes = (self.remaining_seconds % 3600) // 60
+        seconds = self.remaining_seconds % 60
+        self.time_entry.set_text(f"{hours:02d}:{minutes:02d}:{seconds:02d}")
+
+        # Switch widgets
+        self.time_container.remove(self.time_event_box)
+        self.time_container.add(self.time_entry)
+        self.time_entry.show()
+        self.time_entry.grab_focus()
+        self.time_entry.select_region(0, -1)
+
+    def _stop_editing(self, apply_value=True):
+        """Switch back to display mode"""
+        if not self._editing:
+            return
+
+        self._editing = False
+
+        if apply_value:
+            self._parse_entry_time()
+
+        # Switch widgets back
+        self.time_container.remove(self.time_entry)
+        self.time_container.add(self.time_event_box)
+        self._update_display()
+
+    def _parse_entry_time(self):
+        """Parse time from entry and set remaining_seconds"""
+        text = self.time_entry.get_text().strip()
+
+        # Try different formats
+        parts = text.replace(":", " ").replace(",", " ").split()
+
+        try:
+            if len(parts) == 1:
+                # Single number - treat as minutes
+                self.remaining_seconds = int(parts[0]) * 60
+            elif len(parts) == 2:
+                # MM:SS format
+                minutes = int(parts[0])
+                seconds = int(parts[1])
+                self.remaining_seconds = minutes * 60 + seconds
+            elif len(parts) >= 3:
+                # HH:MM:SS format
+                hours = int(parts[0])
+                minutes = int(parts[1])
+                seconds = int(parts[2])
+                self.remaining_seconds = hours * 3600 + minutes * 60 + seconds
+        except ValueError:
+            pass  # Keep current value on parse error
+
+        # Clamp to reasonable max (24 hours)
+        self.remaining_seconds = max(0, min(86400, self.remaining_seconds))
+
+    def _on_entry_activate(self, entry):
+        """Handle Enter key in entry"""
+        self._stop_editing(apply_value=True)
+
+    def _on_entry_focus_out(self, entry, event):
+        """Handle focus loss from entry"""
+        self._stop_editing(apply_value=True)
+        return False
+
+    def _on_entry_key_press(self, entry, event):
+        """Handle Escape key to cancel editing"""
+        if event.keyval == Gdk.KEY_Escape:
+            self._stop_editing(apply_value=False)
+            return True
+        return False
 
     def _toggle_timer(self, btn):
         """Start/pause timer"""
@@ -453,7 +567,7 @@ class Stopwatch(Box):
 class QuickToggle(Button):
     """Quick toggle button for DND, Night Light, etc."""
 
-    def __init__(self, name: str, icon: str, label_text: str, is_active_fn, toggle_fn, **kwargs):
+    def __init__(self, name: str, icon: str, label_text: str, is_active_fn, toggle_fn, icon_active: str = None, **kwargs):
         super().__init__(
             name=f"ax-toggle-{name}",
             **kwargs,
@@ -461,13 +575,17 @@ class QuickToggle(Button):
 
         self.is_active_fn = is_active_fn
         self.toggle_fn = toggle_fn
+        self.icon_inactive = icon
+        self.icon_active = icon_active or icon  # Use same icon if no active icon provided
+
+        self.icon_label = Label(name=f"ax-toggle-{name}-icon", label=icon)
 
         content = Box(
             orientation="v",
             spacing=4,
             h_align="center",
             children=[
-                Label(name=f"ax-toggle-{name}-icon", label=icon),
+                self.icon_label,
                 Label(name=f"ax-toggle-{name}-label", label=label_text),
             ],
         )
@@ -483,10 +601,13 @@ class QuickToggle(Button):
 
     def _update_state(self):
         """Update button state"""
-        if self.is_active_fn():
+        is_active = self.is_active_fn()
+        if is_active:
             self.add_style_class("active")
+            self.icon_label.set_label(self.icon_active)
         else:
             self.remove_style_class("active")
+            self.icon_label.set_label(self.icon_inactive)
         return False
 
 
@@ -514,22 +635,14 @@ class Utilities(Box):
             h_expand=True,
         )
 
-        # Do Not Disturb toggle
+        # Do Not Disturb toggle (bell when off, bell-off when on)
         dnd_toggle = QuickToggle(
             name="dnd",
-            icon="󰂛",
+            icon="󰂚",  # Bell (notifications on)
+            icon_active="󰂛",  # Bell off (DND active)
             label_text="DND",
             is_active_fn=self._is_dnd_active,
             toggle_fn=self._toggle_dnd,
-        )
-
-        # Night Light toggle
-        night_toggle = QuickToggle(
-            name="night",
-            icon="󰖔",
-            label_text="Night Light",
-            is_active_fn=self._is_night_light_active,
-            toggle_fn=self._toggle_night_light,
         )
 
         # Airplane mode toggle
@@ -546,12 +659,11 @@ class Utilities(Box):
             name="record",
             icon="󰑋",
             label_text="Record",
-            is_active_fn=lambda: False,
-            toggle_fn=self._start_recording,
+            is_active_fn=self._is_recording_active,
+            toggle_fn=self._toggle_recording,
         )
 
         toggles_box.add(dnd_toggle)
-        toggles_box.add(night_toggle)
         toggles_box.add(airplane_toggle)
         toggles_box.add(record_toggle)
 
@@ -582,10 +694,10 @@ class Utilities(Box):
         self.add(self.notes)
 
     def _is_dnd_active(self):
-        """Check if DND is active"""
+        """Check if DND is active (using swaync)"""
         try:
             result = subprocess.run(
-                ["dunstctl", "is-paused"],
+                ["swaync-client", "-D"],
                 capture_output=True,
                 text=True,
                 timeout=2,
@@ -595,54 +707,11 @@ class Utilities(Box):
             return False
 
     def _toggle_dnd(self):
-        """Toggle Do Not Disturb"""
+        """Toggle Do Not Disturb (using swaync)"""
         try:
-            subprocess.run(["dunstctl", "set-paused", "toggle"], timeout=2)
+            subprocess.run(["swaync-client", "-d"], timeout=2)
         except Exception:
             pass
-
-    def _is_night_light_active(self):
-        """Check if night light is active"""
-        try:
-            # Try gammastep first
-            result = subprocess.run(
-                ["pgrep", "-x", "gammastep"],
-                capture_output=True,
-            )
-            if result.returncode == 0:
-                return True
-            # Try redshift
-            result = subprocess.run(
-                ["pgrep", "-x", "redshift"],
-                capture_output=True,
-            )
-            return result.returncode == 0
-        except Exception:
-            return False
-
-    def _toggle_night_light(self):
-        """Toggle night light (gammastep/redshift)"""
-        if self._is_night_light_active():
-            # Kill running instance
-            subprocess.run(["pkill", "-x", "gammastep"], capture_output=True)
-            subprocess.run(["pkill", "-x", "redshift"], capture_output=True)
-        else:
-            # Start gammastep (or redshift as fallback)
-            try:
-                subprocess.Popen(
-                    ["gammastep", "-O", "4500"],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                )
-            except Exception:
-                try:
-                    subprocess.Popen(
-                        ["redshift", "-O", "4500"],
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL,
-                    )
-                except Exception:
-                    pass
 
     def _is_airplane_active(self):
         """Check if airplane mode is active"""
@@ -670,15 +739,21 @@ class Utilities(Box):
         except Exception:
             pass
 
-    def _start_recording(self):
-        """Start/stop screen recording"""
+    def _is_recording_active(self):
+        """Check if screen recording is active"""
         try:
-            # Check if wf-recorder is running
             result = subprocess.run(
                 ["pgrep", "-x", "wf-recorder"],
                 capture_output=True,
             )
-            if result.returncode == 0:
+            return result.returncode == 0
+        except Exception:
+            return False
+
+    def _toggle_recording(self):
+        """Start/stop screen recording"""
+        try:
+            if self._is_recording_active():
                 # Stop recording
                 subprocess.run(["pkill", "-x", "wf-recorder"])
             else:
