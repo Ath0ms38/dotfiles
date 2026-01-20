@@ -1,0 +1,105 @@
+configuration {
+    modi: "drun,run,filebrowser";
+    show-icons: true;
+    icon-theme: "Qogir";
+    terminal: "kitty";
+    drun-display-format: "{name}";
+    location: 0;
+    disable-history: false;
+    hide-scrollbar: true;
+    sidebar-mode: false;
+    kb-move-char-forward: "Control+f";
+    kb-move-char-back: "Control+b";
+    kb-accept-entry: "Return,Right";
+    kb-custom-1: "Left";
+}
+
+@theme "colors.rasi"
+
+* {
+    font: "JetBrainsMono Nerd Font 12";
+    background-color: transparent;
+    text-color: @text-light;
+}
+
+window {
+    transparency: "real";
+    background-color: @bg-primary;
+    border: 1px solid;
+    border-color: @accent-pink-dim;
+    border-radius: 12px;
+    padding: 0;
+}
+
+mainbox {
+    background-color: transparent;
+    children: [ inputbar, listview ];
+    spacing: 0;
+    padding: 0;
+}
+
+inputbar {
+    background-color: transparent;
+    border: 0 0 1px 0;
+    border-color: @accent-pink-dim;
+    padding: 16px;
+    children: [ prompt, entry ];
+    spacing: 12px;
+}
+
+prompt {
+    background-color: transparent;
+    text-color: @accent-pink;
+    font: "JetBrainsMono Nerd Font 14";
+}
+
+entry {
+    background-color: transparent;
+    text-color: @text-light;
+    placeholder: "Search...";
+    placeholder-color: @text-dim;
+    font: "JetBrainsMono Nerd Font 14";
+}
+
+listview {
+    background-color: transparent;
+    padding: 8px;
+    columns: 1;
+    lines: 8;
+    fixed-height: false;
+    dynamic: true;
+    scrollbar: false;
+    spacing: 4px;
+}
+
+element {
+    background-color: transparent;
+    padding: 10px 16px;
+    border-radius: 8px;
+    spacing: 12px;
+}
+
+element-icon {
+    size: 24px;
+    background-color: transparent;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: @text-light;
+    vertical-align: 0.5;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+}
+
+element selected.normal {
+    background-color: @accent-pink;
+}
+
+element selected.normal element-text,
+element-text selected {
+    text-color: @text-dark;
+}

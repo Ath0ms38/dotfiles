@@ -6,6 +6,7 @@ cd "$SCRIPT_DIR"
 
 echo "Stopping Fabric bar..."
 pkill -f "python.*fabric-bar.py" 2>/dev/null
+pkill -f "python.*ax_notch_bar.py" 2>/dev/null
 sleep 0.5
 
 echo "Clearing Python cache..."
@@ -17,4 +18,5 @@ if [ -d "$SCRIPT_DIR/venv" ]; then
     source "$SCRIPT_DIR/venv/bin/activate"
 fi
 
-python "$SCRIPT_DIR/fabric-bar.py"
+python "$SCRIPT_DIR/fabric-bar.py" &
+python "$SCRIPT_DIR/ax_notch_bar.py" &

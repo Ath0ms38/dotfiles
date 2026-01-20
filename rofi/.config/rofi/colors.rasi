@@ -1,0 +1,22 @@
+/**
+ * Matugen-generated colors for Rofi
+ * Auto-generated from wallpaper - do not edit manually
+ */
+
+* {
+    bg-primary: #1c2024cc;
+    bg-secondary: #262a2ecc;
+    bg-popup: #181c20cc;
+
+    accent-pink: #ccc0e9;
+    accent-pink-dim: #ccc0e94d;
+    accent-yellow: #92cef6;
+    accent-teal: #b6c9d8;
+
+    text-light: #dfe3e7;
+    text-dim: #dfe3e780;
+    text-dark: #00344c;
+
+    error: #ffb4ab;
+    success: #95d5a7;
+}

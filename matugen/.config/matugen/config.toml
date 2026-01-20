@@ -37,3 +37,11 @@ output_path = "/home/athoms/.config/starship.toml"
 input_path = "/home/athoms/.config/matugen/templates/fastfetch.jsonc"
 output_path = "/home/athoms/.config/fastfetch/config.jsonc"
 post_hook = "/home/athoms/.config/matugen/post-matugen.sh '{{image}}'"
+
+[templates.walker]
+input_path = "/home/athoms/.config/matugen/templates/walker-colors.css"
+output_path = "/home/athoms/.config/walker/themes/default/colors.css"
+
+[templates.rofi]
+input_path = "/home/athoms/.config/matugen/templates/rofi-colors.rasi"
+output_path = "/home/athoms/.config/rofi/colors.rasi"
