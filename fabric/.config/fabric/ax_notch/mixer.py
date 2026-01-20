@@ -86,7 +86,7 @@ class AudioVisualizer(Gtk.DrawingArea):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.set_name("ax-visualizer")
-        self.set_size_request(-1, 60)
+        self.set_size_request(-1, 50)
 
         # Visualizer settings
         self.num_bars = 24
@@ -413,7 +413,8 @@ class Mixer(Box):
             orientation="v",
             spacing=12,
             h_expand=True,
-            v_expand=True,
+            v_expand=False,
+            v_align="start",
             **kwargs,
         )
 
@@ -492,10 +493,12 @@ class Mixer(Box):
         self.app_scroll = ScrolledWindow(
             name="ax-mixer-apps-scroll",
             h_expand=True,
-            v_expand=True,
+            v_expand=False,
         )
         self.app_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.app_scroll.set_max_content_height(150)
+        # Set both min and max to same value to prevent any size changes
+        self.app_scroll.set_min_content_height(80)
+        self.app_scroll.set_max_content_height(80)
         self.app_scroll.add(self.app_list)
 
         # Apps container
@@ -507,11 +510,16 @@ class Mixer(Box):
             children=[app_header_box, self.app_scroll],
         )
 
-        # Add all sections
+        # Add all sections directly
         self.add(header_box)
         self.add(self.controls)
         self.add(visualizer_box)
         self.add(self.app_container)
+
+        # Set fixed height to prevent layout shifts when apps are added
+        # This ensures the mixer doesn't grow after initial render
+        # Must fit within dashboard's 450px - switcher (~40px) - padding (~30px) = ~380px max
+        self.set_size_request(-1, 360)
 
         # Initialize app list and set up polling
         GLib.timeout_add(500, self._refresh_app_list)

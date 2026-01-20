@@ -21,9 +21,9 @@ class Dashboard(Box):
             orientation="v",
             spacing=8,
             h_align="center",
-            v_align="center",
+            v_align="start",
             h_expand=True,
-            v_expand=True,
+            v_expand=False,
             visible=True,
             all_visible=True,
         )
@@ -53,7 +53,7 @@ class Dashboard(Box):
             h_align="fill",
         )
         self.stack.set_homogeneous(False)  # Allow different page sizes
-        self.stack.set_interpolate_size(True)  # Smoothly animate size changes
+        self.stack.set_interpolate_size(False)  # Disable to prevent layout shifts with negative margin
 
         self.stack.add_titled(self.widgets, "widgets", "Widgets")
         self.stack.add_titled(self.wallpapers, "wallpapers", "Wallpapers")
@@ -78,7 +78,8 @@ class Dashboard(Box):
             orientation="v",
             spacing=8,
             h_expand=True,
-            v_expand=True,
+            v_expand=False,
+            v_align="start",
             children=[self.switcher, self.stack],
         )
 
