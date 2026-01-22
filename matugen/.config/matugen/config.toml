@@ -45,3 +45,11 @@ output_path = "/home/athoms/.config/walker/themes/default/colors.css"
 [templates.rofi]
 input_path = "/home/athoms/.config/matugen/templates/rofi-colors.rasi"
 output_path = "/home/athoms/.config/rofi/colors.rasi"
+
+[templates.sddm]
+input_path = "/home/athoms/.config/matugen/templates/sddm-colors.conf"
+output_path = "/home/athoms/dotfiles/sddm/usr/share/sddm/themes/cozy-anime-room/Themes/cozy_anime_room.conf"
+
+[templates.vscode]
+input_path = "/home/athoms/.config/matugen/templates/vscode-colors.json"
+output_path = "/home/athoms/.config/Code/User/settings.json"

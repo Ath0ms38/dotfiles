@@ -1,0 +1,14 @@
+[SddmGreeterTheme]
+Name=Cozy Anime Room
+Description=A warm, tech-meets-traditional Japanese themed login screen inspired by an anime bedroom
+Author=athoms
+License=GPL-3.0-or-later
+Type=sddm-theme
+Version=1.0
+ConfigFile=Themes/cozy_anime_room.conf
+Screenshot=Previews/cozy_anime_room.png
+MainScript=Main.qml
+TranslationsDirectory=translations
+Theme-Id=cozy-anime-room
+Theme-API=2.0
+QtVersion=6
