@@ -1,0 +1,489 @@
+/**
+ * Notch Styles
+ * Full-width transparent bar
+ * Uses CSS transitions with bounce curve for polish
+ */
+
+/* Main notch window - full width, transparent background */
+#notch {
+  background: transparent;
+}
+
+/* Outer wrapper - transparent, full width */
+#notch-wrap {
+  background: transparent;
+}
+
+/* Event box - transparent */
+#notch-eventbox {
+  background: transparent;
+}
+
+/* Content wrapper - transparent so only elements are visible */
+#notch-content {
+  background: transparent;
+  padding: 4px 16px;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#notch-content.open {
+  padding: 8px 16px;
+}
+
+/* ============================================
+   POPUP PANEL (separate overlay window)
+   ============================================ */
+
+#popup-panel {
+  background: transparent;
+}
+
+#popup-eventbox {
+  background: transparent;
+}
+
+#popup-content {
+  background: transparent;
+  padding: 8px;
+}
+
+#popup-revealer {
+  background: transparent;
+}
+
+/* Sections stack - the actual popup with background */
+#sections-stack {
+  background: var(--bg-popup);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+/* ============================================
+   COMPACT BAR STATE
+   ============================================ */
+
+#compact-bar {
+  background: transparent;
+  font-weight: bold;
+}
+
+#compact-spacer {
+  background: transparent;
+}
+
+#compact-left,
+#compact-right {
+  background: transparent;
+}
+
+/* ============================================
+   SECTION COMMON STYLES
+   ============================================ */
+
+#audio-section,
+#network-section,
+#power-section {
+  background: transparent;
+  padding: 12px;
+}
+
+/* Section headers */
+#audio-header,
+#network-header,
+#power-header {
+  margin-bottom: 8px;
+}
+
+/* Section titles */
+#section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent-yellow);
+}
+
+#subsection-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+/* Close button in sections */
+#close-button {
+  padding: 4px 8px;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+}
+
+#close-button:hover {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+}
+
+/* ============================================
+   AUDIO SECTION
+   ============================================ */
+
+#section-header {
+  margin-bottom: 12px;
+}
+
+#volume-control {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+#volume-slider {
+  margin-top: 4px;
+}
+
+#volume-percent {
+  min-width: 40px;
+}
+
+#mute-button {
+  padding: 4px 8px;
+  min-width: 36px;
+  border-radius: 8px;
+}
+
+/* ============================================
+   NETWORK SECTION
+   ============================================ */
+
+#current-connection-box {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+#current-connection-info {
+  color: var(--text-light);
+}
+
+#ethernet-section {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+#wifi-toggle-button,
+#network-refresh {
+  padding: 4px 10px;
+  min-width: 36px;
+  border-radius: 8px;
+}
+
+#wifi-ap-slot {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 4px 0;
+}
+
+#wifi-ap-slot:hover {
+  background: var(--accent-pink-dim);
+}
+
+#wifi-connect-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+#wifi-connect-button.connected {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+}
+
+#password-entry-row {
+  background: var(--bg-primary);
+  border-radius: 8px;
+  padding: 8px;
+  margin-top: 8px;
+}
+
+#password-connect-btn {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+}
+
+#password-cancel-btn {
+  background: var(--bg-secondary);
+}
+
+#network-status {
+  opacity: 0.7;
+  font-style: italic;
+  padding: 16px 0;
+}
+
+#network-ap-scrolled-window {
+  background: transparent;
+}
+
+/* ============================================
+   POWER SECTION
+   ============================================ */
+
+#power-section {
+  min-width: 380px;
+}
+
+#power-buttons-row1,
+#power-buttons-row2 {
+  margin: 8px 0;
+}
+
+#power-shutdown,
+#power-reboot,
+#power-logout,
+#power-lock,
+#power-sleep {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 12px;
+  min-width: 100px;
+  min-height: 100px;
+  transition: all 0.2s ease;
+}
+
+#power-shutdown:hover {
+  background: rgba(255, 107, 107, 0.3);
+  border: 1px solid #ff6b6b;
+}
+
+#power-reboot:hover {
+  background: rgba(255, 217, 102, 0.3);
+  border: 1px solid #ffd966;
+}
+
+#power-logout:hover {
+  background: rgba(164, 232, 141, 0.3);
+  border: 1px solid #a4e88d;
+}
+
+#power-lock:hover {
+  background: rgba(116, 199, 236, 0.3);
+  border: 1px solid #74c7ec;
+}
+
+#power-sleep:hover {
+  background: rgba(203, 166, 247, 0.3);
+  border: 1px solid #cba6f7;
+}
+
+#power-hint {
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+/* ============================================
+   WORKSPACE & WIDGET BUTTONS (inherited from bar)
+   ============================================ */
+
+#widget-buttons button {
+  padding: 4px 10px;
+  min-width: 32px;
+  border-radius: 10px;
+}
+
+#audio-button,
+#network-button,
+#power-button {
+  font-size: 16px;
+}
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+
+#audio-section scrollbar,
+#network-section scrollbar {
+  background: transparent;
+}
+
+#audio-section scrollbar slider,
+#network-section scrollbar slider {
+  background: var(--accent-pink-dim);
+  border-radius: 4px;
+  min-width: 6px;
+}
+
+#audio-section scrollbar slider:hover,
+#network-section scrollbar slider:hover {
+  background: var(--accent-pink);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+#empty-message {
+  opacity: 0.7;
+  font-style: italic;
+  padding: 16px 0;
+}
+
+/* ============================================
+   CENTER NOTCH (ax-shell style)
+   ============================================ */
+
+#center-notch {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  padding: 8px 20px;
+  min-width: 200px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#center-notch:hover,
+#center-notch.hovered {
+  background: var(--accent-pink-dim);
+  min-width: 240px;
+}
+
+#center-notch-content {
+  background: transparent;
+}
+
+#notch-compact-stack {
+  background: transparent;
+}
+
+#active-window-box {
+  background: transparent;
+}
+
+#notch-window-icon {
+  opacity: 0.9;
+}
+
+#notch-active-window {
+  font-size: 13px;
+}
+
+#compact-user {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+#compact-clock {
+  font-size: 13px;
+}
+
+/* ============================================
+   DASHBOARD
+   ============================================ */
+
+#dashboard {
+  background: transparent;
+  padding: 8px;
+}
+
+#dashboard-tabs {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 12px;
+}
+
+#dashboard-tab {
+  background: transparent;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 16px;
+  min-width: 48px;
+}
+
+#dashboard-tab:hover {
+  background: var(--accent-pink-dim);
+}
+
+#dashboard-tab.active {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+}
+
+#dashboard-stack {
+  background: transparent;
+}
+
+/* Widget Cards */
+#widgets-section {
+  padding: 12px;
+}
+
+#widget-card {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 16px;
+  min-width: 100px;
+  min-height: 100px;
+  transition: all 0.2s ease;
+}
+
+#widget-card:hover {
+  background: var(--accent-pink-dim);
+  border: 1px solid var(--accent-pink);
+}
+
+#widget-card-icon {
+  font-size: 28px;
+  color: var(--accent-yellow);
+}
+
+#widget-card-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#widget-card-desc {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* Mixer Section */
+#mixer-section {
+  padding: 8px;
+}
+
+/* Wallpapers Section */
+#wallpapers-section {
+  padding: 16px;
+}
+
+#placeholder-text {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+/* Shortcuts Section */
+#shortcuts-section {
+  padding: 12px;
+}
+
+#shortcut-button {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 80px;
+  transition: all 0.2s ease;
+}
+
+#shortcut-button:hover {
+  background: var(--accent-pink-dim);
+}
+
+#shortcut-icon {
+  font-size: 24px;
+  color: var(--accent-yellow);
+}
+
+#shortcut-name {
+  font-size: 11px;
+}

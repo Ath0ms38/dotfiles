@@ -1,0 +1,64 @@
+/**
+ * Bar Styles
+ * Main bar window and sections
+ */
+
+/* Main bar window - completely transparent like waybar */
+#main-bar {
+  background: transparent;
+}
+
+/* Bar content - also transparent, no background */
+#bar-content {
+  background: transparent;
+  padding: 0;
+  margin: 4px;
+}
+
+/* Sections */
+#left-section,
+#center-section,
+#right-section {
+  background: transparent;
+  margin: 0;
+}
+
+/* Active window */
+#active-window {
+  background: var(--bg-secondary);
+  color: var(--text-light);
+  border-radius: 12px;
+  padding: 6px 16px;
+  margin: 4px;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-style: italic;
+  min-width: 100px;
+}
+
+/* Notification button */
+#notification-button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 2px 4px;
+  font-size: 16px;
+  min-width: 32px;
+  transition: all 0.2s ease;
+}
+
+#notification-button:hover {
+  background: var(--accent-primary);
+  color: var(--bg-dark);
+}
+
+/* Clock */
+#clock {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 12px;
+  padding: 6px 16px;
+  margin: 2px 4px;
+  font-weight: 600;
+}

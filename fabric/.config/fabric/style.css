@@ -1,0 +1,28 @@
+/**
+ * Fabric Bar Stylesheet
+ * Main entry point - imports modular stylesheets
+ * Dynamic theming via Matugen (wallpaper-based colors)
+ */
+
+/* Matugen-generated colors */
+@import url("colors.css");
+
+/* Base styles and reset */
+@import url("styles/base.css");
+
+/* Component styles */
+@import url("styles/bar.css");
+@import url("styles/workspaces.css");
+@import url("styles/widgets.css");
+@import url("styles/popups.css");
+
+/* Widget-specific styles */
+@import url("styles/audio.css");
+@import url("styles/network.css");
+@import url("styles/wallpaper.css");
+
+/* Notch system styles */
+@import url("styles/notch.css");
+
+/* Ax-Shell style notch */
+@import url("styles/ax-notch.css");

@@ -1,0 +1,44 @@
+/**
+ * Widget Button Styles
+ * Right-side widget toggle buttons
+ */
+
+/* Widget buttons container */
+#widget-buttons {
+  background: transparent;
+  margin: 0 4px;
+}
+
+#widget-buttons > button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-size: 18px;
+  padding: 6px 12px;
+}
+
+#wallpaper-button,
+#audio-button,
+#network-button,
+#battery-button,
+#tray-button,
+#utility-button,
+#power-button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 2px;
+  font-size: 18px;
+}
+
+/* Active states for widget buttons (when popup is open) */
+#wallpaper-button.active,
+#audio-button.active,
+#network-button.active,
+#battery-button.active,
+#tray-button.active,
+#utility-button.active,
+#power-button.active {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+}

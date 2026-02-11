@@ -1,0 +1,177 @@
+/* === KITTY & WAYBAR THEME COLORS === */
+/* Primary Colors from kitty.conf */
+$background: #3d2f2a;
+$foreground: #f5f0e8;
+$cursor: #ffcc5c;
+$cursor-text: #8d6e63;
+$selection-fg: #8d6e63;
+$selection-bg: #ffb7ba;
+
+/* ANSI Colors */
+$black: #2d2a2e;
+$red: #ff6b6b;
+$green: #a8e6cf;
+$yellow: #ffd93d;
+$blue: #74b9ff;
+$magenta: #b39ddb;
+$cyan: #81ecec;
+$white: #f5f0e8;
+
+$bright-black: #74705d;
+$bright-red: #ffb7ba;
+$bright-green: #dcedc8;
+$bright-yellow: #ffcc5c;
+$bright-blue: #a29bfe;
+$bright-magenta: #fd79a8;
+$bright-cyan: #00cec9;
+$bright-white: #ffffff;
+
+/* Theme Palette */
+$primary-bg: rgba(61, 47, 42, 0.92);
+$primary-text: #f5f0e8;
+$accent-brown: #8d6e63;
+$accent-gold: #ffcc5c;
+$accent-pink: #ffb7ba;
+$accent-magenta: #fd79a8;
+$accent-blue: #74b9ff;
+
+/* Animations */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.85; }
+  100% { opacity: 1; }
+}
+
+@keyframes bordershift {
+  0% { border-color: rgba(255, 183, 186, 0.3); }
+  50% { border-color: rgba(255, 183, 186, 0.6); }
+  100% { border-color: rgba(255, 183, 186, 0.3); }
+}
+
+* {
+  font-family: "JetBrainsMono Nerd Font", "JetBrainsMono", "FiraCode Nerd Font", monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Generic window styling */
+window {
+  background: transparent;
+  color: $primary-text;
+}
+
+/* === WIDGET WINDOWS === */
+window.AudioWidget,
+window.NetworkWidget,
+window.SystemMonitorWidget,
+window.PowerDisplayWidget,
+window.MediaControlWidget,
+window.QuickSettingsWidget,
+window.ProductivityWidget,
+window.GamingWidget,
+window.NotificationCenterWidget,
+window.PowerMenuWidget {
+  background: $primary-bg;
+  color: $primary-text;
+  border-radius: 8px;
+  border: 2px solid $accent-pink;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  padding: 12px;
+
+  /* Container box styling */
+  box {
+    background: transparent;
+    color: $primary-text;
+  }
+
+  /* Title styling (first label) */
+  label:first-child {
+    font-size: 14px;
+    font-weight: bold;
+    color: $accent-gold;
+    margin-bottom: 10px;
+    padding: 4px 0;
+  }
+
+  /* All other labels */
+  label {
+    color: $primary-text;
+    padding: 4px 0;
+    margin: 2px 0;
+    font-weight: 500;
+    font-size: 12px;
+  }
+
+  /* Buttons - matching waybar style */
+  button {
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 4px 2px;
+    background: $accent-brown;
+    color: $primary-text;
+    border: 1px solid transparent;
+    transition: all 0.2s ease-out;
+    min-height: 22px;
+    min-width: 50px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &:hover {
+      background: $accent-pink;
+      color: $black;
+      border: 1px solid $accent-pink;
+      box-shadow: 0 0 0 2px $accent-pink;
+    }
+
+    &:active {
+      background: $accent-gold;
+      color: $black;
+      box-shadow: 0 0 0 2px $accent-gold;
+    }
+  }
+
+  /* Toggle buttons - matching waybar toggle style */
+  togglebutton {
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 4px 2px;
+    background: $accent-brown;
+    color: $primary-text;
+    border: 1px solid transparent;
+    transition: all 0.2s ease-out;
+    min-height: 22px;
+    min-width: 50px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &:hover {
+      background: $accent-pink;
+      color: $black;
+      border: 1px solid $accent-pink;
+      box-shadow: 0 0 0 2px $accent-pink;
+    }
+
+    &:checked {
+      background: $bright-blue;
+      color: $bright-white;
+      border: 1px solid $bright-blue;
+      box-shadow: 0 0 0 2px $bright-blue;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    &:checked:hover {
+      background: $bright-blue;
+      box-shadow: 0 0 0 3px $bright-blue;
+    }
+  }
+
+  /* Scrolled window styling */
+  scrolledwindow {
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.15);
+
+    label {
+      padding: 4px 4px;
+    }
+  }
+}

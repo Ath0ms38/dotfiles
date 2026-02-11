@@ -20,12 +20,17 @@
     ],
     
     "modules-right": [
-        "custom/system-info",
-        "custom/audio",
-        "network",
-        "battery",
-        "clock",
-        "custom/notification-center"
+        "custom/ags-audio",
+        "custom/ags-network",
+        "custom/ags-system-monitor",
+        "custom/ags-power-display",
+        "custom/ags-media-control",
+        "custom/ags-quick-settings",
+        "custom/ags-productivity",
+        "custom/ags-gaming",
+        "custom/ags-notification-center",
+        "custom/ags-power-menu",
+        "clock"
     ],
 
     // Left modules
@@ -86,17 +91,10 @@
         "on-click": "~/.config/waybar/scripts/battery-popup.py"
     },
 
-    "clock": {
-        "format": "{:%H:%M}",
-        "format-alt": "{:%A, %B %d, %Y}",
-        "tooltip": true,
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "on-click": "~/.config/waybar/scripts/calendar-popup.py"
-    },
 
-    // Custom modules
+        // Custom modules
     "custom/special-discord": {
-        "format": "󰙯 {}",
+        "format": "󰙯 {text}",
         "return-type": "json",
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status discord",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle discord",
@@ -104,7 +102,7 @@
     },
     
     "custom/special-vscode": {
-        "format": "󰨞 {}",
+        "format": "󰨞 {text}",
         "return-type": "json", 
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status vscode",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle vscode",
@@ -112,7 +110,7 @@
     },
     
     "custom/special-minecraft": {
-        "format": "󰍳 {}",
+        "format": "󰍳 {text}",
         "return-type": "json",
         "exec": "~/.config/waybar/scripts/regular-workspace-manager.py status minecraft",
         "on-click": "~/.config/waybar/scripts/regular-workspace-manager.py toggle minecraft",
@@ -160,5 +158,63 @@
         "on-click": "swaync-client -t -sw",
         "on-click-right": "swaync-client -d -sw",
         "escape": true
+    },
+    "custom/ags-audio": {
+      "format": "",
+      "tooltip": "Audio",
+      "on-click": "ags request toggle_audio"
+    },
+    "custom/ags-network": {
+      "format": "",
+      "tooltip": "Network",
+      "on-click": "ags request toggle_network"
+    },
+    "custom/ags-system-monitor": {
+      "format": "",
+      "tooltip": "System Monitor",
+      "on-click": "ags request toggle_system"
+    },
+    "custom/ags-power-display": {
+      "format": "",
+      "tooltip": "Power Display",
+      "on-click": "ags request toggle_power_display"
+    },
+    "custom/ags-media-control": {
+      "format": "",
+      "tooltip": "Media Control",
+      "on-click": "ags request toggle_media_control"
+    },
+    "custom/ags-quick-settings": {
+      "format": "",
+      "tooltip": "Quick Settings",
+      "on-click": "ags request toggle_quick_settings"
+    },
+    "custom/ags-productivity": {
+      "format": "",
+      "tooltip": "Productivity",
+      "on-click": "ags request toggle_productivity"
+    },
+    "custom/ags-gaming": {
+      "format": "",
+      "tooltip": "Gaming",
+      "on-click": "ags request toggle_gaming"
+    },
+    "custom/ags-notification-center": {
+      "format": "",
+      "tooltip": "Notification Center",
+      "on-click": "ags request toggle_notifications"
+    },
+    "custom/ags-power-menu": {
+      "format": "",
+      "tooltip": "Power Menu",
+      "on-click": "ags request toggle_power_menu"
+    },
+    "clock": {
+        "format": "{:%H:%M:%S}",
+        "format-alt": "{:%A, %B %d, %Y}",
+        "tooltip": true,
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "on-click": "ags request toggle_calendar",
+        "interval": 1
     }
 }

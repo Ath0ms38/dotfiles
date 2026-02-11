@@ -1,107 +1,88 @@
-# === STARSHIP THEME ===
-# Custom color scheme
+# Matugen-generated Starship configuration
+# Auto-generated from wallpaper - do not edit manually
 
-# Prompt format
 format = """
-[┌─](bold #ffcc5c) $time $username$hostname$directory$git_branch$git_status$python$cmd_duration
-[└─](bold #ffcc5c) $character
+[┌─](bold #92cef6) $time $username$hostname$directory$git_branch$git_status$python$cmd_duration
+[└─](bold #92cef6) $character
 """
 
-# Add a blank line between shell prompts
 add_newline = true
 
-# Time module
 [time]
 disabled = false
-format = '[\[$time\]](bold #ffcc5c) '
+format = '[\[$time\]](bold #92cef6) '
 time_format = "%H:%M:%S"
 
-# Username module
 [username]
-style_user = "bold #81ecec"
-style_root = "bold #ff6b6b"
+style_user = "bold #82d3e2"
+style_root = "bold #ffb2b9"
 format = "[$user]($style) "
 disabled = false
 show_always = true
 
-# Hostname module
 [hostname]
 ssh_only = false
-format = "[@$hostname](bold #a8e6cf) "
+format = "[@$hostname](bold #95d5a7) "
 disabled = false
 
-# Directory module
 [directory]
-style = "bold #74b9ff"
+style = "bold #afc6ff"
 truncation_length = 3
 truncate_to_repo = false
 format = "in [$path]($style)[$read_only]($read_only_style) "
 
-# Git branch module
 [git_branch]
-style = "bold #b39ddb"
+style = "bold #e4b7f3"
 format = "on [$symbol$branch]($style) "
 symbol = "󰊢 "
 
-# Git status module
 [git_status]
-style = "bold #ffb7ba"
+style = "bold #ccc0e9"
 format = "[$all_status$ahead_behind]($style)"
 
-# Python module
 [python]
-style = "bold #ffd93d"
+style = "bold #b8cf84"
 format = "via [${symbol}${pyenv_prefix}(${version})(\\($virtualenv\\))]($style) "
 symbol = " "
 detect_extensions = ["py"]
 detect_files = [".python-version", "Pipfile", "__init__.py", "pyproject.toml", "requirements.txt", "setup.py", "tox.ini"]
 
-# Command duration module
 [cmd_duration]
 min_time = 2_000
-style = "bold #ffcc5c"
+style = "bold #92cef6"
 format = "took [$duration]($style) "
 
-# Character module (prompt symbol)
 [character]
-success_symbol = "[❯](bold #a8e6cf)"
-error_symbol = "[❯](bold #ff6b6b)"
+success_symbol = "[❯](bold #95d5a7)"
+error_symbol = "[❯](bold #ffb2b9)"
 
-# Additional modules for enhanced experience
-
-# Node.js module
 [nodejs]
-style = "bold #a8e6cf"
+style = "bold #95d5a7"
 format = "via [${symbol}(${version})]($style) "
 symbol = " "
 
-# Rust module
 [rust]
-style = "bold #ffb7ba"
+style = "bold #ccc0e9"
 format = "via [${symbol}(${version})]($style) "
 symbol = " "
 
-# Docker module
 [docker_context]
-style = "bold #74b9ff"
+style = "bold #afc6ff"
 format = "via [${symbol}$context]($style) "
 symbol = " "
 
-# Package module
 [package]
-style = "bold #b39ddb"
+style = "bold #e4b7f3"
 format = "pkg [${symbol}${version}]($style) "
 symbol = "󰏗 "
 
-# Memory usage module
 [memory_usage]
 disabled = false
 threshold = 70
-style = "bold #fd79a8"
+style = "bold #ccc0e9"
 format = "via [${symbol}${ram}]($style) "
 symbol = "󰍛 "
 
-# Battery module for laptops
 [battery]
 full_symbol = "🔋"
 charging_symbol = "⚡️"
@@ -109,29 +90,26 @@ discharging_symbol = "💀"
 
 [[battery.display]]
 threshold = 10
-style = "bold #ff6b6b"
+style = "bold #ffb2b9"
 
 [[battery.display]]
 threshold = 30
-style = "bold #ffcc5c"
+style = "bold #b8cf84"
 
-# Custom styling for various states
 [status]
-style = "bold #ff6b6b"
+style = "bold #ffb2b9"
 symbol = "✖"
 format = '[\[$symbol $common_meaning$signal_name$maybe_int\]]($style) '
 map_symbol = true
 disabled = false
 
-# AWS module
 [aws]
-style = "bold #ffcc5c"
+style = "bold #92cef6"
 format = "on [${symbol}($profile)(\\($region\\))]($style) "
 symbol = "☁️  "
 
-# Kubernetes module
 [kubernetes]
-style = "bold #81ecec"
+style = "bold #82d3e2"
 format = "on [${symbol}$context(\\($namespace\\))]($style) "
 symbol = "⎈ "
 disabled = false

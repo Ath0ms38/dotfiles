@@ -1,0 +1,111 @@
+/**
+ * Audio Widget Styles
+ * Volume controls, device selectors, per-app audio
+ */
+
+/* Master volume control */
+#master-volume-control {
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+#master-name {
+  font-weight: bold;
+}
+
+#master-volume-percent {
+  min-width: 40px;
+}
+
+#master-mute-button {
+  min-width: 32px;
+  padding: 4px 8px;
+}
+
+#master-mute-button.muted {
+  background: var(--urgent-red);
+  color: var(--text-dark);
+}
+
+#master-volume-slider {
+  margin-top: 4px;
+}
+
+#master-volume-slider trough {
+  min-height: 6px;
+}
+
+/* Device selector */
+#device-selector {
+  padding: 4px;
+}
+
+#device-button {
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+#device-button:hover {
+  background: var(--bg-secondary);
+}
+
+#device-button.active-device {
+  background: var(--accent-pink);
+  color: var(--text-dark);
+}
+
+/* Per-window audio control */
+#window-audio-control {
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin: 4px 0;
+}
+
+#stream-name {
+  font-size: 12px;
+}
+
+#volume-percent {
+  min-width: 35px;
+  font-size: 12px;
+}
+
+#mute-button {
+  min-width: 28px;
+  padding: 2px 6px;
+  font-size: 14px;
+}
+
+#volume-slider trough {
+  min-height: 4px;
+}
+
+/* Application audio group */
+#app-audio-group {
+  margin: 4px 0;
+}
+
+#app-group-header {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+#app-group-header:hover {
+  background: var(--accent-pink-dim);
+}
+
+#windows-container {
+  padding: 4px 0 4px 16px;
+}
+
+/* Streams container */
+#streams-container {
+  margin-top: 8px;
+}

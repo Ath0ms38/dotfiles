@@ -1,0 +1,157 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "source": "endeavour",
+    "padding": {
+      "top": 2,
+      "left": 2,
+      "right": 2
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "size": {
+      "binaryPrefix": "iec"
+    },
+    "color": {
+      "keys": "#{{colors.primary.default.hex_stripped}}",
+      "title": "#{{colors.tertiary.default.hex_stripped}}",
+      "separator": "#{{colors.outline.default.hex_stripped}}",
+      "output": "#{{colors.on_background.default.hex_stripped}}"
+    }
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "╭──────────────────────────────────────────"
+    },
+    {
+      "type": "title",
+      "key": "│  ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "{user-name}@{host-name}",
+      "color": {
+        "user": "#{{colors.tertiary.default.hex_stripped}}",
+        "at": "#{{colors.outline.default.hex_stripped}}",
+        "host": "#{{colors.secondary.default.hex_stripped}}"
+      }
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "├──────────────────────────────────────────"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.primary.default.hex_stripped}}",
+      "format": "│    SYSTEM"
+    },
+    {
+      "type": "os",
+      "key": "│    ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "kernel",
+      "key": "│   󰌽 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "{release}"
+    },
+    {
+      "type": "uptime",
+      "key": "│   󰅐 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "packages",
+      "key": "│   󰏖 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "│"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.secondary.default.hex_stripped}}",
+      "format": "│    DESKTOP"
+    },
+    {
+      "type": "wm",
+      "key": "│    ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "shell",
+      "key": "│    ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "terminal",
+      "key": "│    ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "font",
+      "key": "│   󰛖 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "│"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.tertiary.default.hex_stripped}}",
+      "format": "│   󰍛 HARDWARE"
+    },
+    {
+      "type": "cpu",
+      "key": "│   󰻠 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "{name}"
+    },
+    {
+      "type": "gpu",
+      "key": "│   󰢮 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "{name}"
+    },
+    {
+      "type": "memory",
+      "key": "│   󰍛 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "disk",
+      "key": "│   󰋊 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
+      "folders": "/"
+    },
+    {
+      "type": "battery",
+      "key": "│   󰁹 ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "├──────────────────────────────────────────"
+    },
+    {
+      "type": "colors",
+      "key": "│   ",
+      "keyColor": "#{{colors.outline.default.hex_stripped}}",
+      "symbol": "diamond"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#{{colors.outline.default.hex_stripped}}",
+      "format": "╰──────────────────────────────────────────"
+    }
+  ]
+}

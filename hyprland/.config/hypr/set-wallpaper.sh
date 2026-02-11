@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Simple wallpaper setter for Hyprland using hyprctl
-WALLPAPER_PATH="$HOME/dotfiles/wallpapers/anime_room.png"
+WALLPAPER_PATH="$HOME/dotfiles/wallpapers/anime_room2.png"
 
 # Check if wallpaper file exists
 if [ -f "$WALLPAPER_PATH" ]; then

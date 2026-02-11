@@ -1,0 +1,22 @@
+/**
+ * Matugen-generated colors for Rofi
+ * Auto-generated from wallpaper - do not edit manually
+ */
+
+* {
+    bg-primary: {{colors.surface_container.default.hex}}cc;
+    bg-secondary: {{colors.surface_container_high.default.hex}}cc;
+    bg-popup: {{colors.surface_container_low.default.hex}}cc;
+
+    accent-pink: {{colors.tertiary.default.hex}};
+    accent-pink-dim: {{colors.tertiary.default.hex}}4d;
+    accent-yellow: {{colors.primary.default.hex}};
+    accent-teal: {{colors.secondary.default.hex}};
+
+    text-light: {{colors.on_background.default.hex}};
+    text-dim: {{colors.on_background.default.hex}}80;
+    text-dark: {{colors.on_primary.default.hex}};
+
+    error: {{colors.error.default.hex}};
+    success: {{colors.green.default.hex}};
+}

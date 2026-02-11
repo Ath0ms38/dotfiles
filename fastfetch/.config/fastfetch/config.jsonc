@@ -1,146 +1,157 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "source": "/home/athoms/dotfiles/wallpapers/fast-fetch-stable.gif",
-    "type": "kitty-icat",
+    "source": "endeavour",
     "padding": {
       "top": 2,
       "left": 2,
-      "right": 4
+      "right": 2
     }
   },
   "display": {
-    "separator": " ",
+    "separator": "  ",
+    "size": {
+      "binaryPrefix": "iec"
+    },
     "color": {
-      "keys": "#f3e5ab",
-      "title": "#ffb7ba", 
-      "separator": "#8d6e63",
-      "output": "#f5f0e8"
+      "keys": "#92cef6",
+      "title": "#ccc0e9",
+      "separator": "#8b9198",
+      "output": "#dfe3e7"
     }
   },
   "modules": [
     {
+      "type": "custom",
+      "outputColor": "#8b9198",
+      "format": "╭──────────────────────────────────────────"
+    },
+    {
       "type": "title",
-      "format": "{user-name-colored}@{host-name-colored}",
+      "key": "│  ",
+      "keyColor": "#8b9198",
+      "format": "{user-name}@{host-name}",
       "color": {
-        "user": "#ffcc5c",
-        "at": "#f3e5ab",
-        "host": "#b39ddb"
+        "user": "#ccc0e9",
+        "at": "#8b9198",
+        "host": "#b6c9d8"
       }
     },
     {
-      "type": "separator",
-      "string": "─",
-      "color": "#8d6e63"
+      "type": "custom",
+      "outputColor": "#8b9198",
+      "format": "├──────────────────────────────────────────"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#92cef6",
+      "format": "│    SYSTEM"
     },
     {
       "type": "os",
-      "key": " OS",
+      "key": "│    ",
+      "keyColor": "#8b9198",
       "format": "{pretty-name}"
     },
     {
-      "type": "kernel", 
-      "key": "󰌽 Kernel",
+      "type": "kernel",
+      "key": "│   󰌽 ",
+      "keyColor": "#8b9198",
       "format": "{release}"
     },
     {
       "type": "uptime",
-      "key": "󰅐 Uptime"
+      "key": "│   󰅐 ",
+      "keyColor": "#8b9198"
     },
     {
       "type": "packages",
-      "key": "󰏖 Packages"
+      "key": "│   󰏖 ",
+      "keyColor": "#8b9198"
     },
     {
-      "type": "shell",
-      "key": " Shell"
+      "type": "custom",
+      "outputColor": "#8b9198",
+      "format": "│"
     },
     {
-      "type": "display",
-      "key": "󰍹 Display"
-    },
-    {
-      "type": "de",
-      "key": "󰧨 DE"
+      "type": "custom",
+      "outputColor": "#b6c9d8",
+      "format": "│    DESKTOP"
     },
     {
       "type": "wm",
-      "key": " WM"
+      "key": "│    ",
+      "keyColor": "#8b9198"
     },
     {
-      "type": "wmtheme",
-      "key": "󰉼 WM Theme"
-    },
-    {
-      "type": "theme",
-      "key": "󰉼 Theme"
-    },
-    {
-      "type": "icons",
-      "key": "󰀻 Icons"
-    },
-    {
-      "type": "font",
-      "key": "󰛖 Font"
-    },
-    {
-      "type": "cursor",
-      "key": "󰇀 Cursor"
+      "type": "shell",
+      "key": "│    ",
+      "keyColor": "#8b9198"
     },
     {
       "type": "terminal",
-      "key": " Terminal"
+      "key": "│    ",
+      "keyColor": "#8b9198"
+    },
+    {
+      "type": "font",
+      "key": "│   󰛖 ",
+      "keyColor": "#8b9198"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#8b9198",
+      "format": "│"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#ccc0e9",
+      "format": "│   󰍛 HARDWARE"
     },
     {
       "type": "cpu",
-      "key": "󰻠 CPU",
-      "format": "{name} ({core-count})",
-      "color": {
-        "keys": "#ff8a65",
-        "output": "#f5f0e8"
-      }
+      "key": "│   󰻠 ",
+      "keyColor": "#8b9198",
+      "format": "{name}"
     },
     {
       "type": "gpu",
-      "key": "󰢮 GPU", 
-      "format": "{vendor} {name}",
-      "color": {
-        "keys": "#b39ddb",
-        "output": "#f5f0e8"
-      }
+      "key": "│   󰢮 ",
+      "keyColor": "#8b9198",
+      "format": "{name}"
     },
     {
       "type": "memory",
-      "key": "󰍛 Memory",
-      "color": {
-        "keys": "#ffcc5c",
-        "output": "#f5f0e8"
-      }
+      "key": "│   󰍛 ",
+      "keyColor": "#8b9198"
     },
     {
       "type": "disk",
-      "key": "󰋊 Disk (/)",
+      "key": "│   󰋊 ",
+      "keyColor": "#8b9198",
       "folders": "/"
     },
     {
-      "type": "localip",
-      "key": "󰩟 Local IP"
-    },
-    {
       "type": "battery",
-      "key": "󰁹 Battery"
+      "key": "│   󰁹 ",
+      "keyColor": "#8b9198"
     },
     {
-      "type": "poweradapter", 
-      "key": "󰚥 Power"
-    },
-    {
-      "type": "media",
-      "key": "󰝚 Media"
+      "type": "custom",
+      "outputColor": "#8b9198",
+      "format": "├──────────────────────────────────────────"
     },
     {
       "type": "colors",
-      "symbol": "circle"
+      "key": "│   ",
+      "keyColor": "#8b9198",
+      "symbol": "diamond"
+    },
+    {
+      "type": "custom",
+      "outputColor": "#8b9198",
+      "format": "╰──────────────────────────────────────────"
     }
   ]
 }

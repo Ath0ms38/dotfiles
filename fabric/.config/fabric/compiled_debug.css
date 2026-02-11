@@ -1,0 +1,2108 @@
+/* Primary backgrounds */
+  @define-color bg-primary #1c2024;
+  @define-color bg-secondary #262a2e;
+  @define-color bg-popup #181c20;
+  @define-color bg-tooltip #0a0f12;
+  /* Accent colors */
+  @define-color accent-pink #ccc0e9;
+  @define-color accent-pink-border rgba(204, 192, 233, 0.5);
+  @define-color accent-pink-dim rgba(204, 192, 233, 0.3);
+  @define-color accent-light-pink rgba(204, 192, 233, 0.7);
+  @define-color accent-yellow #92cef6;
+  @define-color accent-teal #b6c9d8;
+  /* App-specific colors (keep distinct for recognition) */
+  @define-color discord-purple #ccc0e9;
+  @define-color vscode-orange #b6c9d8;
+  @define-color minecraft-green #95d5a7;
+  @define-color steam-blue #afc6ff;
+  /* Text colors */
+  @define-color text-light #dfe3e7;
+  @define-color text-medium #dfe3e7;
+  @define-color text-dark #00344c;
+  @define-color text-very-dark #000000;
+  /* Button colors */
+  @define-color button-bg #262a2e;
+  @define-color button-text #dfe3e7;
+  /* Workspace colors */
+  @define-color workspace-occupied #1c2024;
+  @define-color workspace-empty #262a2e;
+  @define-color workspace-active #92cef6;
+  @define-color idle-pink rgba(182, 201, 216, 0.6);
+  @define-color urgent-red #ffb4ab;
+  /* Utility colors */
+  @define-color white #82d3e0;
+  @define-color transparent rgba(0, 0, 0, 0);
+  /* Semantic colors */
+  @define-color red #ffb2b9;
+  @define-color green #95d5a7;
+  @define-color yellow #b8cf84;
+  @define-color blue #afc6ff;
+  @define-color magenta #e4b7f3;
+  @define-color cyan #82d3e2;
+/**
+ * Fabric Bar Stylesheet
+ * Main entry point - imports modular stylesheets
+ * Dynamic theming via Matugen (wallpaper-based colors)
+ */
+/* Matugen-generated colors */
+/**
+ * Matugen-generated colors for Fabric Bar
+ * Auto-generated from wallpaper - do not edit manually
+ */
+/* Base styles and reset */
+/**
+ * Base Styles
+ * Global styles, fonts, and resets
+ */
+/* Base styles */
+* {
+  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", "Font Awesome";
+  font-size: 13px;
+  font-weight: 600;
+  color: @text-light;
+}
+/* Windows should be transparent by default */
+window {
+  background: transparent;
+}
+/* Boxes should be transparent by default */
+box {
+  background: transparent;
+}
+/* Common button styles */
+button {
+  background: @button-bg;
+  color: @button-text;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 6px 10px;
+  margin: 2px;
+  min-width: 20px;
+  min-height: 20px;
+}
+button:hover {
+  background: @accent-pink;
+  color: @text-dark;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 2px @accent-pink;
+}
+/* Tooltips */
+tooltip {
+  background: @bg-tooltip;
+  border: 1px solid @accent-pink-dim;
+  border-radius: 8px;
+  color: @text-light;
+  padding: 8px 12px;
+}
+/* Separators */
+separator {
+  background: @accent-pink-dim;
+  min-height: 1px;
+  margin: 8px 0;
+}
+/* Scrollbars */
+scrollbar {
+  background: transparent;
+}
+scrollbar slider {
+  background: @accent-pink-dim;
+  border-radius: 4px;
+  min-width: 6px;
+  min-height: 6px;
+}
+scrollbar slider:hover {
+  background: @accent-pink;
+}
+/* Scale/Slider base styles */
+scale {
+  padding: 4px 0;
+}
+scale trough {
+  background: @bg-secondary;
+  border-radius: 4px;
+  min-height: 8px;
+}
+scale highlight {
+  background: @accent-pink;
+  border-radius: 4px;
+}
+scale slider {
+  background: @accent-yellow;
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+}
+scale slider:hover {
+  background: @accent-pink;
+}
+/* Component styles */
+/**
+ * Bar Styles
+ * Main bar window and sections
+ */
+/* Main bar window - completely transparent like waybar */
+#main-bar {
+  background: transparent;
+}
+/* Bar content - also transparent, no background */
+#bar-content {
+  background: transparent;
+  padding: 0;
+  margin: 4px;
+}
+/* Sections */
+#left-section,
+#center-section,
+#right-section {
+  background: transparent;
+  margin: 0;
+}
+/* Active window */
+#active-window {
+  background: @bg-secondary;
+  color: @text-light;
+  border-radius: 12px;
+  padding: 6px 16px;
+  margin: 4px;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-style: italic;
+  min-width: 100px;
+}
+/* Notification button */
+#notification-button {
+  background: @button-bg;
+  color: @button-text;
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 2px 4px;
+  font-size: 16px;
+  min-width: 32px;
+  transition: all 0.2s ease;
+}
+#notification-button:hover {
+  background: @accent-primary;
+  color: @bg-dark;
+}
+/* Clock */
+#clock {
+  background: @button-bg;
+  color: @button-text;
+  border-radius: 12px;
+  padding: 6px 16px;
+  margin: 2px 4px;
+  font-weight: 600;
+}
+/**
+ * Workspace Styles
+ * Regular and special workspace buttons
+ */
+/* Workspace buttons container */
+#workspaces {
+  background: transparent;
+  padding: 2px;
+  margin: 0 8px 0 0;
+}
+/* Default workspace button - empty workspace (no windows) */
+#workspaces > button {
+  background: @workspace-empty;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 6px 10px;
+  margin: 2px;
+  min-width: 20px;
+  min-height: 20px;
+}
+#workspaces > button label {
+  color: @text-medium;
+}
+/* Hover state for workspace buttons */
+#workspaces > button:hover {
+  background: @accent-pink;
+  box-shadow: 0 0 0 2px @accent-pink;
+  font-weight: bold;
+}
+#workspaces > button:hover label {
+  color: @text-dark;
+}
+/* Active workspace - highest priority (currently viewing this workspace) */
+#workspaces > button.active {
+  background: @accent-yellow;
+  font-weight: bold;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 3px @accent-yellow;
+}
+#workspaces > button.active label {
+  color: @text-very-dark;
+}
+/* Occupied workspace - has windows but not active (idle) */
+#workspaces > button:not(.empty):not(.active) {
+  background: @idle-pink;
+}
+#workspaces > button:not(.empty):not(.active) label {
+  color: @text-dark;
+}
+#workspaces > button.urgent {
+  background: @urgent-red;
+  color: @text-dark;
+}
+/* Special workspace buttons container */
+#special-workspaces {
+  background: transparent;
+  padding: 2px;
+  margin: 0 8px;
+}
+#special-workspaces > button {
+  background: @button-bg;
+  font-size: 18px;
+  min-width: 40px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  margin: 2px;
+}
+#special-workspaces > button label {
+  color: @button-text;
+}
+/* Discord button states */
+#special-workspaces > button#special-discord.active {
+  background: @discord-purple;
+  border: 1px solid transparent;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @discord-purple;
+}
+#special-workspaces > button#special-discord.active label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-discord.idle {
+  background: @idle-pink;
+}
+#special-workspaces > button#special-discord.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-discord.idle:hover {
+  background: @discord-purple;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @discord-purple;
+}
+#special-workspaces > button#special-discord.idle:hover label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-discord.empty {
+  background: @workspace-empty;
+}
+#special-workspaces > button#special-discord.empty label {
+  color: @text-medium;
+}
+#special-workspaces > button#special-discord.empty:hover {
+  background: @discord-purple;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px @discord-purple;
+}
+#special-workspaces > button#special-discord.empty:hover label {
+  color: @text-dark;
+}
+/* VS Code button states */
+#special-workspaces > button#special-vscode.active {
+  background: @vscode-orange;
+  border: 1px solid transparent;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @vscode-orange;
+}
+#special-workspaces > button#special-vscode.active label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-vscode.idle {
+  background: @idle-pink;
+}
+#special-workspaces > button#special-vscode.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-vscode.idle:hover {
+  background: @vscode-orange;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @vscode-orange;
+}
+#special-workspaces > button#special-vscode.idle:hover label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-vscode.empty {
+  background: @workspace-empty;
+}
+#special-workspaces > button#special-vscode.empty label {
+  color: @text-medium;
+}
+#special-workspaces > button#special-vscode.empty:hover {
+  background: @vscode-orange;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px @vscode-orange;
+}
+#special-workspaces > button#special-vscode.empty:hover label {
+  color: @text-dark;
+}
+/* Minecraft button states */
+#special-workspaces > button#special-minecraft.active {
+  background: @minecraft-green;
+  border: 1px solid transparent;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @minecraft-green;
+}
+#special-workspaces > button#special-minecraft.active label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-minecraft.idle {
+  background: @idle-pink;
+}
+#special-workspaces > button#special-minecraft.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-minecraft.idle:hover {
+  background: @minecraft-green;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @minecraft-green;
+}
+#special-workspaces > button#special-minecraft.idle:hover label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-minecraft.empty {
+  background: @workspace-empty;
+}
+#special-workspaces > button#special-minecraft.empty label {
+  color: @text-medium;
+}
+#special-workspaces > button#special-minecraft.empty:hover {
+  background: @minecraft-green;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px @minecraft-green;
+}
+#special-workspaces > button#special-minecraft.empty:hover label {
+  color: @text-dark;
+}
+/* Steam button states */
+#special-workspaces > button#special-steam.active {
+  background: @steam-blue;
+  border: 1px solid transparent;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @steam-blue;
+}
+#special-workspaces > button#special-steam.active label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-steam.idle {
+  background: @idle-pink;
+}
+#special-workspaces > button#special-steam.idle label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-steam.idle:hover {
+  background: @steam-blue;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px @steam-blue;
+}
+#special-workspaces > button#special-steam.idle:hover label {
+  color: @text-dark;
+}
+#special-workspaces > button#special-steam.empty {
+  background: @workspace-empty;
+}
+#special-workspaces > button#special-steam.empty label {
+  color: @text-medium;
+}
+#special-workspaces > button#special-steam.empty:hover {
+  background: @steam-blue;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px @steam-blue;
+}
+#special-workspaces > button#special-steam.empty:hover label {
+  color: @text-dark;
+}
+/**
+ * Widget Button Styles
+ * Right-side widget toggle buttons
+ */
+/* Widget buttons container */
+#widget-buttons {
+  background: transparent;
+  margin: 0 4px;
+}
+#widget-buttons > button {
+  background: @button-bg;
+  color: @button-text;
+  font-size: 18px;
+  padding: 6px 12px;
+}
+#wallpaper-button,
+#audio-button,
+#network-button,
+#battery-button,
+#tray-button,
+#utility-button,
+#power-button {
+  background: @button-bg;
+  color: @button-text;
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 2px;
+  font-size: 18px;
+}
+/* Active states for widget buttons (when popup is open) */
+#wallpaper-button.active,
+#audio-button.active,
+#network-button.active,
+#battery-button.active,
+#tray-button.active,
+#utility-button.active,
+#power-button.active {
+  background: @accent-pink;
+  color: @text-dark;
+}
+/**
+ * Popup Styles
+ * Common popup window and animation styles
+ * Using ax-shell style CSS transitions with GTK Revealer
+ */
+/* Widget Popups base styles */
+#audio-widget,
+#network-widget,
+#battery-widget,
+#power-menu-widget,
+#system-tray-widget,
+#utility-widget,
+#wallpaper-widget {
+  background: @bg-popup;
+  border: 2px solid @accent-pink-border;
+  border-radius: 16px;
+}
+/* Blur effect for popup widgets - outer container */
+.popup-blur {
+  background: @bg-popup;
+  border: 2px solid @accent-pink-border;
+  border-radius: 16px;
+  /* ax-shell bounce curve for polish */
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+/* Popup content wrapper - handles scale/transform animations */
+.popup-content {
+  padding: 14px;
+  border-radius: 14px;
+  background: transparent;
+  /* Smooth transitions for open/close */
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+/* Open state - triggers CSS transition polish */
+.popup-content.open {
+  /* CSS transitions will animate to this state */
+}
+/* Widget content areas */
+#audio-content,
+#network-content,
+#battery-content,
+#power-menu-content,
+#system-tray-content,
+#utility-content,
+#battery-container,
+#power-menu-container {
+  background: transparent;
+  padding: 16px;
+  border-radius: 12px;
+}
+/* Widget titles */
+#audio-title,
+#network-title,
+#battery-title,
+#power-menu-title,
+#system-tray-title,
+#utility-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: @accent-yellow;
+  margin-bottom: 12px;
+}
+/* Section titles within popups */
+#section-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+/* Popup scrolled windows */
+.popup-scroll {
+  background: transparent;
+}
+/* Empty state message */
+#empty-message {
+  opacity: 0.7;
+  font-style: italic;
+  margin: 12px 0;
+}
+/* Widget-specific styles */
+/**
+ * Audio Widget Styles
+ * Volume controls, device selectors, per-app audio
+ */
+/* Master volume control */
+#master-volume-control {
+  padding: 8px;
+  background: @bg-secondary;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+#master-name {
+  font-weight: bold;
+}
+#master-volume-percent {
+  min-width: 40px;
+}
+#master-mute-button {
+  min-width: 32px;
+  padding: 4px 8px;
+}
+#master-mute-button.muted {
+  background: @urgent-red;
+  color: @text-dark;
+}
+#master-volume-slider {
+  margin-top: 4px;
+}
+#master-volume-slider trough {
+  min-height: 6px;
+}
+/* Device selector */
+#device-selector {
+  padding: 4px;
+}
+#device-button {
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+#device-button:hover {
+  background: @bg-secondary;
+}
+#device-button.active-device {
+  background: @accent-pink;
+  color: @text-dark;
+}
+/* Per-window audio control */
+#window-audio-control {
+  padding: 8px;
+  background: @bg-secondary;
+  border-radius: 8px;
+  margin: 4px 0;
+}
+#stream-name {
+  font-size: 12px;
+}
+#volume-percent {
+  min-width: 35px;
+  font-size: 12px;
+}
+#mute-button {
+  min-width: 28px;
+  padding: 2px 6px;
+  font-size: 14px;
+}
+#volume-slider trough {
+  min-height: 4px;
+}
+/* Application audio group */
+#app-audio-group {
+  margin: 4px 0;
+}
+#app-group-header {
+  background: @bg-secondary;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+#app-group-header:hover {
+  background: @accent-pink-dim;
+}
+#windows-container {
+  padding: 4px 0 4px 16px;
+}
+/* Streams container */
+#streams-container {
+  margin-top: 8px;
+}
+/**
+ * Network Widget Styles
+ * WiFi, ethernet, connection management
+ */
+/* Network status header */
+#network-status {
+  padding: 8px;
+  background: @bg-secondary;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+#network-icon {
+  font-size: 24px;
+  min-width: 40px;
+}
+#connection-name {
+  font-weight: bold;
+}
+#connection-details {
+  font-size: 11px;
+  opacity: 0.8;
+}
+/* Bandwidth display */
+#bandwidth-display {
+  font-size: 11px;
+  opacity: 0.8;
+}
+#bandwidth-up,
+#bandwidth-down {
+  min-width: 80px;
+}
+/* WiFi access point list */
+#wifi-list {
+  margin-top: 8px;
+}
+#wifi-ap-slot {
+  background: @bg-secondary;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 2px 0;
+}
+#wifi-ap-slot:hover {
+  background: @accent-pink-dim;
+}
+#wifi-ap-slot.connected {
+  background: @accent-teal;
+  color: @text-dark;
+}
+#wifi-ssid {
+  font-weight: 500;
+}
+#wifi-signal {
+  font-size: 16px;
+  min-width: 24px;
+}
+#wifi-security {
+  font-size: 10px;
+  opacity: 0.7;
+}
+/* Password entry */
+#password-entry-row {
+  background: @bg-secondary;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 4px 0;
+}
+#password-entry {
+  background: @bg-popup;
+  border: 1px solid @accent-pink-dim;
+  border-radius: 6px;
+  padding: 6px 8px;
+  min-width: 150px;
+}
+#password-entry:focus {
+  border-color: @accent-pink;
+}
+#connect-button {
+  background: @accent-teal;
+  color: @text-dark;
+  padding: 6px 12px;
+}
+#connect-button:hover {
+  background: @accent-pink;
+}
+/* Ethernet info */
+#ethernet-info {
+  padding: 8px;
+  background: @bg-secondary;
+  border-radius: 8px;
+}
+#ethernet-status {
+  font-weight: bold;
+}
+#ethernet-ip {
+  font-size: 11px;
+  opacity: 0.8;
+}
+/**
+ * Wallpaper Widget Styles
+ * Wallpaper grid, scheme selector, controls
+ */
+#wallpaper-widget {
+  background: @bg-popup;
+  border: 2px solid @accent-pink-border;
+  border-radius: 12px;
+}
+#wallpaper-content {
+  padding: 16px;
+}
+#wallpaper-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: @accent-yellow;
+  margin-bottom: 8px;
+}
+#wallpaper-controls {
+  margin-bottom: 8px;
+}
+#scheme-dropdown {
+  background: @bg-secondary;
+  border: 1px solid @accent-pink-dim;
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: @text-light;
+  min-width: 120px;
+}
+#random-wallpaper-btn {
+  background: @accent-yellow;
+  color: @text-dark;
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+#random-wallpaper-btn:hover {
+  background: @accent-pink;
+}
+#wallpaper-scroll {
+  background: transparent;
+}
+#wallpaper-grid {
+  padding: 4px;
+}
+#wallpaper-item {
+  background: @bg-secondary;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+#wallpaper-item:hover {
+  border-color: @accent-pink;
+}
+#wallpaper-item:selected {
+  border-color: @accent-yellow;
+  background: @accent-yellow;
+}
+flowboxchild {
+  padding: 4px;
+}
+flowboxchild:selected #wallpaper-item {
+  border-color: @accent-yellow;
+}
+/* Wallpaper thumbnail */
+#wallpaper-thumbnail {
+  border-radius: 6px;
+  min-width: 100px;
+  min-height: 60px;
+}
+/* Scheme selector */
+#scheme-selector {
+  margin-bottom: 8px;
+}
+#scheme-button {
+  background: @bg-secondary;
+  border: 1px solid @accent-pink-dim;
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin: 2px;
+}
+#scheme-button:hover {
+  background: @accent-pink-dim;
+}
+#scheme-button.active {
+  background: @accent-pink;
+  color: @text-dark;
+  border-color: @accent-pink;
+}
+/* Notch system styles */
+/**
+ * Notch Styles
+ * Full-width transparent bar
+ * Uses CSS transitions with bounce curve for polish
+ */
+/* Main notch window - full width, transparent background */
+#notch {
+  background: transparent;
+}
+/* Outer wrapper - transparent, full width */
+#notch-wrap {
+  background: transparent;
+}
+/* Event box - transparent */
+#notch-eventbox {
+  background: transparent;
+}
+/* Content wrapper - transparent so only elements are visible */
+#notch-content {
+  background: transparent;
+  padding: 4px 16px;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#notch-content.open {
+  padding: 8px 16px;
+}
+/* ============================================
+   POPUP PANEL (separate overlay window)
+   ============================================ */
+#popup-panel {
+  background: transparent;
+}
+#popup-eventbox {
+  background: transparent;
+}
+#popup-content {
+  background: transparent;
+  padding: 8px;
+}
+#popup-revealer {
+  background: transparent;
+}
+/* Sections stack - the actual popup with background */
+#sections-stack {
+  background: @bg-popup;
+  border-radius: 16px;
+  padding: 12px;
+}
+/* ============================================
+   COMPACT BAR STATE
+   ============================================ */
+#compact-bar {
+  background: transparent;
+  font-weight: bold;
+}
+#compact-spacer {
+  background: transparent;
+}
+#compact-left,
+#compact-right {
+  background: transparent;
+}
+/* ============================================
+   SECTION COMMON STYLES
+   ============================================ */
+#audio-section,
+#network-section,
+#power-section {
+  background: transparent;
+  padding: 12px;
+}
+/* Section headers */
+#audio-header,
+#network-header,
+#power-header {
+  margin-bottom: 8px;
+}
+/* Section titles */
+#section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: @accent-yellow;
+}
+#subsection-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+/* Close button in sections */
+#close-button {
+  padding: 4px 8px;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 8px;
+  background: @bg-secondary;
+}
+#close-button:hover {
+  background: @accent-pink;
+  color: @text-dark;
+}
+/* ============================================
+   AUDIO SECTION
+   ============================================ */
+#section-header {
+  margin-bottom: 12px;
+}
+#volume-control {
+  background: @bg-secondary;
+  border-radius: 12px;
+  padding: 12px;
+}
+#volume-slider {
+  margin-top: 4px;
+}
+#volume-percent {
+  min-width: 40px;
+}
+#mute-button {
+  padding: 4px 8px;
+  min-width: 36px;
+  border-radius: 8px;
+}
+/* ============================================
+   NETWORK SECTION
+   ============================================ */
+#current-connection-box {
+  background: @bg-secondary;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+#current-connection-info {
+  color: @text-light;
+}
+#ethernet-section {
+  background: @bg-secondary;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+#wifi-toggle-button,
+#network-refresh {
+  padding: 4px 10px;
+  min-width: 36px;
+  border-radius: 8px;
+}
+#wifi-ap-slot {
+  background: @bg-secondary;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 4px 0;
+}
+#wifi-ap-slot:hover {
+  background: @accent-pink-dim;
+}
+#wifi-connect-button {
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+#wifi-connect-button.connected {
+  background: @accent-pink;
+  color: @text-dark;
+}
+#password-entry-row {
+  background: @bg-primary;
+  border-radius: 8px;
+  padding: 8px;
+  margin-top: 8px;
+}
+#password-connect-btn {
+  background: @accent-pink;
+  color: @text-dark;
+}
+#password-cancel-btn {
+  background: @bg-secondary;
+}
+#network-status {
+  opacity: 0.7;
+  font-style: italic;
+  padding: 16px 0;
+}
+#network-ap-scrolled-window {
+  background: transparent;
+}
+/* ============================================
+   POWER SECTION
+   ============================================ */
+#power-section {
+  min-width: 380px;
+}
+#power-buttons-row1,
+#power-buttons-row2 {
+  margin: 8px 0;
+}
+#power-shutdown,
+#power-reboot,
+#power-logout,
+#power-lock,
+#power-sleep {
+  background: @bg-secondary;
+  border-radius: 16px;
+  padding: 12px;
+  min-width: 100px;
+  min-height: 100px;
+  transition: all 0.2s ease;
+}
+#power-shutdown:hover {
+  background: rgba(255, 107, 107, 0.3);
+  border: 1px solid #ff6b6b;
+}
+#power-reboot:hover {
+  background: rgba(255, 217, 102, 0.3);
+  border: 1px solid #ffd966;
+}
+#power-logout:hover {
+  background: rgba(164, 232, 141, 0.3);
+  border: 1px solid #a4e88d;
+}
+#power-lock:hover {
+  background: rgba(116, 199, 236, 0.3);
+  border: 1px solid #74c7ec;
+}
+#power-sleep:hover {
+  background: rgba(203, 166, 247, 0.3);
+  border: 1px solid #cba6f7;
+}
+#power-hint {
+  opacity: 0.7;
+  margin-top: 8px;
+}
+/* ============================================
+   WORKSPACE & WIDGET BUTTONS (inherited from bar)
+   ============================================ */
+#widget-buttons button {
+  padding: 4px 10px;
+  min-width: 32px;
+  border-radius: 10px;
+}
+#audio-button,
+#network-button,
+#power-button {
+  font-size: 16px;
+}
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+#audio-section scrollbar,
+#network-section scrollbar {
+  background: transparent;
+}
+#audio-section scrollbar slider,
+#network-section scrollbar slider {
+  background: @accent-pink-dim;
+  border-radius: 4px;
+  min-width: 6px;
+}
+#audio-section scrollbar slider:hover,
+#network-section scrollbar slider:hover {
+  background: @accent-pink;
+}
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+#empty-message {
+  opacity: 0.7;
+  font-style: italic;
+  padding: 16px 0;
+}
+/* ============================================
+   CENTER NOTCH (ax-shell style)
+   ============================================ */
+#center-notch {
+  background: @bg-secondary;
+  border-radius: 20px;
+  padding: 8px 20px;
+  min-width: 200px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#center-notch:hover,
+#center-notch.hovered {
+  background: @accent-pink-dim;
+  min-width: 240px;
+}
+#center-notch-content {
+  background: transparent;
+}
+#notch-compact-stack {
+  background: transparent;
+}
+#active-window-box {
+  background: transparent;
+}
+#notch-window-icon {
+  opacity: 0.9;
+}
+#notch-active-window {
+  font-size: 13px;
+}
+#compact-user {
+  font-size: 13px;
+  opacity: 0.9;
+}
+#compact-clock {
+  font-size: 13px;
+}
+/* ============================================
+   DASHBOARD
+   ============================================ */
+#dashboard {
+  background: transparent;
+  padding: 8px;
+}
+#dashboard-tabs {
+  background: @bg-secondary;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 12px;
+}
+#dashboard-tab {
+  background: transparent;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 16px;
+  min-width: 48px;
+}
+#dashboard-tab:hover {
+  background: @accent-pink-dim;
+}
+#dashboard-tab.active {
+  background: @accent-pink;
+  color: @text-dark;
+}
+#dashboard-stack {
+  background: transparent;
+}
+/* Widget Cards */
+#widgets-section {
+  padding: 12px;
+}
+#widget-card {
+  background: @bg-secondary;
+  border-radius: 16px;
+  padding: 16px;
+  min-width: 100px;
+  min-height: 100px;
+  transition: all 0.2s ease;
+}
+#widget-card:hover {
+  background: @accent-pink-dim;
+  border: 1px solid @accent-pink;
+}
+#widget-card-icon {
+  font-size: 28px;
+  color: @accent-yellow;
+}
+#widget-card-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+#widget-card-desc {
+  font-size: 11px;
+  opacity: 0.7;
+}
+/* Mixer Section */
+#mixer-section {
+  padding: 8px;
+}
+/* Wallpapers Section */
+#wallpapers-section {
+  padding: 16px;
+}
+#placeholder-text {
+  opacity: 0.5;
+  font-style: italic;
+}
+/* Shortcuts Section */
+#shortcuts-section {
+  padding: 12px;
+}
+#shortcut-button {
+  background: @bg-secondary;
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 80px;
+  transition: all 0.2s ease;
+}
+#shortcut-button:hover {
+  background: @accent-pink-dim;
+}
+#shortcut-icon {
+  font-size: 24px;
+  color: @accent-yellow;
+}
+#shortcut-name {
+  font-size: 11px;
+}
+/* Ax-Shell style notch */
+/* ============================================
+   AX-NOTCH STYLES
+   Ax-Shell style center notch with dashboard
+   Following Ax-Shell's blur approach:
+   - Outer containers use solid/shadow colors
+   - Inner widgets use alpha(@bg-primary, 0.5) for blur
+   ============================================ */
+/* ============================================
+   NOTCH WINDOW & CONTAINER
+   ============================================ */
+#ax-notch {
+  background: transparent;
+}
+#ax-notch-box {
+  background: transparent;
+  border-radius: 0 0 14px 14px;
+  padding: 1px;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#ax-notch-box.open {
+  background: transparent;
+  border-radius: 0 0 24px 24px;
+  padding: 6px;
+}
+#ax-notch-content {
+  background: transparent;
+}
+#ax-notch-revealer {
+  background: transparent;
+}
+/* ============================================
+   COMPACT VIEW
+   ============================================ */
+#ax-compact-box {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 0 0 14px 14px;
+  padding: 4px 10px;
+  min-width: 100px;
+  box-shadow: 0 0 3px alpha(@bg-primary, 0.7);
+}
+#ax-compact {
+  background: transparent;
+  padding: 1px 6px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+#ax-compact:hover {
+  background: alpha(white, 0.1);
+}
+#ax-compact-stack {
+  background: transparent;
+}
+#ax-compact-user {
+  font-size: 10px;
+  opacity: 0.9;
+}
+#ax-active-window {
+  font-size: 13px;
+  min-width: 180px;
+}
+#ax-active-window label {
+  color: @text-light;
+}
+/* ============================================
+   DASHBOARD
+   ============================================ */
+#ax-dashboard {
+  background: transparent;
+  padding: 0;
+}
+#ax-dashboard-bg {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 0 0 20px 20px;
+  padding: 12px;
+  box-shadow: 0 0 3px alpha(@bg-primary, 0.7);
+}
+#ax-dashboard-stack {
+  background: transparent;
+  /* Height adapts to content */
+}
+/* Tab Switcher */
+#ax-switcher {
+  background: transparent;
+  border-radius: 12px;
+  padding: 3px;
+  margin-bottom: 10px;
+}
+#ax-switcher button {
+  background: transparent;
+  border-radius: 10px;
+  padding: 6px 14px;
+  min-width: 40px;
+  transition: all 0.2s ease;
+}
+#ax-switcher button:hover {
+  background: alpha(white, 0.1);
+}
+#ax-switcher button:checked {
+  background: @accent-pink;
+}
+#ax-switcher button:checked label {
+  color: @text-dark;
+}
+#ax-switcher button label {
+  font-size: 16px;
+  color: @text-light;
+}
+/* ============================================
+   WIDGETS SECTION
+   ============================================ */
+#ax-widgets {
+  background: transparent;
+  padding: 8px;
+  min-width: 900px;
+  /* Height adapts to content */
+}
+#ax-widgets-top,
+#ax-widgets-calendar,
+#ax-widgets-right {
+  background: transparent;
+}
+#ax-widgets-right {
+  min-width: 220px;
+}
+/* ============================================
+   PLAYER WIDGET
+   ============================================ */
+#ax-player {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 16px;
+  border: 4px solid @bg-secondary;
+  padding: 8px;
+  min-width: 200px;
+}
+#ax-player-stack {
+  background: transparent;
+}
+#ax-player-box {
+  background: transparent;
+}
+#ax-player-cover-placeholder {
+  background: @bg-secondary;
+  border-radius: 50%;
+}
+#ax-player-progress {
+  background: transparent;
+}
+#ax-player-progress trough {
+  background: @bg-secondary;
+}
+#ax-player-progress trough highlight {
+  background: @accent-pink;
+}
+#ax-player-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+#ax-player-artist {
+  font-size: 12px;
+  color: @accent-pink;
+}
+#ax-player-album {
+  font-size: 11px;
+  opacity: 0.6;
+}
+#ax-player-time {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+#ax-player-controls {
+  margin-top: 8px;
+}
+#ax-player-btn {
+  background: transparent;
+  border-radius: 50%;
+  padding: 8px;
+  min-width: 32px;
+  min-height: 32px;
+  transition: all 0.2s ease;
+}
+#ax-player-btn:hover {
+  background: @accent-pink;
+}
+#ax-player-btn:hover label {
+  color: @text-dark;
+}
+#ax-player-btn-play {
+  background: @bg-secondary;
+  border-radius: 50%;
+  padding: 10px;
+  min-width: 40px;
+  min-height: 40px;
+}
+#ax-player-btn-play:hover {
+  background: @accent-pink;
+}
+#ax-player-btn-play.playing {
+  background: @accent-pink;
+}
+#ax-player-btn-play.playing label {
+  color: @text-dark;
+}
+#ax-player-switcher {
+  margin-top: 8px;
+}
+#ax-player-switcher button {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+#ax-player-switcher button:checked {
+  background: @accent-pink;
+}
+/* Compact Player */
+#ax-player-small {
+  background: transparent;
+  padding: 4px 8px;
+}
+#ax-compact-mpris-icon {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+#ax-compact-mpris-icon:hover {
+  background: @accent-pink;
+}
+#ax-compact-mpris-icon:hover label {
+  color: @text-dark;
+}
+#ax-compact-mpris-icon label {
+  color: @accent-pink;
+}
+#ax-compact-mpris-label {
+  font-size: 12px;
+  padding: 0 8px;
+}
+#ax-compact-mpris-btn {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px;
+}
+#ax-compact-mpris-btn:hover {
+  background: @accent-pink;
+}
+#ax-compact-mpris-btn:hover label {
+  color: @text-dark;
+}
+/* ============================================
+   METRICS WIDGET (NEW CIRCULAR DESIGN)
+   ============================================ */
+#ax-metrics {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 16px;
+  border: 4px solid @bg-secondary;
+  padding: 16px;
+}
+#ax-metric-cpu,
+#ax-metric-ram,
+#ax-metric-disk,
+#ax-metric-gpu {
+  padding: 8px;
+}
+#ax-metric-cpu-name,
+#ax-metric-ram-name,
+#ax-metric-disk-name,
+#ax-metric-gpu-name {
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+#ax-metric-cpu-percent,
+#ax-metric-ram-percent,
+#ax-metric-disk-percent,
+#ax-metric-gpu-percent {
+  font-size: 13px;
+  font-weight: bold;
+}
+#ax-metric-cpu-value,
+#ax-metric-ram-value,
+#ax-metric-disk-value,
+#ax-metric-gpu-value {
+  font-size: 9px;
+  opacity: 0.7;
+}
+#ax-metric-cpu-icon,
+#ax-metric-ram-icon,
+#ax-metric-disk-icon,
+#ax-metric-gpu-icon {
+  font-size: 18px;
+}
+/* ============================================
+   CALENDAR WIDGET (NEW DESIGN)
+   ============================================ */
+#ax-calendar {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 16px;
+  border: 4px solid @bg-secondary;
+  padding: 10px;
+}
+#ax-calendar-top {
+  margin-bottom: 4px;
+}
+#ax-calendar-date {
+  font-size: 12px;
+  font-weight: bold;
+}
+#ax-calendar-time {
+  font-size: 20px;
+  font-weight: bold;
+  color: @accent-pink;
+}
+#ax-calendar-nav {
+  margin-bottom: 4px;
+}
+#ax-calendar-prev,
+#ax-calendar-next,
+#ax-calendar-today {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+#ax-calendar-prev:hover,
+#ax-calendar-next:hover,
+#ax-calendar-today:hover {
+  background: @accent-pink;
+}
+#ax-calendar-prev:hover label,
+#ax-calendar-next:hover label,
+#ax-calendar-today:hover label {
+  color: @text-dark;
+}
+#ax-calendar-month {
+  font-size: 13px;
+  font-weight: bold;
+}
+#ax-calendar-weekdays {
+  margin-bottom: 4px;
+}
+#ax-calendar-weekday {
+  font-size: 10px;
+  font-weight: bold;
+  opacity: 0.6;
+  padding: 4px;
+}
+#ax-calendar-week {
+  padding: 2px 0;
+}
+#ax-calendar-day {
+  background: transparent;
+  border-radius: 50%;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 1px;
+  transition: all 0.2s ease;
+}
+#ax-calendar-day:hover {
+  background: alpha(white, 0.1);
+}
+#ax-calendar-day.today {
+  background: @accent-pink;
+}
+#ax-calendar-day.today label {
+  color: @text-dark;
+  font-weight: bold;
+}
+#ax-calendar-day.other-month {
+  opacity: 0.3;
+}
+#ax-calendar-day label {
+  font-size: 11px;
+}
+/* ============================================
+   CONTROLS (Volume/Mic)
+   ============================================ */
+#ax-controls {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 16px;
+  border: 4px solid @bg-secondary;
+  padding: 12px;
+}
+#ax-control-volume,
+#ax-control-mic {
+  padding: 4px;
+}
+#ax-control-volume-header,
+#ax-control-mic-header {
+  margin-bottom: 4px;
+}
+#ax-control-volume-label,
+#ax-control-mic-label {
+  font-size: 12px;
+  font-weight: bold;
+}
+#ax-control-volume-value,
+#ax-control-mic-value {
+  font-size: 11px;
+  opacity: 0.8;
+}
+#ax-control-volume-icon,
+#ax-control-mic-icon {
+  background: transparent;
+  border-radius: 8px;
+  padding: 8px;
+  min-width: 32px;
+  transition: all 0.2s ease;
+}
+#ax-control-volume-icon:hover,
+#ax-control-mic-icon:hover {
+  background: @accent-pink;
+}
+#ax-control-volume-icon:hover label,
+#ax-control-mic-icon:hover label {
+  color: @text-dark;
+}
+#ax-control-volume-icon.muted,
+#ax-control-mic-icon.muted {
+  background: @red;
+}
+#ax-control-volume-icon.muted label,
+#ax-control-mic-icon.muted label {
+  color: @text-dark;
+}
+#ax-control-volume-slider,
+#ax-control-mic-slider {
+  min-height: 8px;
+}
+#ax-control-volume-slider trough,
+#ax-control-mic-slider trough {
+  background: @bg-secondary;
+  border-radius: 4px;
+  min-height: 8px;
+}
+#ax-control-volume-slider trough highlight,
+#ax-control-mic-slider trough highlight {
+  background: @accent-pink;
+  border-radius: 4px;
+}
+#ax-control-volume-slider slider,
+#ax-control-mic-slider slider {
+  background: @accent-pink;
+  border-radius: 50%;
+  min-width: 16px;
+  min-height: 16px;
+  margin: -4px;
+}
+.muted #ax-control-volume-slider trough highlight,
+.muted #ax-control-mic-slider trough highlight {
+  background: @red;
+  opacity: 0.5;
+}
+/* ============================================
+   CONNECTIVITY WIDGET (Compact horizontal bar)
+   ============================================ */
+#ax-connectivity {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 12px;
+  border: 4px solid @bg-secondary;
+  padding: 8px 16px;
+}
+#ax-connectivity-separator {
+  background: @bg-secondary;
+  margin: 0 8px;
+}
+#ax-wifi-box,
+#ax-bluetooth-box {
+  padding: 4px 0;
+}
+#ax-wifi-icon,
+#ax-bluetooth-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+#ax-wifi-status,
+#ax-bluetooth-status {
+  font-size: 12px;
+}
+#ax-wifi-toggle,
+#ax-wifi-settings,
+#ax-bluetooth-toggle,
+#ax-bluetooth-settings {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin-left: 4px;
+  transition: all 0.2s ease;
+}
+#ax-wifi-toggle:hover,
+#ax-wifi-settings:hover,
+#ax-bluetooth-toggle:hover,
+#ax-bluetooth-settings:hover {
+  background: alpha(white, 0.1);
+}
+#ax-wifi-toggle.active,
+#ax-bluetooth-toggle.active {
+  background: @green;
+}
+#ax-wifi-toggle.active label,
+#ax-bluetooth-toggle.active label {
+  color: @text-dark;
+}
+/* ============================================
+   MIXER SECTION
+   ============================================ */
+#ax-mixer {
+  background: transparent;
+  padding: 12px;
+  min-width: 900px;
+  /* Height adapts to content */
+}
+#ax-mixer-header-box {
+  margin-bottom: 12px;
+}
+#ax-mixer-header {
+  font-size: 16px;
+  font-weight: bold;
+}
+#ax-mixer-pavucontrol {
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+#ax-mixer-pavucontrol:hover {
+  background: @accent-pink;
+}
+#ax-mixer-pavucontrol:hover label {
+  color: @text-dark;
+}
+/* Visualizer */
+#ax-visualizer-box {
+  margin: 12px 0;
+}
+#ax-visualizer-label {
+  font-size: 12px;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+#ax-visualizer {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 12px;
+  min-height: 60px;
+}
+/* App volumes */
+#ax-mixer-apps {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 14px;
+  border: 4px solid @bg-secondary;
+  padding: 10px;
+  margin-top: 8px;
+}
+#ax-mixer-apps-header-box {
+  margin-bottom: 8px;
+}
+#ax-mixer-apps-header {
+  font-size: 13px;
+  font-weight: bold;
+}
+#ax-mixer-refresh {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+#ax-mixer-refresh:hover {
+  background: alpha(white, 0.1);
+}
+#ax-app-volume {
+  padding: 6px 8px;
+  background: alpha(@bg-primary, 0.3);
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+#ax-app-volume-icon {
+  font-size: 14px;
+}
+#ax-app-volume-name {
+  font-size: 11px;
+}
+#ax-app-volume-slider trough {
+  background: @bg-secondary;
+  border-radius: 4px;
+  min-height: 6px;
+}
+#ax-app-volume-slider trough highlight {
+  background: @accent-pink;
+  border-radius: 4px;
+}
+#ax-app-volume-slider slider {
+  background: @accent-pink;
+  border-radius: 50%;
+  min-width: 12px;
+  min-height: 12px;
+  margin: -3px;
+}
+#ax-app-volume-value {
+  font-size: 10px;
+  opacity: 0.8;
+}
+#ax-app-volume-mute {
+  background: transparent;
+  border-radius: 6px;
+  padding: 4px;
+  transition: all 0.2s ease;
+}
+#ax-app-volume-mute:hover {
+  background: alpha(white, 0.1);
+}
+#ax-app-volume.muted #ax-app-volume-mute {
+  background: @red;
+}
+/* ============================================
+   UTILITIES SECTION
+   ============================================ */
+#ax-utilities {
+  background: transparent;
+  padding: 12px;
+  min-width: 900px;
+  /* Height adapts to content */
+}
+/* Quick Toggles */
+#ax-utilities-toggles {
+  margin-bottom: 12px;
+}
+#ax-toggle-dnd,
+#ax-toggle-night,
+#ax-toggle-airplane,
+#ax-toggle-record {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 12px;
+  border: 4px solid @bg-secondary;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+#ax-toggle-dnd:hover,
+#ax-toggle-night:hover,
+#ax-toggle-airplane:hover,
+#ax-toggle-record:hover {
+  background: alpha(@bg-primary, 0.7);
+}
+#ax-toggle-dnd.active,
+#ax-toggle-night.active,
+#ax-toggle-airplane.active,
+#ax-toggle-record.active {
+  background: @accent-pink;
+}
+#ax-toggle-dnd.active label,
+#ax-toggle-night.active label,
+#ax-toggle-airplane.active label,
+#ax-toggle-record.active label {
+  color: @text-dark;
+}
+#ax-toggle-dnd-icon,
+#ax-toggle-night-icon,
+#ax-toggle-airplane-icon,
+#ax-toggle-record-icon {
+  font-size: 20px;
+}
+#ax-toggle-dnd-label,
+#ax-toggle-night-label,
+#ax-toggle-airplane-label,
+#ax-toggle-record-label {
+  font-size: 10px;
+  margin-top: 4px;
+}
+/* Power Mode */
+#ax-power-mode {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 16px;
+  border: 4px solid @bg-secondary;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+#ax-power-mode-header {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+#ax-power-modes {
+  margin-top: 4px;
+}
+#ax-power-mode-power-saver,
+#ax-power-mode-balanced,
+#ax-power-mode-performance {
+  background: transparent;
+  border-radius: 10px;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+#ax-power-mode-power-saver:hover,
+#ax-power-mode-balanced:hover,
+#ax-power-mode-performance:hover {
+  background: alpha(white, 0.1);
+}
+#ax-power-mode-power-saver.active {
+  background: @green;
+}
+#ax-power-mode-balanced.active {
+  background: @accent-yellow;
+}
+#ax-power-mode-performance.active {
+  background: @red;
+}
+#ax-power-mode-power-saver.active label,
+#ax-power-mode-balanced.active label,
+#ax-power-mode-performance.active label {
+  color: @text-dark;
+}
+#ax-power-mode-power-saver-icon,
+#ax-power-mode-balanced-icon,
+#ax-power-mode-performance-icon {
+  font-size: 20px;
+}
+#ax-power-mode-power-saver-name,
+#ax-power-mode-balanced-name,
+#ax-power-mode-performance-name {
+  font-size: 10px;
+  margin-top: 4px;
+}
+/* Timers */
+#ax-utilities-timers {
+  margin-bottom: 12px;
+}
+#ax-timer,
+#ax-stopwatch {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 16px;
+  border: 4px solid @bg-secondary;
+  padding: 12px;
+}
+#ax-timer-header,
+#ax-stopwatch-header {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+#ax-timer-display,
+#ax-stopwatch-display {
+  font-size: 28px;
+  font-weight: bold;
+  font-family: monospace;
+  margin: 8px 0;
+}
+#ax-timer-presets {
+  margin-bottom: 8px;
+}
+#ax-timer-preset {
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: all 0.2s ease;
+}
+#ax-timer-preset:hover {
+  background: alpha(white, 0.1);
+}
+#ax-timer-preset label {
+  font-size: 11px;
+}
+#ax-timer-controls,
+#ax-stopwatch-controls {
+  margin-top: 8px;
+}
+#ax-timer-start,
+#ax-timer-reset,
+#ax-stopwatch-start,
+#ax-stopwatch-reset {
+  background: @bg-secondary;
+  border-radius: 50%;
+  padding: 10px;
+  min-width: 40px;
+  min-height: 40px;
+  transition: all 0.2s ease;
+}
+#ax-timer-start:hover,
+#ax-stopwatch-start:hover {
+  background: @green;
+}
+#ax-timer-start:hover label,
+#ax-stopwatch-start:hover label {
+  color: @text-dark;
+}
+#ax-timer-start.running,
+#ax-stopwatch-start.running {
+  background: @accent-pink;
+}
+#ax-timer-start.running label,
+#ax-stopwatch-start.running label {
+  color: @text-dark;
+}
+#ax-timer-reset:hover,
+#ax-stopwatch-reset:hover {
+  background: @red;
+}
+#ax-timer-reset:hover label,
+#ax-stopwatch-reset:hover label {
+  color: @text-dark;
+}
+/* Notes */
+#ax-notes {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 16px;
+  border: 4px solid @bg-secondary;
+  padding: 12px;
+}
+#ax-notes-header {
+  margin-bottom: 8px;
+}
+#ax-notes-title {
+  font-size: 12px;
+  font-weight: bold;
+}
+#ax-notes-clear {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  transition: all 0.2s ease;
+}
+#ax-notes-clear:hover {
+  background: @red;
+}
+#ax-notes-clear:hover label {
+  color: @text-dark;
+}
+#ax-notes-scroll {
+  background: alpha(@bg-primary, 0.3);
+  border-radius: 10px;
+}
+#ax-notes-text {
+  background: transparent;
+  color: @text-light;
+  font-size: 12px;
+}
+#ax-notes-text text {
+  background: transparent;
+}
+/* ============================================
+   WALLPAPERS SECTION
+   ============================================ */
+#ax-wallpapers {
+  background: transparent;
+  padding: 8px;
+  min-width: 900px;
+  /* Height adapts to content */
+}
+#ax-wall-header {
+  margin-bottom: 8px;
+}
+#ax-wall-search {
+  background: alpha(@bg-primary, 0.3);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: @text-light;
+}
+#ax-wall-search:focus {
+  border: 1px solid @accent-pink;
+}
+#ax-scheme-dropdown {
+  background: alpha(@bg-primary, 0.3);
+  border-radius: 12px;
+  padding: 8px;
+  color: @text-light;
+}
+#ax-matugen-switch {
+  background: @bg-secondary;
+  border-radius: 12px;
+}
+#ax-matugen-switch:checked {
+  background: @accent-pink;
+}
+#ax-wall-random {
+  background: alpha(@bg-primary, 0.3);
+  border-radius: 12px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+#ax-wall-random:hover {
+  background: @accent-pink;
+}
+#ax-wall-random:hover label {
+  color: @text-dark;
+}
+#ax-wall-scrolled {
+  background: alpha(@bg-primary, 0.5);
+  border-radius: 14px;
+  border: 4px solid @bg-secondary;
+  padding: 6px;
+  min-height: 300px;
+}
+#ax-wall-icons {
+  background: transparent;
+  min-height: 280px;
+}
+#ax-wall-icons *:selected {
+  background: @accent-pink;
+  border-radius: 12px;
+}

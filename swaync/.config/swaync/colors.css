@@ -1,0 +1,20 @@
+/**
+ * Matugen-generated colors for Swaync notifications
+ * Auto-generated from wallpaper - do not edit manually
+ * Import this file in swaync/style.css with @import url("colors.css");
+ */
+
+:root {
+  --matugen-background: #101417;
+  --matugen-surface: #101417;
+  --matugen-surface-bright: #353a3d;
+  --matugen-primary: #92cef6;
+  --matugen-secondary: #b6c9d8;
+  --matugen-tertiary: #ccc0e9;
+  --matugen-error: #ffb4ab;
+  --matugen-on-background: #dfe3e7;
+  --matugen-on-surface: #dfe3e7;
+  --matugen-on-primary: #00344c;
+  --matugen-outline: #8b9198;
+  --matugen-shadow: #000000;
+}

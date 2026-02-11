@@ -1,0 +1,55 @@
+[config]
+reload_apps = true
+
+# Wallpaper is set via post_hook in hyprland template instead
+# hyprpaper requires preload + wallpaper commands in sequence
+
+[config.custom_colors]
+red = { color = "#FF0000", blend = true }
+green = { color = "#00FF00", blend = true }
+yellow = { color = "#FFFF00", blend = true }
+blue = { color = "#0000FF", blend = true }
+magenta = { color = "#FF00FF", blend = true }
+cyan = { color = "#00FFFF", blend = true }
+white = { color = "#FFFFFF", blend = true }
+
+[templates.fabric]
+input_path = "/home/athoms/.config/matugen/templates/fabric-colors.css"
+output_path = "/home/athoms/.config/fabric/colors.css"
+
+[templates.hyprland]
+input_path = "/home/athoms/.config/matugen/templates/hyprland-colors.conf"
+output_path = "/home/athoms/.config/hypr/conf/colors.conf"
+
+[templates.kitty]
+input_path = "/home/athoms/.config/matugen/templates/kitty-colors.conf"
+output_path = "/home/athoms/.config/kitty/colors.conf"
+
+[templates.swaync]
+input_path = "/home/athoms/.config/matugen/templates/swaync-colors.css"
+output_path = "/home/athoms/.config/swaync/colors.css"
+
+[templates.starship]
+input_path = "/home/athoms/.config/matugen/templates/starship.toml"
+output_path = "/home/athoms/.config/starship.toml"
+
+[templates.fastfetch]
+input_path = "/home/athoms/.config/matugen/templates/fastfetch.jsonc"
+output_path = "/home/athoms/.config/fastfetch/config.jsonc"
+post_hook = "/home/athoms/.config/matugen/post-matugen.sh '{{image}}'"
+
+[templates.walker]
+input_path = "/home/athoms/.config/matugen/templates/walker-colors.css"
+output_path = "/home/athoms/.config/walker/themes/default/colors.css"
+
+[templates.rofi]
+input_path = "/home/athoms/.config/matugen/templates/rofi-colors.rasi"
+output_path = "/home/athoms/.config/rofi/colors.rasi"
+
+[templates.sddm]
+input_path = "/home/athoms/.config/matugen/templates/sddm-colors.conf"
+output_path = "/home/athoms/dotfiles/sddm/usr/share/sddm/themes/cozy-anime-room/Themes/cozy_anime_room.conf"
+
+[templates.vscode]
+input_path = "/home/athoms/.config/matugen/templates/vscode-colors.json"
+output_path = "/home/athoms/.config/Code/User/settings.json"
