@@ -899,6 +899,10 @@ class Homescreen(WaylandWindow):
     def hide_widgets(self):
         # Instant — no exit animation, a window is taking over the screen
         self.hide()
+        # Park cards in their hidden state now so the next show never
+        # renders them at full opacity before the entrance animation
+        for widget, enter_class in self._animated:
+            widget.get_style_context().add_class(enter_class)
 
     def _on_map(self, *_):
         self._tick()
