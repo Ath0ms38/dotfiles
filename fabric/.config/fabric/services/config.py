@@ -49,13 +49,15 @@ DEFAULTS = {
             "workspace": 11,
             "icon": "󰙯",
             "command": "discord",
+            "class": "discord",
             "color": "#5865f2",
         },
         "vscode": {
             "enabled": True,
             "workspace": 12,
-            "icon": "",
+            "icon": "󰨞",
             "command": "code",
+            "class": "Code",
             "color": "#ff9f43",
         },
         "minecraft": {
@@ -63,6 +65,7 @@ DEFAULTS = {
             "workspace": 13,
             "icon": "󰍳",
             "command": "prismlauncher",
+            "class": "org.prismlauncher.PrismLauncher",
             "color": "#1abc9c",
         },
         "steam": {
@@ -70,6 +73,7 @@ DEFAULTS = {
             "workspace": 14,
             "icon": "󰓓",
             "command": "steam",
+            "class": "steam",
             "color": "#1e88e5",
         },
     },
@@ -90,7 +94,7 @@ DEFAULTS = {
     "clock_format": "%H:%M:%S",
     "clock_show_date": True,
     "clock_date_format": "%A, %B %d",
-    "clock_update_interval": 100,  # ms
+    "clock_update_interval": 1000,  # ms
 
     # Workspaces
     "workspaces_count": 5,  # Number of always-visible workspaces
@@ -301,7 +305,7 @@ class Config(Service):
 
     @Property(int, "readable", default_value=100)
     def clock_update_interval(self) -> int:
-        return self._config.get("clock_update_interval", 100)
+        return self._config.get("clock_update_interval", 1000)
 
     @Property(int, "readable", default_value=5)
     def workspaces_count(self) -> int:

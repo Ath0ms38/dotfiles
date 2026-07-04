@@ -4,9 +4,39 @@ Standalone script to toggle special workspace apps
 Can be called from Hyprland keybindings
 """
 
+import os
 import sys
 import json
 import subprocess
+
+CONFIG_PATH = os.path.expanduser("~/.config/fabric/config.json")
+
+# Fallback if config.json is missing or unreadable
+DEFAULT_APPS = {
+    "discord": {"workspace": 11, "class": "discord", "command": "discord"},
+    "vscode": {"workspace": 12, "class": "Code", "command": "code"},
+    "minecraft": {"workspace": 13, "class": "org.prismlauncher.PrismLauncher", "command": "prismlauncher"},
+    "steam": {"workspace": 14, "class": "steam", "command": "steam"},
+}
+
+
+def load_apps():
+    """Load special workspace apps from the shared fabric config.json"""
+    try:
+        with open(CONFIG_PATH) as f:
+            cfg = json.load(f)
+        apps = {
+            name: {
+                "workspace": app["workspace"],
+                "class": app.get("class", name),
+                "command": app["command"],
+            }
+            for name, app in cfg.get("special_workspaces", {}).items()
+            if app.get("enabled", True)
+        }
+        return apps or DEFAULT_APPS
+    except Exception:
+        return DEFAULT_APPS
 
 
 def get_windows():
@@ -49,15 +79,11 @@ def is_app_in_workspace(window_class, workspace_id):
 
 def toggle_app(app_name):
     """Toggle an app - launch or switch to it"""
-    apps = {
-        "discord": {"workspace": 11, "class": "discord", "command": "discord"},
-        "vscode": {"workspace": 12, "class": "Code", "command": "code"},
-        "minecraft": {"workspace": 13, "class": "org.polymc.PolyMC", "command": "polymc"},
-        "steam": {"workspace": 14, "class": "steam", "command": "steam"},
-    }
+    apps = load_apps()
 
     if app_name not in apps:
         print(f"Unknown app: {app_name}")
+        print(f"Available apps: {', '.join(apps)}")
         return
 
     app = apps[app_name]
@@ -100,7 +126,7 @@ def toggle_app(app_name):
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: toggle_app.py <app_name>")
-        print("Available apps: discord, vscode, minecraft, steam")
+        print(f"Available apps: {', '.join(load_apps())}")
         sys.exit(1)
 
     app_name = sys.argv[1]
