@@ -18,6 +18,7 @@ from services.monitor_manager import get_monitor_manager
 
 # Import the bar system
 from notch_bar import create_notch_windows
+from desktop import create_homescreens
 
 
 def create_bar_for_monitors():
@@ -64,6 +65,11 @@ if __name__ == "__main__":
 
     # Filter out None values
     windows = [w for w in windows if w is not None]
+
+    # Homescreen widget layer (shown when the active workspace is empty)
+    homescreen_manager = create_homescreens(get_monitor_manager().get_monitors())
+    if homescreen_manager:
+        windows.extend(homescreen_manager.windows)
 
     # Create the application with all windows
     app = Application("fabric-bar", *windows)

@@ -1,0 +1,110 @@
+/**
+ * Homescreen — desktop widget layer (shown when the workspace is empty)
+ */
+
+#homescreen {
+  background: transparent;
+}
+
+/* Big clock — the `* { font-size }` reset in base.css matches the inner
+   label directly, so the label must be targeted explicitly */
+#homescreen-clock,
+#homescreen-clock label {
+  background: transparent;
+  font-size: 110px;
+  font-weight: 800;
+  color: var(--text-light);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+}
+
+#homescreen-date,
+#homescreen-date label {
+  background: transparent;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--accent-pink);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+/* Cards */
+.homescreen-card {
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 20px;
+  padding: 20px 24px;
+  min-width: 260px;
+  transition: all 0.3s ease;
+}
+
+.homescreen-card:hover {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: var(--accent-pink-border);
+}
+
+.homescreen-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-pink);
+}
+
+/* Weather */
+.homescreen-weather-main {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.homescreen-weather-details {
+  font-size: 14px;
+  color: var(--text-medium);
+}
+
+.homescreen-weather-location {
+  font-size: 13px;
+  color: var(--text-medium);
+}
+
+/* System info */
+.homescreen-system-host {
+  font-size: 13px;
+  color: var(--text-medium);
+}
+
+.homescreen-system-icon {
+  font-size: 14px;
+  color: var(--accent-yellow);
+}
+
+.homescreen-system-key {
+  font-size: 14px;
+  color: var(--text-medium);
+}
+
+.homescreen-system-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* Calendar */
+#homescreen-calendar calendar {
+  background: transparent;
+  color: var(--text-light);
+  font-size: 14px;
+  border: none;
+}
+
+#homescreen-calendar calendar:selected {
+  background: var(--accent-pink);
+  color: var(--bg-primary);
+  border-radius: 8px;
+}
+
+#homescreen-calendar calendar.header {
+  color: var(--accent-pink);
+  font-weight: 700;
+}
+
+#homescreen-calendar calendar.highlight {
+  color: var(--accent-yellow);
+}

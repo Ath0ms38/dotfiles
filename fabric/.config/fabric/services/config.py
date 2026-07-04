@@ -104,6 +104,10 @@ DEFAULTS = {
     "wallpapers_dir": "~/dotfiles/wallpapers",
     "matugen_scheme": "scheme-tonal-spot",
 
+    # Homescreen (desktop widgets shown when the workspace is empty)
+    "homescreen_enabled": True,
+    "homescreen_weather_location": "",  # empty = geolocate by IP (wttr.in)
+
     # System metrics update intervals (ms)
     "metrics_cpu_interval": 2000,
     "metrics_memory_interval": 5000,
@@ -323,6 +327,14 @@ class Config(Service):
     @Property(str, "readable", default_value="scheme-tonal-spot")
     def matugen_scheme(self) -> str:
         return self._config.get("matugen_scheme", "scheme-tonal-spot")
+
+    @Property(bool, "readable", default_value=True)
+    def homescreen_enabled(self) -> bool:
+        return self._config.get("homescreen_enabled", True)
+
+    @Property(str, "readable", default_value="")
+    def homescreen_weather_location(self) -> str:
+        return self._config.get("homescreen_weather_location", "")
 
     @Property(int, "readable", default_value=50)
     def slider_debounce_ms(self) -> int:

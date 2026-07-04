@@ -66,5 +66,7 @@
   "font_size": 13,
   "icon_size": 18,
   "border_radius": 12,
-  "opacity": 0.85
+  "opacity": 0.85,
+  "homescreen_enabled": true,
+  "homescreen_weather_location": ""
 }
