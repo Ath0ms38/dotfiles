@@ -6,17 +6,22 @@ The window lives on the wlr-layer-shell "bottom" layer (above the wallpaper,
 below every normal window), and is additionally hidden/shown from Hyprland
 socket events so it disappears the instant a window opens.
 
-Cards are scattered across the whole screen (Gtk.Fixed, fraction-based
-positions), each with its own entrance animation. Live Cairo sparkline
-graphs for CPU / RAM / network / GPU, top processes, media controls,
-weather, calendar and quick actions.
+Layout is a homogeneous 3x3 Gtk.Grid plus a quick-actions rail — cards can
+never overlap and always fill the whole workarea. Cards use the same
+frosted-glass look as kitty (theme background at 0.8 alpha; Hyprland blurs
+the fabric layer namespace, ignore_alpha 0.50).
+
+Weather comes from Open-Meteo (current conditions + 7-day forecast),
+geolocated by IP or by the `homescreen_weather_location` config value.
 """
 
 import json
+import locale
 import os
 import shlex
 import subprocess
 import time
+import urllib.parse
 from collections import deque
 
 import psutil
@@ -32,11 +37,16 @@ from gi.repository import GLib, Gtk
 from services.config import get_config
 from services.network import format_bandwidth
 
-WEATHER_URL = "https://wttr.in/{location}?format=%l|%c|%t|%f|%w|%h|%S|%s|%p"
 WEATHER_REFRESH_S = 30 * 60
 UPDATES_REFRESH_S = 30 * 60
 UI_TICK_S = 2
 HISTORY_LEN = 120  # 4 minutes of history at 2s per sample
+
+# Localized day abbreviations for the forecast row
+try:
+    locale.setlocale(locale.LC_TIME, "")
+except locale.Error:
+    pass
 
 
 # --------------------------------------------------------------------------- #
@@ -96,7 +106,6 @@ class StatsCollector:
         self.tx_speed = (counters.bytes_sent - last_tx) / dt
         self._last_net = (counters.bytes_recv, counters.bytes_sent, now)
 
-        # Normalize network history against a rolling ceiling (min 1 MiB/s)
         self.rx.append(self.rx_speed)
         self.tx.append(self.tx_speed)
 
@@ -120,14 +129,14 @@ class StatsCollector:
 
 class Sparkline(Gtk.DrawingArea):
     """Filled line graph of a deque of samples; latest sample at the right
-    edge. Stroke/fill color comes from the widget's CSS `color`."""
+    edge. Stroke/fill color comes from the widget's CSS `color`. Expands to
+    fill whatever space its card gives it."""
 
-    def __init__(self, history: deque, width: int = 320, height: int = 100,
-                 normalize: bool = False):
-        super().__init__(visible=True)
+    def __init__(self, history: deque, normalize: bool = False):
+        super().__init__(visible=True, hexpand=True, vexpand=True)
         self._history = history
         self._normalize = normalize
-        self.set_size_request(width, height)
+        self.set_size_request(180, 56)
         self.connect("draw", self._on_draw)
 
     def _on_draw(self, _widget, cr):
@@ -156,7 +165,6 @@ class Sparkline(Gtk.DrawingArea):
             cr.line_to(*xy(i, v))
         cr.stroke_preserve()
 
-        # Fill under the curve
         cr.line_to(x0 + (len(samples) - 1) * step, h)
         cr.line_to(x0, h)
         cr.close_path()
@@ -165,7 +173,7 @@ class Sparkline(Gtk.DrawingArea):
 
 
 class Card(Box):
-    """A titled homescreen card"""
+    """A titled homescreen card (fills its grid cell)"""
 
     def __init__(self, title: str, icon: str, name: str, accent: str = "", **kwargs):
         super().__init__(
@@ -173,6 +181,8 @@ class Card(Box):
             style_classes=["homescreen-card"] + ([accent] if accent else []),
             orientation="v",
             spacing=8,
+            h_expand=True,
+            v_expand=True,
             **kwargs,
         )
         self.title_label = Label(
@@ -187,10 +197,9 @@ class Card(Box):
 
 
 class GraphCard(Card):
-    """Card with a big value, a detail line and a sparkline"""
+    """Card with a big value, a detail line and an expanding sparkline"""
 
-    def __init__(self, title, icon, name, history, accent, width=320,
-                 normalize=False, **kwargs):
+    def __init__(self, title, icon, name, history, accent, normalize=False, **kwargs):
         super().__init__(title, icon, name, accent=accent, **kwargs)
 
         top = Box(orientation="h", spacing=12)
@@ -206,7 +215,7 @@ class GraphCard(Card):
         top.add(self.detail)
         self.add(top)
 
-        self.graph = Sparkline(history, width=width, normalize=normalize)
+        self.graph = Sparkline(history, normalize=normalize)
         self.graph.get_style_context().add_class("homescreen-graph")
         if accent:
             self.graph.get_style_context().add_class(accent)
@@ -219,7 +228,7 @@ class GraphCard(Card):
 class CpuCard(GraphCard):
     def __init__(self, stats: StatsCollector, **kwargs):
         super().__init__("CPU", "󰻠", "homescreen-cpu", stats.cpu,
-                         accent="accent-a", width=560, **kwargs)
+                         accent="accent-a", **kwargs)
         self._stats = stats
 
     def tick(self):
@@ -236,7 +245,7 @@ class CpuCard(GraphCard):
 class RamCard(GraphCard):
     def __init__(self, stats: StatsCollector, **kwargs):
         super().__init__("Memory", "󰍛", "homescreen-ram", stats.mem,
-                         accent="accent-b", width=520, **kwargs)
+                         accent="accent-b", **kwargs)
         self._stats = stats
 
     def tick(self):
@@ -265,10 +274,10 @@ class NetCard(Card):
         row.add(self.up)
         self.add(row)
 
-        self.rx_graph = Sparkline(stats.rx, width=520, height=68, normalize=True)
+        self.rx_graph = Sparkline(stats.rx, normalize=True)
         self.rx_graph.get_style_context().add_class("homescreen-graph")
         self.rx_graph.get_style_context().add_class("accent-c")
-        self.tx_graph = Sparkline(stats.tx, width=520, height=46, normalize=True)
+        self.tx_graph = Sparkline(stats.tx, normalize=True)
         self.tx_graph.get_style_context().add_class("homescreen-graph")
         self.tx_graph.get_style_context().add_class("accent-d")
         self.add(self.rx_graph)
@@ -287,7 +296,13 @@ class GpuCard(GraphCard):
     def __init__(self, **kwargs):
         self._history = deque(maxlen=HISTORY_LEN)
         super().__init__("GPU", "󰢮", "homescreen-gpu", self._history,
-                         accent="accent-e", width=300, **kwargs)
+                         accent="accent-e", **kwargs)
+        self.vram = Label(style_classes=["homescreen-detail"], label="",
+                          h_align="start")
+        # Put the VRAM line between the header row and the graph
+        self.remove(self.graph)
+        self.add(self.vram)
+        self.add(self.graph)
         self._flip = False
 
     def tick(self):
@@ -295,26 +310,29 @@ class GpuCard(GraphCard):
         if self._flip:
             exec_shell_command_async(
                 "nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total,"
-                "temperature.gpu --format=csv,noheader,nounits",
+                "temperature.gpu,power.draw,clocks.gr --format=csv,noheader,nounits",
                 self._on_stats,
             )
         super().tick()
 
     def _on_stats(self, output):
         try:
-            util, used, total, temp = [int(x) for x in str(output).strip().split(",")]
+            util, used, total, temp, power, clock = [
+                float(x) for x in str(output).strip().split(",")
+            ]
         except (ValueError, TypeError):
             return
         self._history.append(util / 100.0)
-        self.value.set_label(f"{util}%")
-        self.detail.set_label(f"{used / 1024:.1f} / {total / 1024:.0f} GiB   {temp}°C")
+        self.value.set_label(f"{util:.0f}%")
+        self.detail.set_label(f"{temp:.0f}°C   {power:.0f} W   {clock:.0f} MHz")
+        self.vram.set_label(f"󰑭 VRAM  {used / 1024:.1f} / {total / 1024:.0f} GiB")
         self.graph.queue_draw()
 
 
 class ProcsCard(Card):
     """Top processes by CPU; click to open btop"""
 
-    ROWS = 8
+    ROWS = 7
 
     def __init__(self, **kwargs):
         super().__init__("Top processes", "󱕍", "homescreen-procs",
@@ -325,7 +343,8 @@ class ProcsCard(Card):
             self._rows.append(row)
             self.add(row)
         self.add(Label(style_classes=["homescreen-hint"],
-                       label="click to open btop", h_align="start"))
+                       label="click to open btop", h_align="start",
+                       v_expand=True, v_align="end"))
 
         # Prime psutil's per-process CPU delta tracking so the first visible
         # tick already has meaningful percentages
@@ -356,8 +375,52 @@ class ProcsCard(Card):
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+class DiskCard(Card):
+    """Disk usage bars for real mounted partitions"""
+
+    def __init__(self, **kwargs):
+        super().__init__("Disks", "󰋊", "homescreen-disks", accent="accent-b", **kwargs)
+        self._bars = {}
+
+        seen_devices = set()
+        for part in psutil.disk_partitions():
+            if not part.device.startswith("/dev/") or part.device in seen_devices:
+                continue
+            seen_devices.add(part.device)
+
+            header = Box(orientation="h", spacing=8)
+            header.add(Label(style_classes=["homescreen-detail"],
+                             label=part.mountpoint, h_align="start"))
+            usage_label = Label(style_classes=["homescreen-detail"], label="",
+                                h_align="end", h_expand=True)
+            header.add(usage_label)
+
+            bar = Gtk.LevelBar(min_value=0, max_value=100, visible=True,
+                               hexpand=True)
+            bar.get_style_context().add_class("homescreen-levelbar")
+            self.add(header)
+            self.add(bar)
+            self._bars[part.mountpoint] = (bar, usage_label)
+
+            if len(self._bars) >= 3:
+                break
+
+    def tick(self):
+        for mount, (bar, label) in self._bars.items():
+            try:
+                usage = psutil.disk_usage(mount)
+            except OSError:
+                continue
+            bar.set_value(usage.percent)
+            label.set_label(
+                f"{usage.used / 1024**3:.0f} / {usage.total / 1024**3:.0f} GiB"
+                f"  ({usage.free / 1024**3:.0f} free)"
+            )
+
+
 class MediaCard(Card):
-    """Now playing + controls (playerctl). Revealed only while playing."""
+    """Now playing + controls (playerctl). Shown instead of Disks while
+    something is playing."""
 
     def __init__(self, **kwargs):
         super().__init__("Now playing", "󰝚", "homescreen-media",
@@ -366,14 +429,15 @@ class MediaCard(Card):
 
         self.track = Label(style_classes=["homescreen-media-title"], label="",
                            h_align="start", ellipsization="end")
-        self.track.set_max_width_chars(32)
+        self.track.set_max_width_chars(30)
         self.artist = Label(style_classes=["homescreen-detail"], label="",
                             h_align="start", ellipsization="end")
         self.artist.set_max_width_chars(36)
         self.add(self.track)
         self.add(self.artist)
 
-        controls = Box(orientation="h", spacing=8, h_align="center")
+        controls = Box(orientation="h", spacing=8, h_align="center",
+                       v_expand=True, v_align="end")
         for icon, action in (("󰒮", "previous"), ("󰐎", "play-pause"), ("󰒭", "next")):
             controls.add(Button(
                 style_classes=["homescreen-media-btn"],
@@ -403,54 +467,164 @@ class MediaCard(Card):
         self.artist.set_label(f"{'' if status == 'Playing' else '󰏤 '}{artist}")
 
 
+# WMO weather codes -> icon
+def _wmo_icon(code: int) -> str:
+    for codes, icon in (
+        ((0,), "☀️"), ((1, 2), "🌤️"), ((3,), "☁️"), ((45, 48), "🌫️"),
+        (tuple(range(51, 68)), "🌧️"), (tuple(range(71, 78)), "🌨️"),
+        ((80, 81, 82), "🌦️"), ((85, 86), "🌨️"), ((95, 96, 99), "⛈️"),
+    ):
+        if code in codes:
+            return icon
+    return "🌡️"
+
+
 class WeatherCard(Card):
+    """Current conditions + 7-day forecast via Open-Meteo"""
+
     def __init__(self, **kwargs):
         super().__init__("Weather", "󰖐", "homescreen-weather",
                          accent="accent-b", **kwargs)
         self._last_fetch = 0.0
+        self._coords = None
+        self._place_name = ""
 
+        top = Box(orientation="h", spacing=12)
         self.condition = Label(style_classes=["homescreen-big"], label="…",
                                h_align="start")
+        self.location = Label(style_classes=["homescreen-hint"], label="",
+                              h_align="end", v_align="end", h_expand=True)
+        top.add(self.condition)
+        top.add(self.location)
+        self.add(top)
+
         self.details = Label(style_classes=["homescreen-detail"], label="",
                              h_align="start")
-        self.sun = Label(style_classes=["homescreen-detail"], label="",
-                         h_align="start")
-        self.location = Label(style_classes=["homescreen-hint"], label="",
-                              h_align="start")
-        for w in (self.condition, self.details, self.sun, self.location):
-            self.add(w)
+        self.add(self.details)
+
+        # 7-day forecast row
+        self._days = []
+        week = Box(orientation="h", spacing=0, h_expand=True, v_expand=True,
+                   v_align="end")
+        for _ in range(7):
+            col = Box(orientation="v", spacing=2, h_expand=True)
+            name = Label(style_classes=["homescreen-day-name"], label="–")
+            icon = Label(style_classes=["homescreen-day-icon"], label=" ")
+            tmax = Label(style_classes=["homescreen-day-max"], label=" ")
+            tmin = Label(style_classes=["homescreen-day-min"], label=" ")
+            for widget in (name, icon, tmax, tmin):
+                col.add(widget)
+            week.add(col)
+            self._days.append((name, icon, tmax, tmin))
+        self.add(week)
+
+    # -- fetch chain: coords (config name or IP) -> forecast ---------------
 
     def refresh_if_stale(self):
         if time.time() - self._last_fetch < WEATHER_REFRESH_S:
             return
         self._last_fetch = time.time()
-        location = get_config().homescreen_weather_location
+
+        if self._coords:
+            self._fetch_forecast()
+            return
+
+        place = get_config().homescreen_weather_location.strip()
+        if place:
+            query = urllib.parse.quote(place)
+            exec_shell_command_async(
+                'bash -c "curl -sf --max-time 10 '
+                "'https://geocoding-api.open-meteo.com/v1/search"
+                f"?name={query}&count=1&format=json'"
+                ' | jq -c ."',
+                self._on_geocode,
+            )
+        else:
+            exec_shell_command_async(
+                'bash -c "curl -sf --max-time 10 https://ipinfo.io/json | jq -c ."',
+                self._on_iplocate,
+            )
+
+    def _on_geocode(self, output):
+        try:
+            result = json.loads(str(output))["results"][0]
+            self._coords = (result["latitude"], result["longitude"])
+            self._place_name = result.get("name", "")
+        except (ValueError, KeyError, IndexError, TypeError):
+            self._fail()
+            return
+        self._fetch_forecast()
+
+    def _on_iplocate(self, output):
+        try:
+            info = json.loads(str(output))
+            lat, lon = info["loc"].split(",")
+            self._coords = (float(lat), float(lon))
+            self._place_name = info.get("city", "")
+        except (ValueError, KeyError, TypeError):
+            self._fail()
+            return
+        self._fetch_forecast()
+
+    def _fetch_forecast(self):
+        lat, lon = self._coords
+        url = (
+            "https://api.open-meteo.com/v1/forecast"
+            f"?latitude={lat}&longitude={lon}"
+            "&current=temperature_2m,relative_humidity_2m,apparent_temperature,"
+            "weather_code,wind_speed_10m"
+            "&daily=weather_code,temperature_2m_max,temperature_2m_min"
+            "&timezone=auto&forecast_days=7"
+        )
         exec_shell_command_async(
-            f"curl -sf --max-time 10 '{WEATHER_URL.format(location=location)}'",
-            self._on_weather,
+            f'bash -c "curl -sf --max-time 10 \'{url}\' | jq -c ."',
+            self._on_forecast,
         )
 
-    def _on_weather(self, output):
-        parts = [p.strip() for p in str(output).strip().split("|")]
-        if len(parts) != 9 or not parts[2]:
-            self.condition.set_label("unavailable")
-            self._last_fetch = 0.0
+    def _on_forecast(self, output):
+        try:
+            data = json.loads(str(output))
+            current = data["current"]
+            daily = data["daily"]
+        except (ValueError, KeyError, TypeError):
+            self._fail()
             return
-        location, condition, temp, feels, wind, humidity, sunrise, sunset, precip = parts
-        self.condition.set_label(f"{condition}  {temp}")
-        self.details.set_label(f"Feels {feels}   󰖝 {wind}   󰖌 {humidity}   󰖗 {precip}")
-        self.sun.set_label(f"󰖜 {sunrise[:5]}    󰖛 {sunset[:5]}")
-        # IP geolocation returns raw "lat,lon" — only show real place names
-        self.location.set_label(
-            f"󰍎 {location}" if any(ch.isalpha() for ch in location) else ""
+
+        self.condition.set_label(
+            f"{_wmo_icon(int(current['weather_code']))} "
+            f"{current['temperature_2m']:.0f}°C"
         )
+        self.details.set_label(
+            f"Feels {current['apparent_temperature']:.0f}°C   "
+            f"󰖝 {current['wind_speed_10m']:.0f} km/h   "
+            f"󰖌 {current['relative_humidity_2m']:.0f}%"
+        )
+        if self._place_name:
+            self.location.set_label(f"󰍎 {self._place_name}")
+
+        for (name, icon, tmax, tmin), date, code, hi, lo in zip(
+            self._days,
+            daily["time"],
+            daily["weather_code"],
+            daily["temperature_2m_max"],
+            daily["temperature_2m_min"],
+        ):
+            day = time.strftime("%a", time.strptime(date, "%Y-%m-%d"))
+            name.set_label(day.rstrip(".").capitalize())
+            icon.set_label(_wmo_icon(int(code)))
+            tmax.set_label(f"{hi:.0f}°")
+            tmin.set_label(f"{lo:.0f}°")
+
+    def _fail(self):
+        self.condition.set_label("unavailable")
+        self._last_fetch = 0.0  # retry on next show
 
 
 class CalendarCard(Card):
     def __init__(self, **kwargs):
         super().__init__("Calendar", "󰃭", "homescreen-calendar",
                          accent="accent-c", **kwargs)
-        self.calendar = Gtk.Calendar(visible=True)
+        self.calendar = Gtk.Calendar(visible=True, hexpand=True, vexpand=True)
         self.calendar.set_property("show-details", False)
         self.add(self.calendar)
 
@@ -461,7 +635,7 @@ class CalendarCard(Card):
 
 
 class ActionsColumn(Box):
-    """Quick actions: lock, screenshot, clipboard, power"""
+    """Quick actions rail: lock, screenshot, clipboard, power"""
 
     ACTIONS = (
         ("󰌾", "Lock", "loginctl lock-session"),
@@ -472,9 +646,9 @@ class ActionsColumn(Box):
 
     def __init__(self, **kwargs):
         super().__init__(name="homescreen-actions", orientation="v",
-                         spacing=12, **kwargs)
+                         spacing=12, v_align="center", **kwargs)
         for icon, tip, command in self.ACTIONS:
-            btn = Button(
+            self.add(Button(
                 style_classes=["homescreen-action-btn"],
                 label=icon,
                 tooltip_text=tip,
@@ -482,8 +656,7 @@ class ActionsColumn(Box):
                     shlex.split(os.path.expanduser(c)),
                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                 ),
-            )
-            self.add(btn)
+            ))
 
 
 class ClockCluster(Box):
@@ -491,7 +664,7 @@ class ClockCluster(Box):
 
     def __init__(self, **kwargs):
         super().__init__(name="homescreen-clock-box", orientation="v",
-                         spacing=4, **kwargs)
+                         spacing=4, h_align="start", v_align="center", **kwargs)
         self._updates_fetch = 0.0
 
         # Click the clock to toggle seconds
@@ -542,12 +715,15 @@ class ClockCluster(Box):
 # The window                                                                  #
 # --------------------------------------------------------------------------- #
 
-# (x, y) as fractions of the workarea; transition; size request width or None
 SLIDE = Gtk.RevealerTransitionType
 
 
 class Homescreen(WaylandWindow):
-    """Per-monitor full-screen desktop dashboard (bottom layer)"""
+    """Per-monitor full-screen desktop dashboard (bottom layer).
+
+    Homogeneous 3x3 grid + actions rail: cards can never overlap and always
+    fill the workarea.
+    """
 
     def __init__(self, monitor: int, workarea: tuple[int, int], **kwargs):
         super().__init__(
@@ -563,78 +739,96 @@ class Homescreen(WaylandWindow):
         )
         stats = StatsCollector.get()
         self._tick_id = None
-        # Fixed pixel geometry from hyprctl — placing by window allocation is
-        # racy: the layer surface starts content-sized and grows to full
-        # screen over several configures
-        self._workarea = workarea
-        self._placements = []
+        self._revealers = []
 
-        self._fixed = Gtk.Fixed(visible=True)
         self.set_size_request(*workarea)
-        self.add(self._fixed)
 
         self.clock = ClockCluster()
         self.weather = WeatherCard()
         self.calendar = CalendarCard()
         self.media = MediaCard()
+        self.disks = DiskCard()
         self.cpu = CpuCard(stats)
         self.ram = RamCard(stats)
         self.net = NetCard(stats)
         self.gpu = GpuCard() if GLib.find_program_in_path("nvidia-smi") else None
         procs = ProcsCard()
 
-        procs_clickable = Gtk.EventBox(visible=True)
+        procs_clickable = Gtk.EventBox(visible=True, hexpand=True, vexpand=True)
         procs_clickable.add(procs)
         procs_clickable.connect("button-press-event", procs.on_click)
 
+        # Disks card swaps to the media player while something is playing
+        self._stack = Gtk.Stack(
+            transition_type=Gtk.StackTransitionType.CROSSFADE,
+            transition_duration=400,
+            visible=True, hexpand=True, vexpand=True,
+        )
+        self._stack.add_named(self.disks, "disks")
+        self._stack.add_named(self.media, "media")
+
         self._tickables = [c for c in (
-            self.clock, self.cpu, self.ram, self.net, self.gpu, procs, self.media,
+            self.clock, self.cpu, self.ram, self.net, self.gpu, procs,
+            self.media, self.disks,
         ) if c is not None]
 
-        # The scattered layout ("a little disorganized" by design)
-        self._place(self.clock, 0.040, 0.050, SLIDE.SLIDE_RIGHT)
-        self._place(self.calendar, 0.045, 0.400, SLIDE.SLIDE_RIGHT)
-        self._place(procs_clickable, 0.040, 0.725, SLIDE.SLIDE_RIGHT)
-        self._place(self.cpu, 0.280, 0.095, SLIDE.SLIDE_DOWN)
-        self._place(self.ram, 0.300, 0.420, SLIDE.SLIDE_UP)
-        self._place(self.net, 0.275, 0.720, SLIDE.SLIDE_UP)
-        self._place(self.weather, 0.640, 0.070, SLIDE.SLIDE_LEFT)
-        self._place(self.gpu, 0.625, 0.380, SLIDE.SLIDE_DOWN)
-        self.media_revealer = self._place(self.media, 0.655, 0.720, SLIDE.SLIDE_UP)
-        self._place(ActionsColumn(), 0.952, 0.300, SLIDE.SLIDE_LEFT)
+        grid = Gtk.Grid(
+            visible=True,
+            hexpand=True, vexpand=True,
+            row_homogeneous=True, column_homogeneous=True,
+            row_spacing=24, column_spacing=24,
+        )
+
+        # Row 0: identity + compute
+        self._cell(grid, self.clock, 0, 0, SLIDE.CROSSFADE)
+        self._cell(grid, self.cpu, 1, 0, SLIDE.SLIDE_DOWN)
+        self._cell(grid, self.gpu or Box(), 2, 0, SLIDE.SLIDE_DOWN)
+        # Row 1: calendar + memory + weather
+        self._cell(grid, self.calendar, 0, 1, SLIDE.SLIDE_RIGHT)
+        self._cell(grid, self.ram, 1, 1, SLIDE.CROSSFADE)
+        self._cell(grid, self.weather, 2, 1, SLIDE.SLIDE_LEFT)
+        # Row 2: activity
+        self._cell(grid, procs_clickable, 0, 2, SLIDE.SLIDE_UP)
+        self._cell(grid, self.net, 1, 2, SLIDE.SLIDE_UP)
+        self._cell(grid, self._stack, 2, 2, SLIDE.SLIDE_UP)
+
+        root = Box(orientation="h", spacing=24, h_expand=True, v_expand=True)
+        for side in ("top", "bottom", "start", "end"):
+            getattr(root, f"set_margin_{side}")(32)
+        root.add(grid)
+        root.add(ActionsColumn())
+        self.add(root)
 
         self.connect("map", self._on_map)
         self.connect("unmap", self._on_unmap)
 
-    def _place(self, widget, xf, yf, transition):
-        if widget is None:
-            return None
+    def _cell(self, grid, widget, col, row, transition):
         revealer = Gtk.Revealer(
             transition_type=transition,
-            transition_duration=500,
-            visible=True,
+            transition_duration=450,
+            visible=True, hexpand=True, vexpand=True,
         )
         revealer.add(widget)
-        w, h = self._workarea
-        self._fixed.put(revealer, int(xf * w), int(yf * h))
-        self._placements.append((revealer, xf, yf))
-        return revealer
+        grid.attach(revealer, col, row, 1, 1)
+        self._revealers.append(revealer)
 
     # -- visibility ---------------------------------------------------------
 
     def show_widgets(self):
         if self.get_visible():
             return
-        for revealer, *_ in self._placements:
+        for revealer in self._revealers:
             revealer.set_reveal_child(False)
         self.calendar.reset_to_today()
+        # Pick the disks/media pane instantly — only animate changes that
+        # happen while visible
+        self._stack.set_transition_type(Gtk.StackTransitionType.NONE)
+        self._stack.set_visible_child_name("media" if self.media.active else "disks")
+        self._stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
         self.show_all()
 
-        # Staggered entrance, each card sliding from its own direction
-        for i, (revealer, *_ ) in enumerate(self._placements):
-            if revealer is self.media_revealer:
-                continue  # revealed by the media poll only while playing
-            GLib.timeout_add(60 + i * 70,
+        for i, revealer in enumerate(self._revealers):
+            GLib.timeout_add(60 + i * 60,
                              lambda r=revealer: r.set_reveal_child(True) or False)
 
         self.weather.refresh_if_stale()
@@ -657,8 +851,7 @@ class Homescreen(WaylandWindow):
     def _tick(self):
         for card in self._tickables:
             card.tick()
-        if self.media_revealer:
-            self.media_revealer.set_reveal_child(self.media.active)
+        self._stack.set_visible_child_name("media" if self.media.active else "disks")
         return True
 
 

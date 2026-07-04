@@ -11,7 +11,7 @@
 #homescreen-clock,
 #homescreen-clock label {
   background: transparent;
-  font-size: 128px;
+  font-size: 112px;
   font-weight: 800;
   color: var(--text-light);
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
@@ -31,7 +31,7 @@
 }
 
 .homescreen-chip {
-  background: rgba(0, 0, 0, 0.45);
+  background: alpha(var(--bg-primary), 0.80);
   border: 1px solid var(--accent-pink-dim);
   border-radius: 999px;
   padding: 6px 16px;
@@ -41,7 +41,7 @@
 
 /* Cards */
 .homescreen-card {
-  background: rgba(0, 0, 0, 0.42);
+  background: alpha(var(--bg-primary), 0.80);
   border: 1px solid var(--accent-pink-dim);
   border-radius: 22px;
   padding: 24px 28px;
@@ -49,7 +49,7 @@
 }
 
 .homescreen-card:hover {
-  background: rgba(0, 0, 0, 0.58);
+  background: alpha(var(--bg-primary), 0.90);
   border-color: var(--accent-pink-border);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
 }
@@ -124,7 +124,7 @@
 
 /* Quick actions */
 #homescreen-actions {
-  background: rgba(0, 0, 0, 0.42);
+  background: alpha(var(--bg-primary), 0.80);
   border: 1px solid var(--accent-pink-dim);
   border-radius: 999px;
   padding: 14px 8px;
@@ -150,7 +150,7 @@
 #homescreen-calendar calendar {
   background: transparent;
   color: var(--text-light);
-  font-size: 19px;
+  font-size: 16px;
   border: none;
 }
 
@@ -167,4 +167,41 @@
 
 #homescreen-calendar calendar.highlight {
   color: var(--accent-yellow);
+}
+
+/* Disk level bars */
+levelbar.homescreen-levelbar trough {
+  background: alpha(var(--bg-secondary), 0.7);
+  border: none;
+  border-radius: 999px;
+  min-height: 10px;
+}
+
+levelbar.homescreen-levelbar block.filled {
+  background: var(--accent-pink);
+  border: none;
+  border-radius: 999px;
+  min-height: 10px;
+}
+
+/* 7-day forecast row */
+.homescreen-day-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-medium);
+}
+
+.homescreen-day-icon {
+  font-size: 22px;
+}
+
+.homescreen-day-max {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.homescreen-day-min {
+  font-size: 13px;
+  color: var(--text-medium);
 }
