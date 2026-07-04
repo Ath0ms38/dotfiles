@@ -2,7 +2,7 @@
 # Install SDDM theme by symlinking to system directory
 # Requires sudo privileges
 
-DOTFILES_THEME="/home/athoms/dotfiles/sddm/usr/share/sddm/themes/cozy-anime-room"
+DOTFILES_THEME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/usr/share/sddm/themes/cozy-anime-room"
 SYSTEM_THEME="/usr/share/sddm/themes/cozy-anime-room"
 
 echo "Installing SDDM theme..."
