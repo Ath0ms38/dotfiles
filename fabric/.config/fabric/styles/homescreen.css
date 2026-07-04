@@ -1,5 +1,5 @@
 /**
- * Homescreen — desktop widget layer (shown when the workspace is empty)
+ * Homescreen — full-screen desktop dashboard (shown when the workspace is empty)
  */
 
 #homescreen {
@@ -11,7 +11,7 @@
 #homescreen-clock,
 #homescreen-clock label {
   background: transparent;
-  font-size: 110px;
+  font-size: 128px;
   font-weight: 800;
   color: var(--text-light);
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
@@ -20,69 +20,129 @@
 #homescreen-date,
 #homescreen-date label {
   background: transparent;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 500;
   color: var(--accent-pink);
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
 }
 
+.homescreen-chips {
+  margin-top: 10px;
+}
+
+.homescreen-chip {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 15px;
+  color: var(--text-medium);
+}
+
 /* Cards */
 .homescreen-card {
-  background: rgba(0, 0, 0, 0.38);
+  background: rgba(0, 0, 0, 0.42);
   border: 1px solid var(--accent-pink-dim);
-  border-radius: 20px;
-  padding: 20px 24px;
-  min-width: 260px;
-  transition: all 0.3s ease;
+  border-radius: 22px;
+  padding: 24px 28px;
+  transition: all 0.25s ease;
 }
 
 .homescreen-card:hover {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.58);
   border-color: var(--accent-pink-border);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
 }
 
 .homescreen-card-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--accent-pink);
 }
 
-/* Weather */
-.homescreen-weather-main {
-  font-size: 30px;
+/* Per-card accent tints (titles + graph stroke color) */
+.homescreen-card.accent-a .homescreen-card-title { color: var(--accent-yellow); }
+.homescreen-card.accent-b .homescreen-card-title { color: var(--accent-pink); }
+.homescreen-card.accent-c .homescreen-card-title { color: var(--green); }
+.homescreen-card.accent-d .homescreen-card-title { color: var(--magenta); }
+.homescreen-card.accent-e .homescreen-card-title { color: var(--cyan); }
+
+.homescreen-graph { color: var(--accent-pink); }
+.homescreen-graph.accent-a { color: var(--accent-yellow); }
+.homescreen-graph.accent-b { color: var(--accent-pink); }
+.homescreen-graph.accent-c { color: var(--green); }
+.homescreen-graph.accent-d { color: var(--magenta); }
+.homescreen-graph.accent-e { color: var(--cyan); }
+
+/* Text roles */
+.homescreen-big {
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--text-light);
+}
+
+.homescreen-detail {
+  font-size: 17px;
+  color: var(--text-medium);
+}
+
+.homescreen-detail.accent-c { color: var(--green); }
+.homescreen-detail.accent-d { color: var(--magenta); }
+
+.homescreen-mono {
+  font-family: monospace;
+  font-size: 15px;
+  color: var(--text-light);
+}
+
+.homescreen-hint {
+  font-size: 13px;
+  color: var(--text-medium);
+  margin-top: 4px;
+}
+
+/* Media */
+.homescreen-media-title {
+  font-size: 22px;
   font-weight: 700;
   color: var(--text-light);
 }
 
-.homescreen-weather-details {
-  font-size: 14px;
+.homescreen-media-btn,
+.homescreen-media-btn label {
+  background: transparent;
+  font-size: 28px;
+  color: var(--text-light);
+  padding: 2px 10px;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+
+.homescreen-media-btn:hover {
+  background: var(--accent-pink-dim);
+}
+
+/* Quick actions */
+#homescreen-actions {
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid var(--accent-pink-dim);
+  border-radius: 999px;
+  padding: 14px 8px;
+}
+
+.homescreen-action-btn,
+.homescreen-action-btn label {
+  background: transparent;
+  font-size: 24px;
   color: var(--text-medium);
+  padding: 12px;
+  border-radius: 999px;
+  transition: all 0.15s ease;
 }
 
-.homescreen-weather-location {
-  font-size: 13px;
-  color: var(--text-medium);
-}
-
-/* System info */
-.homescreen-system-host {
-  font-size: 13px;
-  color: var(--text-medium);
-}
-
-.homescreen-system-icon {
-  font-size: 14px;
-  color: var(--accent-yellow);
-}
-
-.homescreen-system-key {
-  font-size: 14px;
-  color: var(--text-medium);
-}
-
-.homescreen-system-value {
-  font-size: 14px;
-  font-weight: 600;
+.homescreen-action-btn:hover,
+.homescreen-action-btn:hover label {
+  background: var(--accent-pink-dim);
   color: var(--text-light);
 }
 
@@ -90,7 +150,7 @@
 #homescreen-calendar calendar {
   background: transparent;
   color: var(--text-light);
-  font-size: 14px;
+  font-size: 19px;
   border: none;
 }
 
