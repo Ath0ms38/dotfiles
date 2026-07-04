@@ -300,3 +300,22 @@ levelbar.homescreen-levelbar block.filled {
 #homescreen-calendar calendar.highlight {
   color: var(--accent-yellow);
 }
+
+/* Entrance animation: cards slide in from their screen edge + fade.
+   The .hs-enter-* class is set before show and removed staggered — the
+   transition below animates the release. */
+.hs-anim {
+  transition: opacity 0.55s ease, margin 0.55s ease;
+}
+
+.hs-enter-left {
+  opacity: 0;
+  margin-left: -80px;
+  margin-right: 80px;
+}
+
+.hs-enter-right {
+  opacity: 0;
+  margin-left: 80px;
+  margin-right: -80px;
+}

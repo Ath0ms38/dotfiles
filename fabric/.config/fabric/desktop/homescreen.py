@@ -792,7 +792,6 @@ class ClockCluster(Box):
 # The window                                                                  #
 # --------------------------------------------------------------------------- #
 
-SLIDE = Gtk.RevealerTransitionType
 
 
 class Homescreen(WaylandWindow):
@@ -817,7 +816,7 @@ class Homescreen(WaylandWindow):
         )
         stats = StatsCollector.get()
         self._tick_id = None
-        self._revealers = []
+        self._animated = []
 
         self.set_size_request(*workarea)
 
@@ -844,23 +843,17 @@ class Homescreen(WaylandWindow):
 
         left = Box(orientation="v", spacing=24, v_align="center")
         left.set_size_request(col_width, -1)
-        for widget, transition in (
-            (self.clock, SLIDE.SLIDE_RIGHT),
-            (self.weather, SLIDE.SLIDE_RIGHT),
-            (self.calendar, SLIDE.SLIDE_RIGHT),
-        ):
-            self._column_cell(left, widget, transition)
+        for widget in (self.clock, self.weather, self.calendar):
+            self._column_cell(left, widget, "hs-enter-left")
 
         right = Box(orientation="v", spacing=24, v_align="center")
         right.set_size_request(col_width, -1)
-        for widget, transition in (
-            (self.cpu, SLIDE.SLIDE_LEFT),
-            (self.gpu, SLIDE.SLIDE_LEFT),
-            (self.ram, SLIDE.SLIDE_LEFT),
-            (self._stack, SLIDE.SLIDE_LEFT),
-        ):
+        for widget in (self.cpu, self.gpu, self.ram, self._stack):
             if widget is not None:
-                self._column_cell(right, widget, transition)
+                self._column_cell(right, widget, "hs-enter-right")
+
+        actions = ActionsColumn()
+        self._column_cell(None, actions, "hs-enter-right")
 
         root = Box(orientation="h", spacing=24, h_expand=True, v_expand=True)
         for side in ("top", "bottom", "start", "end"):
@@ -868,36 +861,37 @@ class Homescreen(WaylandWindow):
         root.add(left)
         root.add(Box(h_expand=True))  # free center
         root.add(right)
-        root.add(ActionsColumn())
+        root.add(actions)
         self.add(root)
 
         self.connect("map", self._on_map)
         self.connect("unmap", self._on_unmap)
 
-    def _column_cell(self, column, widget, transition):
-        revealer = Gtk.Revealer(
-            transition_type=transition,
-            transition_duration=650,
-            visible=True, hexpand=True,
-        )
-        revealer.add(widget)
-        column.add(revealer)
-        self._revealers.append(revealer)
+    def _column_cell(self, column, widget, enter_class):
+        widget.get_style_context().add_class("hs-anim")
+        if column is not None:
+            column.add(widget)
+        self._animated.append((widget, enter_class))
 
     # -- visibility ---------------------------------------------------------
 
     def show_widgets(self):
         if self.get_visible():
             return
-        for revealer in self._revealers:
-            revealer.set_reveal_child(False)
+        for widget, enter_class in self._animated:
+            widget.get_style_context().add_class(enter_class)
         self.calendar.reset_to_today()
         self.show_all()
         self._update_stack()
 
-        for i, revealer in enumerate(self._revealers):
-            GLib.timeout_add(80 + i * 90,
-                             lambda r=revealer: r.set_reveal_child(True) or False)
+        # Staggered entrance: each card slides in from its screen edge and
+        # fades in (CSS transition fires when the enter class is removed)
+        for i, (widget, enter_class) in enumerate(self._animated):
+            GLib.timeout_add(
+                120 + i * 100,
+                lambda w=widget, c=enter_class:
+                    w.get_style_context().remove_class(c) or False,
+            )
 
         self.weather.refresh_if_stale()
         self.clock.refresh_updates_if_stale()
