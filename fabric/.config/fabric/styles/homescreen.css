@@ -20,7 +20,7 @@
 #homescreen-clock,
 #homescreen-clock label {
   background: transparent;
-  font-size: 112px;
+  font-size: 78px;
   font-weight: 800;
   color: var(--text-light);
   text-shadow: 0 0 26px rgba(0, 0, 0, 0.85);
@@ -322,4 +322,29 @@ levelbar.homescreen-levelbar block.filled {
   opacity: 0;
   margin-left: 80px;
   margin-right: -80px;
+}
+
+/* Weather location gear */
+.homescreen-gear,
+.homescreen-gear label {
+  background: transparent;
+  font-size: 15px;
+  color: var(--text-medium);
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.homescreen-gear:hover,
+.homescreen-gear:hover label {
+  color: var(--text-light);
+  background: alpha(var(--accent-pink), 0.25);
+}
+
+.idle-popover-box entry {
+  background: alpha(var(--bg-secondary), 0.9);
+  color: var(--text-light);
+  border: 1px solid alpha(var(--accent-pink), 0.3);
+  border-radius: 6px;
+  padding: 6px 10px;
 }

@@ -561,9 +561,13 @@ class WeatherCard(Card):
                                h_align="start")
         self.location = Label(style_classes=["homescreen-hint"], label="",
                               h_align="end", v_align="end", h_expand=True)
+        gear = Button(style_classes=["homescreen-gear"], label="",
+                      tooltip_text="Set weather location", v_align="start")
         top.add(self.condition)
         top.add(self.location)
+        top.add(gear)
         self.add(top)
+        self._build_location_popover(gear)
 
         self.details = Label(style_classes=["homescreen-detail"], label="",
                              h_align="start")
@@ -584,6 +588,39 @@ class WeatherCard(Card):
             week.add(col)
             self._days.append((name, icon, tmax, tmin))
         self.add(week)
+
+    def _build_location_popover(self, gear):
+        self._loc_popover = Gtk.Popover(relative_to=gear,
+                                        position=Gtk.PositionType.BOTTOM)
+        self._loc_popover.set_name("idle-popover")
+        box = Box(orientation="v", spacing=8,
+                  style_classes=["idle-popover-box"])
+        box.add(Label(style_classes=["homescreen-card-title"],
+                      label="󰍎  LOCATION", h_align="start"))
+        self._loc_entry = Gtk.Entry(
+            visible=True, placeholder_text="City (empty = auto by IP)")
+        self._loc_entry.connect("activate", self._apply_location)
+        box.add(self._loc_entry)
+        box.add(Button(style_classes=["idle-apply-btn"], label="Apply",
+                       on_clicked=self._apply_location))
+        box.show_all()
+        self._loc_popover.add(box)
+
+        def open_popover(*_):
+            self._loc_entry.set_text(
+                get_config().homescreen_weather_location)
+            self._loc_popover.popup()
+        gear.connect("clicked", open_popover)
+
+    def _apply_location(self, *_):
+        place = self._loc_entry.get_text().strip()
+        get_config().set("homescreen_weather_location", place)
+        self._coords = None
+        self._place_name = ""
+        self._last_fetch = 0.0
+        self.location.set_label("󰍎 …")
+        self.refresh_if_stale()
+        self._loc_popover.popdown()
 
     # -- fetch chain: coords (config name or IP) -> forecast ---------------
 
@@ -744,8 +781,7 @@ class ClockCluster(Box):
                          spacing=4, h_align="start", v_align="center", **kwargs)
         self._updates_fetch = 0.0
 
-        # Click the clock to toggle seconds
-        self.add(DateTime(formatters=["%H:%M", "%H:%M:%S"], interval=1000,
+        self.add(DateTime(formatters=["%H:%M:%S"], interval=1000,
                           name="homescreen-clock", h_align="start"))
         self.add(DateTime(formatters=["%A %d %B"], interval=60000,
                           name="homescreen-date", h_align="start"))
@@ -806,7 +842,7 @@ class Homescreen(WaylandWindow):
             layer="bottom",
             anchor="top left right bottom",
             exclusivity="none",
-            keyboard_mode="none",
+            keyboard_mode="on-demand",
             monitor=monitor,
             name="homescreen",
             title="homescreen",
