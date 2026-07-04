@@ -1,0 +1,350 @@
+/**
+ * Homescreen — full-screen HUD dashboard (shown when the workspace is empty)
+ * Sci-fi look: frosted gradient glass, accent edge strips, neon glows,
+ * pulsing status dots. Blur comes from Hyprland (layerrule on the
+ * "homescreen" namespace, ignore_alpha 0.50 — keep card alpha above that).
+ */
+
+#homescreen {
+  background: transparent;
+}
+
+@keyframes hs-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.15; }
+  100% { opacity: 1; }
+}
+
+/* Big clock — the `* { font-size }` reset in base.css matches the inner
+   label directly, so the label must be targeted explicitly */
+#homescreen-clock,
+#homescreen-clock label {
+  background: transparent;
+  font-size: 78px;
+  font-weight: 800;
+  color: var(--text-light);
+  text-shadow: 0 0 26px rgba(0, 0, 0, 0.85);
+}
+
+#homescreen-date,
+#homescreen-date label {
+  background: transparent;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--accent-pink);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+.homescreen-chips {
+  margin-top: 10px;
+}
+
+.homescreen-chip {
+  background: alpha(var(--bg-primary), 0.80);
+  border: 1px solid alpha(var(--accent-pink), 0.35);
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 15px;
+  color: var(--text-medium);
+}
+
+/* Cards — frosted gradient glass with accent edge strip + soft neon glow */
+.homescreen-card {
+  background: linear-gradient(to bottom right,
+              alpha(var(--bg-primary), 0.86),
+              alpha(var(--bg-secondary), 0.70));
+  border: 1px solid alpha(var(--accent-pink), 0.22);
+  border-left: 3px solid var(--accent-pink);
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 0 22px alpha(var(--accent-pink), 0.10);
+  transition: all 0.3s ease;
+}
+
+.homescreen-card:hover {
+  background: linear-gradient(to bottom right,
+              alpha(var(--bg-primary), 0.94),
+              alpha(var(--bg-secondary), 0.82));
+  box-shadow: 0 0 34px alpha(var(--accent-pink), 0.25);
+}
+
+.homescreen-card.accent-a { border-left-color: var(--accent-yellow);
+  box-shadow: 0 0 22px alpha(var(--accent-yellow), 0.10); }
+.homescreen-card.accent-a:hover { box-shadow: 0 0 34px alpha(var(--accent-yellow), 0.25); }
+.homescreen-card.accent-c { border-left-color: var(--green);
+  box-shadow: 0 0 22px alpha(var(--green), 0.10); }
+.homescreen-card.accent-c:hover { box-shadow: 0 0 34px alpha(var(--green), 0.25); }
+.homescreen-card.accent-d { border-left-color: var(--magenta);
+  box-shadow: 0 0 22px alpha(var(--magenta), 0.10); }
+.homescreen-card.accent-d:hover { box-shadow: 0 0 34px alpha(var(--magenta), 0.25); }
+.homescreen-card.accent-e { border-left-color: var(--cyan);
+  box-shadow: 0 0 22px alpha(var(--cyan), 0.10); }
+.homescreen-card.accent-e:hover { box-shadow: 0 0 34px alpha(var(--cyan), 0.25); }
+
+/* HUD header: pulsing status dot + uppercase spaced title + rule line */
+.homescreen-card-header {
+  border-bottom: 1px solid alpha(var(--accent-pink), 0.30);
+  padding-bottom: 8px;
+}
+
+.homescreen-pulse {
+  font-size: 9px;
+  color: var(--accent-pink);
+  animation: hs-pulse 2.2s ease-in-out infinite;
+}
+
+.homescreen-card-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: var(--accent-pink);
+}
+
+.homescreen-card-header.accent-a { border-bottom-color: alpha(var(--accent-yellow), 0.30); }
+.homescreen-card-header.accent-a .homescreen-pulse,
+.homescreen-card-header.accent-a .homescreen-card-title { color: var(--accent-yellow); }
+.homescreen-card-header.accent-c { border-bottom-color: alpha(var(--green), 0.30); }
+.homescreen-card-header.accent-c .homescreen-pulse,
+.homescreen-card-header.accent-c .homescreen-card-title { color: var(--green); }
+.homescreen-card-header.accent-d { border-bottom-color: alpha(var(--magenta), 0.30); }
+.homescreen-card-header.accent-d .homescreen-pulse,
+.homescreen-card-header.accent-d .homescreen-card-title { color: var(--magenta); }
+.homescreen-card-header.accent-e { border-bottom-color: alpha(var(--cyan), 0.30); }
+.homescreen-card-header.accent-e .homescreen-pulse,
+.homescreen-card-header.accent-e .homescreen-card-title { color: var(--cyan); }
+
+/* Graph stroke colors */
+.homescreen-graph { color: var(--accent-pink); }
+.homescreen-graph.accent-a { color: var(--accent-yellow); }
+.homescreen-graph.accent-b { color: var(--accent-pink); }
+.homescreen-graph.accent-c { color: var(--green); }
+.homescreen-graph.accent-d { color: var(--magenta); }
+.homescreen-graph.accent-e { color: var(--cyan); }
+
+/* Text roles */
+.homescreen-big {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--text-light);
+}
+
+.homescreen-detail {
+  font-size: 17px;
+  color: var(--text-medium);
+}
+
+.homescreen-detail.accent-c { color: var(--green); }
+.homescreen-detail.accent-d { color: var(--magenta); }
+
+.homescreen-mono {
+  font-family: monospace;
+  font-size: 15px;
+  color: var(--text-light);
+}
+
+.homescreen-hint {
+  font-size: 13px;
+  color: var(--text-medium);
+  margin-top: 4px;
+}
+
+/* Media */
+.homescreen-media-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.homescreen-media-btn,
+.homescreen-media-btn label {
+  background: transparent;
+  font-size: 28px;
+  color: var(--text-light);
+  padding: 2px 10px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.homescreen-media-btn:hover {
+  background: alpha(var(--magenta), 0.25);
+}
+
+/* Quick actions rail */
+#homescreen-actions {
+  background: alpha(var(--bg-primary), 0.80);
+  border: 1px solid alpha(var(--accent-pink), 0.35);
+  border-radius: 10px;
+  padding: 14px 8px;
+  box-shadow: 0 0 22px alpha(var(--accent-pink), 0.12);
+}
+
+.homescreen-action-btn,
+.homescreen-action-btn label {
+  background: transparent;
+  font-size: 24px;
+  color: var(--text-medium);
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.homescreen-action-btn:hover,
+.homescreen-action-btn:hover label {
+  background: alpha(var(--accent-pink), 0.25);
+  color: var(--text-light);
+}
+
+/* Idle timers popover */
+popover#idle-popover,
+popover#idle-popover > contents {
+  background: alpha(var(--bg-primary), 0.97);
+  border: 1px solid alpha(var(--accent-pink), 0.40);
+  border-radius: 10px;
+}
+
+.idle-popover-box {
+  padding: 14px;
+  min-width: 300px;
+}
+
+.idle-popover-box switch {
+  border-radius: 999px;
+}
+
+.idle-popover-box switch:checked {
+  background: var(--accent-pink);
+}
+
+.idle-popover-box spinbutton {
+  background: alpha(var(--bg-secondary), 0.8);
+  color: var(--text-light);
+  border: 1px solid alpha(var(--accent-pink), 0.3);
+  border-radius: 6px;
+}
+
+.idle-popover-box spinbutton button {
+  background: transparent;
+  color: var(--text-medium);
+}
+
+.idle-apply-btn,
+.idle-apply-btn label {
+  background: alpha(var(--accent-pink), 0.85);
+  color: var(--bg-primary);
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-top: 6px;
+}
+
+.idle-apply-btn:hover {
+  background: var(--accent-pink);
+}
+
+/* Disk level bars */
+levelbar.homescreen-levelbar trough {
+  background: alpha(var(--bg-secondary), 0.7);
+  border: none;
+  border-radius: 999px;
+  min-height: 10px;
+}
+
+levelbar.homescreen-levelbar block.filled {
+  background: var(--accent-pink);
+  border: none;
+  border-radius: 999px;
+  min-height: 10px;
+}
+
+/* 7-day forecast row */
+.homescreen-day-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-medium);
+}
+
+.homescreen-day-icon {
+  font-size: 22px;
+}
+
+.homescreen-day-max {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.homescreen-day-min {
+  font-size: 13px;
+  color: var(--text-medium);
+}
+
+/* Calendar */
+#homescreen-calendar calendar {
+  background: transparent;
+  color: var(--text-light);
+  font-size: 16px;
+  border: none;
+}
+
+#homescreen-calendar calendar:selected {
+  background: var(--accent-pink);
+  color: var(--bg-primary);
+  border-radius: 6px;
+}
+
+#homescreen-calendar calendar.header {
+  color: var(--accent-pink);
+  font-weight: 700;
+}
+
+#homescreen-calendar calendar.highlight {
+  color: var(--accent-yellow);
+}
+
+/* Entrance animation: cards slide in from their screen edge + fade.
+   The .hs-enter-* class is set before show and removed staggered — the
+   transition below animates the release. */
+.hs-anim {
+  transition: opacity 0.55s ease, margin 0.55s ease;
+}
+
+/* transition: none here makes ENTERING the hidden state instant —
+   only the release (class removal) animates */
+.hs-enter-left {
+  transition: none;
+  opacity: 0;
+  margin-left: -80px;
+  margin-right: 80px;
+}
+
+.hs-enter-right {
+  transition: none;
+  opacity: 0;
+  margin-left: 80px;
+  margin-right: -80px;
+}
+
+/* Weather location gear */
+.homescreen-gear,
+.homescreen-gear label {
+  background: transparent;
+  font-size: 15px;
+  color: var(--text-medium);
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.homescreen-gear:hover,
+.homescreen-gear:hover label {
+  color: var(--text-light);
+  background: alpha(var(--accent-pink), 0.25);
+}
+
+.idle-popover-box entry {
+  background: alpha(var(--bg-secondary), 0.9);
+  color: var(--text-light);
+  border: 1px solid alpha(var(--accent-pink), 0.3);
+  border-radius: 6px;
+  padding: 6px 10px;
+}

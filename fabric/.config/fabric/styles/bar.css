@@ -53,6 +53,46 @@
   color: var(--bg-dark);
 }
 
+/* Bar indicators: battery, power profile, clipboard */
+#battery-indicator,
+#power-profile-button,
+#clipboard-button {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 12px;
+  padding: 6px 12px;
+  margin: 2px 4px;
+  font-size: 16px;
+  min-width: 32px;
+  transition: all 0.2s ease;
+}
+
+#power-profile-button:hover,
+#clipboard-button:hover {
+  background: var(--accent-primary);
+  color: var(--bg-dark);
+}
+
+#battery-indicator {
+  font-size: 14px;
+}
+
+#battery-indicator.charging {
+  color: var(--green);
+}
+
+#battery-indicator.low {
+  color: var(--urgent-red);
+}
+
+#power-profile-button.performance {
+  color: var(--urgent-red);
+}
+
+#power-profile-button.power-saver {
+  color: var(--green);
+}
+
 /* Clock */
 #clock {
   background: var(--button-bg);

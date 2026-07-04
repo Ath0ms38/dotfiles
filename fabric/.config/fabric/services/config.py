@@ -49,13 +49,15 @@ DEFAULTS = {
             "workspace": 11,
             "icon": "󰙯",
             "command": "discord",
+            "class": "discord",
             "color": "#5865f2",
         },
         "vscode": {
             "enabled": True,
             "workspace": 12,
-            "icon": "",
+            "icon": "󰨞",
             "command": "code",
+            "class": "Code",
             "color": "#ff9f43",
         },
         "minecraft": {
@@ -63,6 +65,7 @@ DEFAULTS = {
             "workspace": 13,
             "icon": "󰍳",
             "command": "prismlauncher",
+            "class": "org.prismlauncher.PrismLauncher",
             "color": "#1abc9c",
         },
         "steam": {
@@ -70,6 +73,7 @@ DEFAULTS = {
             "workspace": 14,
             "icon": "󰓓",
             "command": "steam",
+            "class": "steam",
             "color": "#1e88e5",
         },
     },
@@ -90,7 +94,7 @@ DEFAULTS = {
     "clock_format": "%H:%M:%S",
     "clock_show_date": True,
     "clock_date_format": "%A, %B %d",
-    "clock_update_interval": 100,  # ms
+    "clock_update_interval": 1000,  # ms
 
     # Workspaces
     "workspaces_count": 5,  # Number of always-visible workspaces
@@ -99,6 +103,11 @@ DEFAULTS = {
     # Wallpaper settings
     "wallpapers_dir": "~/dotfiles/wallpapers",
     "matugen_scheme": "scheme-tonal-spot",
+
+    # Homescreen (desktop widgets shown when the workspace is empty)
+    "homescreen_enabled": True,
+    "homescreen_weather_location": "",  # empty = geolocate by IP
+    "homescreen_graph_fx": True,  # animated sweep/pulse on the graphs
 
     # System metrics update intervals (ms)
     "metrics_cpu_interval": 2000,
@@ -301,7 +310,7 @@ class Config(Service):
 
     @Property(int, "readable", default_value=100)
     def clock_update_interval(self) -> int:
-        return self._config.get("clock_update_interval", 100)
+        return self._config.get("clock_update_interval", 1000)
 
     @Property(int, "readable", default_value=5)
     def workspaces_count(self) -> int:
@@ -319,6 +328,18 @@ class Config(Service):
     @Property(str, "readable", default_value="scheme-tonal-spot")
     def matugen_scheme(self) -> str:
         return self._config.get("matugen_scheme", "scheme-tonal-spot")
+
+    @Property(bool, "readable", default_value=True)
+    def homescreen_enabled(self) -> bool:
+        return self._config.get("homescreen_enabled", True)
+
+    @Property(str, "readable", default_value="")
+    def homescreen_weather_location(self) -> str:
+        return self._config.get("homescreen_weather_location", "")
+
+    @Property(bool, "readable", default_value=True)
+    def homescreen_graph_fx(self) -> bool:
+        return self._config.get("homescreen_graph_fx", True)
 
     @Property(int, "readable", default_value=50)
     def slider_debounce_ms(self) -> int:

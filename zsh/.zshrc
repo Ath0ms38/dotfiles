@@ -1,8 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -32,9 +27,7 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_BEEP
 
-# Auto-completion settings
-autoload -U compinit
-compinit
+# Auto-completion settings (compinit is already run by Oh My Zsh)
 
 # Case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -60,11 +53,10 @@ alias gp='git push'
 alias gl='git log --oneline'
 alias gd='git diff'
 
-# Development aliases
+# Development aliases (Python managed by uv)
 alias py='python'
-alias pip='python -m pip'
-alias venv='python -m venv'
-alias activate='source venv/bin/activate'
+alias venv='uv venv'
+alias activate='source .venv/bin/activate'
 
 
 # Enhanced ls aliases
@@ -156,9 +148,8 @@ setopt PROMPT_SUBST
 setopt AUTO_CD
 setopt GLOB_DOTS
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+export PATH="$HOME/.local/bin:$PATH"
 
-eval "$(pyenv virtualenv-init -)"
+# uv (Python toolchain) shell completions
+command -v uv >/dev/null && eval "$(uv generate-shell-completion zsh)"
 

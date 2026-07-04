@@ -8,6 +8,8 @@ import subprocess
 from fabric.core.service import Service, Signal, Property
 from fabric.hyprland.service import Hyprland
 
+from services.config import get_config
+
 
 class WorkspaceApp:
     """Represents an application assigned to a specific workspace"""
@@ -31,12 +33,18 @@ class WorkspaceManagerService(Service):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Define special workspace apps
+        # Special workspace apps come from config.json (single source of truth,
+        # shared with toggle_app.py and the notch buttons)
         self.apps = {
-            "discord": WorkspaceApp("discord", 11, "discord", "discord", "󰙯"),
-            "vscode": WorkspaceApp("vscode", 12, "Code", "code", "󰨞"),
-            "minecraft": WorkspaceApp("minecraft", 13, "org.polymc.PolyMC", "polymc", "󰍳"),
-            "steam": WorkspaceApp("steam", 14, "steam", "steam", "󰓓"),
+            name: WorkspaceApp(
+                name,
+                cfg["workspace"],
+                cfg.get("class", name),
+                cfg["command"],
+                cfg.get("icon", ""),
+            )
+            for name, cfg in get_config().special_workspaces.items()
+            if cfg.get("enabled", True)
         }
 
         # Connect to Hyprland events

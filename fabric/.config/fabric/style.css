@@ -21,6 +21,9 @@
 @import url("styles/network.css");
 @import url("styles/wallpaper.css");
 
+/* Homescreen (desktop widgets) */
+@import url("styles/homescreen.css");
+
 /* Notch system styles */
 @import url("styles/notch.css");
 

@@ -14,6 +14,7 @@ from gi.repository import Gtk
 
 from services.config import get_config
 from services.workspace_manager import WorkspaceManagerService
+from notch.indicators import BatteryIndicator, PowerProfileButton, ClipboardButton
 
 
 class SpecialWorkspaceButton(Button):
@@ -149,12 +150,15 @@ class CompactBar(CenterBox):
         )
 
     def _build_right_section(self):
-        """Build right section: notification button + clock"""
+        """Build right section: indicators + notification button + clock"""
         return Box(
             name="compact-right",
             orientation="h",
             spacing=8,
             children=[
+                ClipboardButton(),
+                PowerProfileButton(),
+                BatteryIndicator(),
                 self._build_notification_button(),
                 self._build_clock(),
             ]

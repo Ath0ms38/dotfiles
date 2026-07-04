@@ -251,11 +251,19 @@ class ControlSliders(Box):
         GLib.timeout_add(100, self._update_volume)
         GLib.timeout_add(100, self._update_mic)
 
-        # Poll for changes periodically (every 1 second)
+        # Poll for changes periodically (every 1 second) while visible;
+        # refresh when the widget is shown again
         GLib.timeout_add(1000, self._poll_audio_state)
+        self.connect("map", self._on_mapped)
+
+    def _on_mapped(self, *_):
+        GLib.idle_add(self._update_volume)
+        GLib.idle_add(self._update_mic)
 
     def _poll_audio_state(self):
-        """Poll audio state periodically"""
+        """Poll audio state periodically (wpctl subprocess; skip while hidden)"""
+        if not self.get_mapped():
+            return True
         self._update_volume()
         self._update_mic()
         return True  # Continue polling

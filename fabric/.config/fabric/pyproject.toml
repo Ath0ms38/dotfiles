@@ -1,0 +1,11 @@
+[project]
+name = "fabric-shell"
+version = "0.1.0"
+description = "Fabric status bar + notch (Hyprland desktop shell)"
+requires-python = ">=3.12"
+dependencies = [
+    "fabric @ git+https://github.com/Fabric-Development/fabric.git",
+    "psutil",
+    "pygobject",
+    "pillow",  # wallpaper picker thumbnails
+]
