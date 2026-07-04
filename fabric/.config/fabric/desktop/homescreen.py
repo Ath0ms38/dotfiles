@@ -17,6 +17,7 @@ geolocated by IP or by the `homescreen_weather_location` config value.
 
 import json
 import locale
+import math
 import os
 import shlex
 import subprocess
@@ -34,6 +35,7 @@ from fabric.widgets.label import Label
 from fabric.widgets.wayland import WaylandWindow
 from gi.repository import GLib, Gtk
 
+from desktop.idle_config import IdlePopover
 from services.config import get_config
 from services.network import format_bandwidth
 
@@ -136,8 +138,40 @@ class Sparkline(Gtk.DrawingArea):
         super().__init__(visible=True, hexpand=True, vexpand=True)
         self._history = history
         self._normalize = normalize
-        self.set_size_request(180, 56)
+        self._anim_t = 0.0
+        self._tick_cb = None
+        self._frame = 0
+        self.set_size_request(160, 48)
         self.connect("draw", self._on_draw)
+        self.connect("map", self._start_anim)
+        self.connect("unmap", self._stop_anim)
+
+    def _start_anim(self, *_):
+        if not get_config().homescreen_graph_fx:
+            return
+        if self._tick_cb is None:
+            self._tick_cb = self.add_tick_callback(self._on_frame)
+
+    def _stop_anim(self, *_):
+        if self._tick_cb is not None:
+            self.remove_tick_callback(self._tick_cb)
+            self._tick_cb = None
+
+    def _on_frame(self, widget, clock):
+        self._frame += 1
+        if self._frame % 4:  # ~15fps keeps the sweep cheap
+            return GLib.SOURCE_CONTINUE
+        prev_t = self._anim_t
+        self._anim_t = clock.get_frame_time() / 1e6
+        # Damage only the sweep band (old + new) and the endpoint pulse,
+        # not the whole card — full redraws of 9 graphs are expensive
+        alloc = self.get_allocation()
+        w, h = alloc.width, alloc.height
+        for t in (prev_t, self._anim_t):
+            x = ((t % 5.0) / 5.0) * w
+            widget.queue_draw_area(max(int(x) - 62, 0), 0, 66, h)
+        widget.queue_draw_area(max(w - 70, 0), 0, 70, h)
+        return GLib.SOURCE_CONTINUE
 
     def _on_draw(self, _widget, cr):
         alloc = self.get_allocation()
@@ -171,6 +205,31 @@ class Sparkline(Gtk.DrawingArea):
         cr.set_source_rgba(color.red, color.green, color.blue, 0.18)
         cr.fill()
 
+        # HUD sweep: a scanline crossing the graph every few seconds
+        phase = (self._anim_t % 5.0) / 5.0
+        sweep_x = phase * w
+        gradient = __import__("cairo").LinearGradient(sweep_x - 60, 0, sweep_x, 0)
+        gradient.add_color_stop_rgba(0, color.red, color.green, color.blue, 0)
+        gradient.add_color_stop_rgba(1, color.red, color.green, color.blue, 0.13)
+        cr.set_source(gradient)
+        cr.rectangle(max(sweep_x - 60, 0), 0, min(60.0, sweep_x), h)
+        cr.fill()
+        cr.set_source_rgba(color.red, color.green, color.blue, 0.32)
+        cr.set_line_width(1)
+        cr.move_to(sweep_x, 0)
+        cr.line_to(sweep_x, h)
+        cr.stroke()
+
+        # Pulsing dot on the latest sample
+        lx, ly = xy(len(samples) - 1, samples[-1])
+        pulse = 0.5 + 0.5 * math.sin(self._anim_t * 3.0)
+        cr.set_source_rgba(color.red, color.green, color.blue, 0.25 + 0.35 * pulse)
+        cr.arc(lx, ly, 3.0 + 3.0 * pulse, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(color.red, color.green, color.blue, 1)
+        cr.arc(lx, ly, 2.2, 0, 2 * math.pi)
+        cr.fill()
+
 
 class Card(Box):
     """A titled homescreen card (fills its grid cell)"""
@@ -182,15 +241,23 @@ class Card(Box):
             orientation="v",
             spacing=8,
             h_expand=True,
-            v_expand=True,
+            v_expand=kwargs.pop("v_expand", False),
             **kwargs,
         )
+        header = Box(
+            style_classes=["homescreen-card-header"] + ([accent] if accent else []),
+            orientation="h",
+            spacing=8,
+        )
+        header.add(Label(style_classes=["homescreen-pulse"], label="●",
+                         v_align="center"))
         self.title_label = Label(
             style_classes=["homescreen-card-title"],
-            label=f"{icon}  {title}",
+            label=f"{icon}  {title.upper()}",
             h_align="start",
         )
-        self.add(self.title_label)
+        header.add(self.title_label)
+        self.add(header)
 
     def tick(self):
         """Called every UI_TICK_S while the homescreen is visible"""
@@ -658,6 +725,16 @@ class ActionsColumn(Box):
                 ),
             ))
 
+        # Idle timers (screen off / lock / suspend) config popover
+        idle_btn = Button(
+            style_classes=["homescreen-action-btn"],
+            label="󰔛",
+            tooltip_text="Idle timers",
+        )
+        popover = IdlePopover(relative_to=idle_btn)
+        idle_btn.connect("clicked", lambda *_: popover.popup())
+        self.add(idle_btn)
+
 
 class ClockCluster(Box):
     """Big clock + date + info chips (uptime, kernel, pacman updates)"""
@@ -733,6 +810,7 @@ class Homescreen(WaylandWindow):
             keyboard_mode="none",
             monitor=monitor,
             name="homescreen",
+            title="homescreen",
             visible=False,
             all_visible=False,
             **kwargs,
@@ -750,66 +828,60 @@ class Homescreen(WaylandWindow):
         self.disks = DiskCard()
         self.cpu = CpuCard(stats)
         self.ram = RamCard(stats)
-        self.net = NetCard(stats)
         self.gpu = GpuCard() if GLib.find_program_in_path("nvidia-smi") else None
-        procs = ProcsCard()
-
-        procs_clickable = Gtk.EventBox(visible=True, hexpand=True, vexpand=True)
-        procs_clickable.add(procs)
-        procs_clickable.connect("button-press-event", procs.on_click)
 
         # Disks card swaps to the media player while something is playing
-        self._stack = Gtk.Stack(
-            transition_type=Gtk.StackTransitionType.CROSSFADE,
-            transition_duration=400,
-            visible=True, hexpand=True, vexpand=True,
-        )
-        self._stack.add_named(self.disks, "disks")
-        self._stack.add_named(self.media, "media")
+        self._stack = Box(orientation="v", h_expand=True)
+        self._stack.add(self.disks)
+        self._stack.add(self.media)
 
         self._tickables = [c for c in (
-            self.clock, self.cpu, self.ram, self.net, self.gpu, procs,
-            self.media, self.disks,
+            self.clock, self.cpu, self.ram, self.gpu, self.media, self.disks,
         ) if c is not None]
 
-        grid = Gtk.Grid(
-            visible=True,
-            hexpand=True, vexpand=True,
-            row_homogeneous=True, column_homogeneous=True,
-            row_spacing=24, column_spacing=24,
-        )
+        # Two edge columns; the middle of the screen stays free
+        col_width = max(int(workarea[0] * 0.24), 400)
 
-        # Row 0: identity + compute
-        self._cell(grid, self.clock, 0, 0, SLIDE.CROSSFADE)
-        self._cell(grid, self.cpu, 1, 0, SLIDE.SLIDE_DOWN)
-        self._cell(grid, self.gpu or Box(), 2, 0, SLIDE.SLIDE_DOWN)
-        # Row 1: calendar + memory + weather
-        self._cell(grid, self.calendar, 0, 1, SLIDE.SLIDE_RIGHT)
-        self._cell(grid, self.ram, 1, 1, SLIDE.CROSSFADE)
-        self._cell(grid, self.weather, 2, 1, SLIDE.SLIDE_LEFT)
-        # Row 2: activity
-        self._cell(grid, procs_clickable, 0, 2, SLIDE.SLIDE_UP)
-        self._cell(grid, self.net, 1, 2, SLIDE.SLIDE_UP)
-        self._cell(grid, self._stack, 2, 2, SLIDE.SLIDE_UP)
+        left = Box(orientation="v", spacing=24, v_align="center")
+        left.set_size_request(col_width, -1)
+        for widget, transition in (
+            (self.clock, SLIDE.SLIDE_RIGHT),
+            (self.weather, SLIDE.SLIDE_RIGHT),
+            (self.calendar, SLIDE.SLIDE_RIGHT),
+        ):
+            self._column_cell(left, widget, transition)
+
+        right = Box(orientation="v", spacing=24, v_align="center")
+        right.set_size_request(col_width, -1)
+        for widget, transition in (
+            (self.cpu, SLIDE.SLIDE_LEFT),
+            (self.gpu, SLIDE.SLIDE_LEFT),
+            (self.ram, SLIDE.SLIDE_LEFT),
+            (self._stack, SLIDE.SLIDE_LEFT),
+        ):
+            if widget is not None:
+                self._column_cell(right, widget, transition)
 
         root = Box(orientation="h", spacing=24, h_expand=True, v_expand=True)
         for side in ("top", "bottom", "start", "end"):
-            getattr(root, f"set_margin_{side}")(32)
-        root.add(grid)
+            getattr(root, f"set_margin_{side}")(36)
+        root.add(left)
+        root.add(Box(h_expand=True))  # free center
+        root.add(right)
         root.add(ActionsColumn())
         self.add(root)
 
         self.connect("map", self._on_map)
         self.connect("unmap", self._on_unmap)
 
-    def _cell(self, grid, widget, col, row, transition):
+    def _column_cell(self, column, widget, transition):
         revealer = Gtk.Revealer(
             transition_type=transition,
-            transition_duration=450,
-            visible=True, hexpand=True, vexpand=True,
+            transition_duration=650,
+            visible=True, hexpand=True,
         )
         revealer.add(widget)
-        grid.attach(revealer, col, row, 1, 1)
+        column.add(revealer)
         self._revealers.append(revealer)
 
     # -- visibility ---------------------------------------------------------
@@ -820,15 +892,11 @@ class Homescreen(WaylandWindow):
         for revealer in self._revealers:
             revealer.set_reveal_child(False)
         self.calendar.reset_to_today()
-        # Pick the disks/media pane instantly — only animate changes that
-        # happen while visible
-        self._stack.set_transition_type(Gtk.StackTransitionType.NONE)
-        self._stack.set_visible_child_name("media" if self.media.active else "disks")
-        self._stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
         self.show_all()
+        self._update_stack()
 
         for i, revealer in enumerate(self._revealers):
-            GLib.timeout_add(60 + i * 60,
+            GLib.timeout_add(80 + i * 90,
                              lambda r=revealer: r.set_reveal_child(True) or False)
 
         self.weather.refresh_if_stale()
@@ -851,8 +919,12 @@ class Homescreen(WaylandWindow):
     def _tick(self):
         for card in self._tickables:
             card.tick()
-        self._stack.set_visible_child_name("media" if self.media.active else "disks")
+        self._update_stack()
         return True
+
+    def _update_stack(self):
+        self.media.set_visible(self.media.active)
+        self.disks.set_visible(not self.media.active)
 
 
 # --------------------------------------------------------------------------- #

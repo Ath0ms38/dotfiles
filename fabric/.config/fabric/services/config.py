@@ -106,7 +106,8 @@ DEFAULTS = {
 
     # Homescreen (desktop widgets shown when the workspace is empty)
     "homescreen_enabled": True,
-    "homescreen_weather_location": "",  # empty = geolocate by IP (wttr.in)
+    "homescreen_weather_location": "",  # empty = geolocate by IP
+    "homescreen_graph_fx": True,  # animated sweep/pulse on the graphs
 
     # System metrics update intervals (ms)
     "metrics_cpu_interval": 2000,
@@ -335,6 +336,10 @@ class Config(Service):
     @Property(str, "readable", default_value="")
     def homescreen_weather_location(self) -> str:
         return self._config.get("homescreen_weather_location", "")
+
+    @Property(bool, "readable", default_value=True)
+    def homescreen_graph_fx(self) -> bool:
+        return self._config.get("homescreen_graph_fx", True)
 
     @Property(int, "readable", default_value=50)
     def slider_debounce_ms(self) -> int:

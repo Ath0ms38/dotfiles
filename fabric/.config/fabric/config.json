@@ -68,5 +68,6 @@
   "border_radius": 12,
   "opacity": 0.85,
   "homescreen_enabled": true,
-  "homescreen_weather_location": ""
+  "homescreen_weather_location": "",
+  "homescreen_graph_fx": true
 }

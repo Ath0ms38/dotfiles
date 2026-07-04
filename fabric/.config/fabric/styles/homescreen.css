@@ -1,9 +1,18 @@
 /**
- * Homescreen — full-screen desktop dashboard (shown when the workspace is empty)
+ * Homescreen — full-screen HUD dashboard (shown when the workspace is empty)
+ * Sci-fi look: frosted gradient glass, accent edge strips, neon glows,
+ * pulsing status dots. Blur comes from Hyprland (layerrule on the
+ * "homescreen" namespace, ignore_alpha 0.50 — keep card alpha above that).
  */
 
 #homescreen {
   background: transparent;
+}
+
+@keyframes hs-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.15; }
+  100% { opacity: 1; }
 }
 
 /* Big clock — the `* { font-size }` reset in base.css matches the inner
@@ -14,7 +23,7 @@
   font-size: 112px;
   font-weight: 800;
   color: var(--text-light);
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 0 26px rgba(0, 0, 0, 0.85);
 }
 
 #homescreen-date,
@@ -32,41 +41,79 @@
 
 .homescreen-chip {
   background: alpha(var(--bg-primary), 0.80);
-  border: 1px solid var(--accent-pink-dim);
-  border-radius: 999px;
+  border: 1px solid alpha(var(--accent-pink), 0.35);
+  border-radius: 6px;
   padding: 6px 16px;
   font-size: 15px;
   color: var(--text-medium);
 }
 
-/* Cards */
+/* Cards — frosted gradient glass with accent edge strip + soft neon glow */
 .homescreen-card {
-  background: alpha(var(--bg-primary), 0.80);
-  border: 1px solid var(--accent-pink-dim);
-  border-radius: 22px;
-  padding: 24px 28px;
-  transition: all 0.25s ease;
+  background: linear-gradient(to bottom right,
+              alpha(var(--bg-primary), 0.86),
+              alpha(var(--bg-secondary), 0.70));
+  border: 1px solid alpha(var(--accent-pink), 0.22);
+  border-left: 3px solid var(--accent-pink);
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 0 22px alpha(var(--accent-pink), 0.10);
+  transition: all 0.3s ease;
 }
 
 .homescreen-card:hover {
-  background: alpha(var(--bg-primary), 0.90);
-  border-color: var(--accent-pink-border);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(to bottom right,
+              alpha(var(--bg-primary), 0.94),
+              alpha(var(--bg-secondary), 0.82));
+  box-shadow: 0 0 34px alpha(var(--accent-pink), 0.25);
+}
+
+.homescreen-card.accent-a { border-left-color: var(--accent-yellow);
+  box-shadow: 0 0 22px alpha(var(--accent-yellow), 0.10); }
+.homescreen-card.accent-a:hover { box-shadow: 0 0 34px alpha(var(--accent-yellow), 0.25); }
+.homescreen-card.accent-c { border-left-color: var(--green);
+  box-shadow: 0 0 22px alpha(var(--green), 0.10); }
+.homescreen-card.accent-c:hover { box-shadow: 0 0 34px alpha(var(--green), 0.25); }
+.homescreen-card.accent-d { border-left-color: var(--magenta);
+  box-shadow: 0 0 22px alpha(var(--magenta), 0.10); }
+.homescreen-card.accent-d:hover { box-shadow: 0 0 34px alpha(var(--magenta), 0.25); }
+.homescreen-card.accent-e { border-left-color: var(--cyan);
+  box-shadow: 0 0 22px alpha(var(--cyan), 0.10); }
+.homescreen-card.accent-e:hover { box-shadow: 0 0 34px alpha(var(--cyan), 0.25); }
+
+/* HUD header: pulsing status dot + uppercase spaced title + rule line */
+.homescreen-card-header {
+  border-bottom: 1px solid alpha(var(--accent-pink), 0.30);
+  padding-bottom: 8px;
+}
+
+.homescreen-pulse {
+  font-size: 9px;
+  color: var(--accent-pink);
+  animation: hs-pulse 2.2s ease-in-out infinite;
 }
 
 .homescreen-card-title {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 3px;
   color: var(--accent-pink);
 }
 
-/* Per-card accent tints (titles + graph stroke color) */
-.homescreen-card.accent-a .homescreen-card-title { color: var(--accent-yellow); }
-.homescreen-card.accent-b .homescreen-card-title { color: var(--accent-pink); }
-.homescreen-card.accent-c .homescreen-card-title { color: var(--green); }
-.homescreen-card.accent-d .homescreen-card-title { color: var(--magenta); }
-.homescreen-card.accent-e .homescreen-card-title { color: var(--cyan); }
+.homescreen-card-header.accent-a { border-bottom-color: alpha(var(--accent-yellow), 0.30); }
+.homescreen-card-header.accent-a .homescreen-pulse,
+.homescreen-card-header.accent-a .homescreen-card-title { color: var(--accent-yellow); }
+.homescreen-card-header.accent-c { border-bottom-color: alpha(var(--green), 0.30); }
+.homescreen-card-header.accent-c .homescreen-pulse,
+.homescreen-card-header.accent-c .homescreen-card-title { color: var(--green); }
+.homescreen-card-header.accent-d { border-bottom-color: alpha(var(--magenta), 0.30); }
+.homescreen-card-header.accent-d .homescreen-pulse,
+.homescreen-card-header.accent-d .homescreen-card-title { color: var(--magenta); }
+.homescreen-card-header.accent-e { border-bottom-color: alpha(var(--cyan), 0.30); }
+.homescreen-card-header.accent-e .homescreen-pulse,
+.homescreen-card-header.accent-e .homescreen-card-title { color: var(--cyan); }
 
+/* Graph stroke colors */
 .homescreen-graph { color: var(--accent-pink); }
 .homescreen-graph.accent-a { color: var(--accent-yellow); }
 .homescreen-graph.accent-b { color: var(--accent-pink); }
@@ -76,7 +123,7 @@
 
 /* Text roles */
 .homescreen-big {
-  font-size: 52px;
+  font-size: 40px;
   font-weight: 800;
   color: var(--text-light);
 }
@@ -114,20 +161,21 @@
   font-size: 28px;
   color: var(--text-light);
   padding: 2px 10px;
-  border-radius: 12px;
+  border-radius: 8px;
   transition: all 0.15s ease;
 }
 
 .homescreen-media-btn:hover {
-  background: var(--accent-pink-dim);
+  background: alpha(var(--magenta), 0.25);
 }
 
-/* Quick actions */
+/* Quick actions rail */
 #homescreen-actions {
   background: alpha(var(--bg-primary), 0.80);
-  border: 1px solid var(--accent-pink-dim);
-  border-radius: 999px;
+  border: 1px solid alpha(var(--accent-pink), 0.35);
+  border-radius: 10px;
   padding: 14px 8px;
+  box-shadow: 0 0 22px alpha(var(--accent-pink), 0.12);
 }
 
 .homescreen-action-btn,
@@ -136,37 +184,61 @@
   font-size: 24px;
   color: var(--text-medium);
   padding: 12px;
-  border-radius: 999px;
+  border-radius: 8px;
   transition: all 0.15s ease;
 }
 
 .homescreen-action-btn:hover,
 .homescreen-action-btn:hover label {
-  background: var(--accent-pink-dim);
+  background: alpha(var(--accent-pink), 0.25);
   color: var(--text-light);
 }
 
-/* Calendar */
-#homescreen-calendar calendar {
-  background: transparent;
-  color: var(--text-light);
-  font-size: 16px;
-  border: none;
+/* Idle timers popover */
+popover#idle-popover,
+popover#idle-popover > contents {
+  background: alpha(var(--bg-primary), 0.97);
+  border: 1px solid alpha(var(--accent-pink), 0.40);
+  border-radius: 10px;
 }
 
-#homescreen-calendar calendar:selected {
+.idle-popover-box {
+  padding: 14px;
+  min-width: 300px;
+}
+
+.idle-popover-box switch {
+  border-radius: 999px;
+}
+
+.idle-popover-box switch:checked {
   background: var(--accent-pink);
+}
+
+.idle-popover-box spinbutton {
+  background: alpha(var(--bg-secondary), 0.8);
+  color: var(--text-light);
+  border: 1px solid alpha(var(--accent-pink), 0.3);
+  border-radius: 6px;
+}
+
+.idle-popover-box spinbutton button {
+  background: transparent;
+  color: var(--text-medium);
+}
+
+.idle-apply-btn,
+.idle-apply-btn label {
+  background: alpha(var(--accent-pink), 0.85);
   color: var(--bg-primary);
-  border-radius: 8px;
-}
-
-#homescreen-calendar calendar.header {
-  color: var(--accent-pink);
   font-weight: 700;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-top: 6px;
 }
 
-#homescreen-calendar calendar.highlight {
-  color: var(--accent-yellow);
+.idle-apply-btn:hover {
+  background: var(--accent-pink);
 }
 
 /* Disk level bars */
@@ -204,4 +276,27 @@ levelbar.homescreen-levelbar block.filled {
 .homescreen-day-min {
   font-size: 13px;
   color: var(--text-medium);
+}
+
+/* Calendar */
+#homescreen-calendar calendar {
+  background: transparent;
+  color: var(--text-light);
+  font-size: 16px;
+  border: none;
+}
+
+#homescreen-calendar calendar:selected {
+  background: var(--accent-pink);
+  color: var(--bg-primary);
+  border-radius: 6px;
+}
+
+#homescreen-calendar calendar.header {
+  color: var(--accent-pink);
+  font-weight: 700;
+}
+
+#homescreen-calendar calendar.highlight {
+  color: var(--accent-yellow);
 }
