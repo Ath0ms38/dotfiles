@@ -7,6 +7,7 @@ import os
 import random
 import hashlib
 import shutil
+import subprocess
 from concurrent.futures import ThreadPoolExecutor
 
 from fabric.widgets.box import Box
@@ -31,6 +32,15 @@ except ImportError:
 # Default wallpapers directory
 DEFAULT_WALLPAPERS_DIR = os.path.expanduser("~/Pictures/Wallpapers")
 CACHE_DIR = os.path.expanduser("~/.cache/fabric-bar/thumbs")
+
+# Video frames are cached under the same md5(path) name the shell helper uses
+# (~/.config/matugen/wallpaper-lib.sh), so a video is only ever decoded once
+# whether the frame is needed for a thumbnail or for the matugen palette.
+FRAMES_DIR = os.path.expanduser("~/.cache/wallpaper/frames")
+SET_WALLPAPER = os.path.expanduser("~/.config/matugen/set-wallpaper.sh")
+
+IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp")
+VIDEO_EXTS = (".mp4", ".mkv", ".webm", ".mov", ".avi", ".m4v")
 
 
 class WallpaperSelector(Box):
@@ -185,7 +195,7 @@ class WallpaperSelector(Box):
 
         self.files = []
         for filename in os.listdir(self.wallpapers_dir):
-            if self._is_image(filename):
+            if self._is_wallpaper(filename):
                 self.files.append(filename)
 
         self.files.sort()
@@ -209,10 +219,14 @@ class WallpaperSelector(Box):
         full_path = os.path.join(self.wallpapers_dir, filename)
         cache_path = self._get_cache_path(filename)
 
-        # Generate thumbnail if not cached
+        # Generate thumbnail if not cached (videos are thumbnailed from their
+        # first frame, same one matugen will read)
         if not os.path.exists(cache_path) and HAS_PIL:
+            source = self._still_path(full_path)
+            if source is None:
+                return
             try:
-                with Image.open(full_path) as img:
+                with Image.open(source) as img:
                     # Crop to square
                     size = min(img.size)
                     left = (img.width - size) // 2
@@ -255,11 +269,48 @@ class WallpaperSelector(Box):
         return os.path.join(CACHE_DIR, f"{file_hash}.png")
 
     @staticmethod
-    def _is_image(filename: str) -> bool:
-        """Check if file is an image"""
-        return filename.lower().endswith(
-            (".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp")
-        )
+    def _is_video(filename: str) -> bool:
+        """Check if file is a video wallpaper"""
+        return filename.lower().endswith(VIDEO_EXTS)
+
+    @staticmethod
+    def _is_wallpaper(filename: str) -> bool:
+        """Check if file can be used as a wallpaper (image or video)"""
+        return filename.lower().endswith(IMAGE_EXTS + VIDEO_EXTS)
+
+    @staticmethod
+    def _still_path(full_path: str):
+        """Image standing in for a wallpaper: itself, or a video's first frame.
+
+        Returns None when a video frame could not be extracted.
+        """
+        if not WallpaperSelector._is_video(full_path):
+            return full_path
+
+        os.makedirs(FRAMES_DIR, exist_ok=True)
+        key = hashlib.md5(full_path.encode()).hexdigest()
+        frame = os.path.join(FRAMES_DIR, f"{key}.png")
+
+        if os.path.exists(frame) and os.path.getsize(frame) > 0:
+            return frame
+
+        # Seek 1s in first — plenty of videos open on a black frame
+        for seek in (["-ss", "1"], []):
+            try:
+                subprocess.run(
+                    ["ffmpeg", "-y", "-loglevel", "error", *seek,
+                     "-i", full_path, "-frames:v", "1", frame],
+                    capture_output=True,
+                    timeout=30,
+                )
+            except (subprocess.SubprocessError, OSError) as e:
+                print(f"ffmpeg failed on {full_path}: {e}")
+                return None
+            if os.path.exists(frame) and os.path.getsize(frame) > 0:
+                return frame
+
+        print(f"Could not extract a frame from {full_path}")
+        return None
 
     def _filter_wallpapers(self, query: str):
         """Filter wallpapers by search query"""
@@ -283,24 +334,17 @@ class WallpaperSelector(Box):
         self._apply_wallpaper(filename)
 
     def _apply_wallpaper(self, filename: str):
-        """Apply selected wallpaper"""
+        """Apply selected wallpaper (image or video)"""
         full_path = os.path.join(self.wallpapers_dir, filename)
         scheme = self.scheme_dropdown.get_active_id()
 
-        # Update current wall symlink
-        current_wall = os.path.expanduser("~/.current.wall")
-        if os.path.exists(current_wall):
-            os.remove(current_wall)
-        os.symlink(full_path, current_wall)
-
-        # Apply with matugen or just set wallpaper
-        if self.matugen_enabled:
-            exec_shell_command_async(f'matugen image "{full_path}" -t {scheme}')
-        else:
-            # Use swww or similar for wallpaper without matugen
-            exec_shell_command_async(
-                f'swww img "{full_path}" -t outer --transition-duration 1.5'
-            )
+        # set-wallpaper.sh owns the whole thing: it picks the backend
+        # (hyprpaper for images, mpvpaper for videos), extracts the still a
+        # video needs for matugen, and records the current wallpaper state.
+        cmd = f'{SET_WALLPAPER} "{full_path}" -t {scheme}'
+        if not self.matugen_enabled:
+            cmd += " --no-matugen"
+        exec_shell_command_async(cmd)
 
         print(f"Applied wallpaper: {filename}")
 
@@ -348,7 +392,7 @@ class WallpaperSelector(Box):
         filename = file.get_basename()
 
         if event_type == Gio.FileMonitorEvent.CREATED:
-            if self._is_image(filename) and filename not in self.files:
+            if self._is_wallpaper(filename) and filename not in self.files:
                 self.files.append(filename)
                 self.files.sort()
                 self.executor.submit(self._process_file, filename)

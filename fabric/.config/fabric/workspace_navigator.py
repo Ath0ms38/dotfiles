@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Workspace Navigator for Fabric + Hyprland
-Navigates between workspaces and auto-launches apps for special workspaces (11-14)
+Navigates between workspaces and auto-launches apps for special workspaces (11-15)
 Reuses toggle_app.py for app launching logic to avoid duplication
 """
 import subprocess
@@ -15,6 +15,7 @@ WORKSPACE_TO_APP = {
     12: "vscode",
     13: "minecraft",
     14: "steam",
+    15: "sidra",
 }
 
 def get_workspaces():
@@ -64,8 +65,8 @@ def navigate_workspace(direction):
 
     current = get_active_workspace()
 
-    # Include normal workspaces 1-10 and special workspaces 11-14 in navigation
-    all_workspaces = sorted(list(set(workspaces + [1, 2, 3, 4, 5, 11, 12, 13, 14])))
+    # Include normal workspaces 1-10 and the special workspaces in navigation
+    all_workspaces = sorted(list(set(workspaces + [1, 2, 3, 4, 5] + list(WORKSPACE_TO_APP))))
 
     try:
         current_index = all_workspaces.index(current)

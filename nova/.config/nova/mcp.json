@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "desktop": {
+      "command": "~/.local/share/nova/venv/bin/python",
+      "args": ["~/.config/nova/servers/desktop.py"]
+    },
+    "shell": {
+      "command": "~/.local/share/nova/venv/bin/python",
+      "args": ["~/.config/nova/servers/shell.py"]
+    },
+    "music": {
+      "command": "~/.local/share/nova/venv/bin/python",
+      "args": ["~/.config/nova/servers/music.py"],
+      "skill": "music"
+    },
+    "media": {
+      "command": "~/.local/share/nova/venv/bin/python",
+      "args": ["~/.config/nova/servers/media.py"],
+      "skill": "recording"
+    },
+    "files": {
+      "command": "~/.local/share/nova/venv/bin/python",
+      "args": ["~/.config/nova/servers/files.py"]
+    },
+    "web": {
+      "command": "~/.local/share/nova/venv/bin/python",
+      "args": ["~/.config/nova/servers/web.py"]
+    },
+    "skills": {
+      "command": "~/.local/share/nova/venv/bin/python",
+      "args": ["~/.config/nova/servers/skills.py"]
+    }
+  }
+}

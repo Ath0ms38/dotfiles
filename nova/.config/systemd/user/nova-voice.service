@@ -1,0 +1,14 @@
+[Unit]
+Description=Nova voice listener (wake word + speech to text)
+After=pipewire.service novad.service
+Wants=pipewire.service
+
+[Service]
+EnvironmentFile=-%h/.config/nova/nova.env
+Type=simple
+ExecStart=%h/.local/share/nova/venv/bin/python %h/.config/nova/listener.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

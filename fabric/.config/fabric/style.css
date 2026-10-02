@@ -19,6 +19,7 @@
 /* Widget-specific styles */
 @import url("styles/audio.css");
 @import url("styles/network.css");
+@import url("styles/vpn.css");
 @import url("styles/wallpaper.css");
 
 /* Homescreen (desktop widgets) */

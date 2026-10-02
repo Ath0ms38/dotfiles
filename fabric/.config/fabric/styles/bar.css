@@ -53,9 +53,10 @@
   color: var(--bg-dark);
 }
 
-/* Bar indicators: battery, power profile, clipboard */
+/* Bar indicators: battery, power profile, VPN, clipboard */
 #battery-indicator,
 #power-profile-button,
+#vpn-button,
 #clipboard-button {
   background: var(--button-bg);
   color: var(--button-text);
@@ -91,6 +92,29 @@
 
 #power-profile-button.power-saver {
   color: var(--green);
+}
+
+#vpn-button {
+  font-size: 14px;
+}
+
+#vpn-button:hover {
+  background: var(--accent-yellow);
+  color: var(--text-dark);
+}
+
+#vpn-button.connected {
+  background: var(--green);
+  color: var(--text-dark);
+}
+
+#vpn-button.connecting,
+#vpn-button.disconnecting {
+  color: var(--accent-yellow);
+}
+
+#vpn-button.error {
+  color: var(--urgent-red);
 }
 
 /* Clock */

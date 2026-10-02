@@ -17,6 +17,7 @@ DEFAULT_APPS = {
     "vscode": {"workspace": 12, "class": "Code", "command": "code"},
     "minecraft": {"workspace": 13, "class": "org.prismlauncher.PrismLauncher", "command": "prismlauncher"},
     "steam": {"workspace": 14, "class": "steam", "command": "steam"},
+    "sidra": {"workspace": 15, "class": "sidra", "command": "sidra"},
 }
 
 

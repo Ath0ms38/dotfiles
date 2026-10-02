@@ -273,3 +273,51 @@
 #special-workspaces > button#special-steam.empty:hover label {
   color: var(--text-dark);
 }
+
+/* Sidra button states */
+#special-workspaces > button#special-sidra.active {
+  background: var(--sidra-red);
+  border: 1px solid transparent;
+  font-weight: bold;
+  box-shadow: 0 0 0 3px var(--sidra-red);
+}
+
+#special-workspaces > button#special-sidra.active label {
+  color: var(--text-dark);
+}
+
+#special-workspaces > button#special-sidra.idle {
+  background: var(--idle-pink);
+}
+
+#special-workspaces > button#special-sidra.idle label {
+  color: var(--text-dark);
+}
+
+#special-workspaces > button#special-sidra.idle:hover {
+  background: var(--sidra-red);
+  font-weight: bold;
+  box-shadow: 0 0 0 3px var(--sidra-red);
+}
+
+#special-workspaces > button#special-sidra.idle:hover label {
+  color: var(--text-dark);
+}
+
+#special-workspaces > button#special-sidra.empty {
+  background: var(--workspace-empty);
+}
+
+#special-workspaces > button#special-sidra.empty label {
+  color: var(--text-medium);
+}
+
+#special-workspaces > button#special-sidra.empty:hover {
+  background: var(--sidra-red);
+  font-weight: bold;
+  box-shadow: 0 0 0 2px var(--sidra-red);
+}
+
+#special-workspaces > button#special-sidra.empty:hover label {
+  color: var(--text-dark);
+}

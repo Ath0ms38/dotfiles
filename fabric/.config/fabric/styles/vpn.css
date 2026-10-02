@@ -1,0 +1,293 @@
+/* ============================================
+   PROTONVPN POPUP
+   Ax-Shell styling: transparent shell, inner card
+   on alpha(bg-primary, 0.5) with a thick bg-secondary
+   border, flat buttons that fill on hover.
+   ============================================ */
+
+/* Shell stays transparent so only the inner ax-style card is drawn.
+   Hide the shared popup frame via colors only: setting `border: none` on
+   .popup-blur collapses the layer surface to a 1px height. */
+#vpn-widget {
+  background: transparent;
+}
+
+#vpn-widget .popup-blur {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* The Stack that morphs the popup open and shut, and the empty page it morphs
+   out of. Both must stay transparent or the shrink leaves a coloured sliver. */
+#vpn-morph,
+#vpn-collapsed {
+  background: transparent;
+}
+
+/* Ax-shell's grow-in, on the bounce curve of #ax-notch-box. Only non-layout
+   properties are animated: transitioning padding retriggers size negotiation
+   and the layer surface settles at a 1px height. */
+#vpn-content {
+  background: alpha(var(--bg-primary), 0.3);
+  border: 4px solid var(--bg-secondary);
+  border-radius: 14px;
+  padding: 14px;
+  transition: background 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              border-radius 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.popup-content.open #vpn-content {
+  background: alpha(var(--bg-primary), 0.5);
+  border-radius: 24px;
+}
+
+/* ============================================
+   TABS (Proton / WireGuard)
+   Same shape as ax-shell's #ax-switcher tabs.
+   ============================================ */
+
+#vpn-tabs {
+  background: transparent;
+}
+
+#vpn-tab {
+  background: transparent;
+  border: 2px solid var(--bg-secondary);
+  border-radius: 12px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+#vpn-tab label {
+  color: var(--text-medium);
+  font-size: 13px;
+}
+
+#vpn-tab:hover {
+  background: alpha(white, 0.1);
+}
+
+#vpn-tab.active {
+  background: var(--accent-pink);
+  border-color: var(--accent-pink);
+}
+
+#vpn-tab.active label {
+  color: var(--text-dark);
+}
+
+#vpn-pages {
+  background: transparent;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+#vpn-title {
+  color: var(--text-light);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#vpn-status {
+  color: var(--text-medium);
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+#vpn-status.connected {
+  color: var(--green);
+}
+
+#vpn-status.connecting,
+#vpn-status.disconnecting {
+  color: var(--accent-yellow);
+}
+
+#vpn-status.error {
+  color: var(--urgent-red);
+}
+
+#vpn-speed {
+  color: var(--accent-teal);
+  font-size: 12px;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+#vpn-disconnect,
+#vpn-preset,
+#vpn-country-row,
+#vpn-tunnel-row,
+#vpn-signin {
+  background: transparent;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+#vpn-disconnect {
+  padding: 8px 14px;
+  border: 2px solid var(--bg-secondary);
+}
+
+#vpn-disconnect label {
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+#vpn-disconnect:hover {
+  background: var(--urgent-red);
+}
+
+#vpn-disconnect:hover label {
+  color: var(--text-dark);
+}
+
+#vpn-disconnect:disabled {
+  background: transparent;
+  border-color: alpha(white, 0.05);
+}
+
+#vpn-disconnect:disabled label {
+  color: var(--idle-pink);
+  opacity: 0.6;
+}
+
+/* Preset row: fastest / p2p / secure core / tor / random */
+#vpn-preset {
+  padding: 6px 8px;
+  min-width: 40px;
+}
+
+#vpn-preset label {
+  color: var(--text-light);
+  font-size: 11px;
+}
+
+#vpn-preset:hover {
+  background: alpha(white, 0.1);
+}
+
+/* ============================================
+   SEARCH
+   ============================================ */
+
+#vpn-search {
+  background: alpha(var(--bg-primary), 0.5);
+  color: var(--text-light);
+  border: 2px solid var(--bg-secondary);
+  border-radius: 12px;
+  padding: 6px 12px;
+}
+
+#vpn-search:focus {
+  border-color: var(--accent-pink);
+}
+
+/* ============================================
+   COUNTRY LIST
+   ============================================ */
+
+#vpn-countries-status {
+  color: var(--idle-pink);
+  font-size: 12px;
+}
+
+#vpn-country-scroll {
+  background: transparent;
+}
+
+#vpn-country-list {
+  background: transparent;
+}
+
+#vpn-country-row {
+  padding: 7px 12px;
+}
+
+#vpn-country-row label {
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+#vpn-country-row:hover {
+  background: alpha(white, 0.1);
+}
+
+#vpn-country-code {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* ============================================
+   WIREGUARD TUNNELS
+   ============================================ */
+
+#vpn-tunnel-scroll,
+#vpn-tunnel-list {
+  background: transparent;
+}
+
+#vpn-tunnel-row {
+  padding: 9px 12px;
+  border: 2px solid var(--bg-secondary);
+}
+
+#vpn-tunnel-row label {
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+#vpn-tunnel-row:hover {
+  background: alpha(white, 0.1);
+}
+
+/* External tunnels (wg-quick) are shown for context but cannot be toggled */
+#vpn-tunnel-row:disabled {
+  border-color: alpha(white, 0.05);
+}
+
+#vpn-tunnel-row:disabled label {
+  color: var(--idle-pink);
+  opacity: 0.6;
+}
+
+#vpn-tunnel-subtitle {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+/* The on/off chip, coloured like #vpn-status */
+#vpn-tunnel-state {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+#vpn-tunnel-state.connected {
+  color: var(--green);
+  opacity: 1;
+}
+
+#vpn-tunnel-state.connecting,
+#vpn-tunnel-state.disconnecting {
+  color: var(--accent-yellow);
+  opacity: 1;
+}
+
+/* Primary action keeps the accent fill, like ax-shell's checked tab */
+#vpn-signin {
+  background: var(--accent-pink);
+  padding: 8px 14px;
+}
+
+#vpn-signin label {
+  color: var(--text-dark);
+  font-size: 13px;
+}
+
+#vpn-signin:hover {
+  background: var(--accent-light-pink);
+}

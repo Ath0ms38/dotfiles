@@ -43,6 +43,14 @@
       "command": "steam",
       "color": "#1e88e5",
       "class": "steam"
+    },
+    "sidra": {
+      "enabled": true,
+      "workspace": 15,
+      "icon": "󰝚",
+      "command": "sidra",
+      "color": "#fa243c",
+      "class": "sidra"
     }
   },
   "animation_duration": 300,

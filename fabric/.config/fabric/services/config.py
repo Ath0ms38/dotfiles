@@ -76,6 +76,14 @@ DEFAULTS = {
             "class": "steam",
             "color": "#1e88e5",
         },
+        "sidra": {
+            "enabled": True,
+            "workspace": 15,
+            "icon": "󰝚",
+            "command": "sidra",
+            "class": "sidra",
+            "color": "#fa243c",
+        },
     },
 
     # Animation settings

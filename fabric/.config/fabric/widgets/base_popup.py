@@ -47,6 +47,12 @@ class BasePopup(WaylandWindow):
     - Position near button on bar
     """
 
+    # Focus level claimed while open. "on-demand" lets the compositor decide,
+    # which is enough to dismiss with Escape once the popup has been clicked;
+    # popups with a text entry should override with "exclusive" so typing and
+    # Escape both work the moment they open.
+    KEYBOARD_MODE_WHEN_OPEN = "on-demand"
+
     def __init__(
         self,
         name="popup-widget",
@@ -67,7 +73,9 @@ class BasePopup(WaylandWindow):
             layer="overlay",
             anchor=anchor,
             margin=margin,
-            keyboard_mode="on-demand",
+            # Focus is claimed only while open (see open/close), otherwise a
+            # hidden popup keeps asking the compositor for keyboard focus.
+            keyboard_mode="none",
             name=name,
             visible=False,
             **kwargs
@@ -109,6 +117,9 @@ class BasePopup(WaylandWindow):
         self.add(self.outer_box)
         self.set_size_request(width, -1)
 
+        # Escape closes, same as the ax-notch dashboard.
+        self.add_keybinding("Escape", lambda *_: self.close())
+
         # Connect revealer state change for cleanup
         self.revealer.connect("notify::child-revealed", self._on_reveal_state_changed)
 
@@ -133,6 +144,9 @@ class BasePopup(WaylandWindow):
         popup_manager.register_popup(self)
         self.on_open()
 
+        # Take keyboard focus before mapping so Escape reaches the window
+        self.set_keyboard_mode(self.KEYBOARD_MODE_WHEN_OPEN)
+
         # Show window first, then reveal content
         self.show_all()
         self.revealer.set_reveal_child(True)
@@ -147,6 +161,7 @@ class BasePopup(WaylandWindow):
 
         self._is_open = False
         self.on_close()
+        self.set_keyboard_mode("none")
 
         # Remove open style class
         self.content_box.remove_style_class("open")
@@ -164,6 +179,7 @@ class BasePopup(WaylandWindow):
     def close_immediate(self):
         """Close immediately without animation"""
         self._is_open = False
+        self.set_keyboard_mode("none")
         self.content_box.remove_style_class("open")
         self.revealer.set_reveal_child(False)
         self.hide()

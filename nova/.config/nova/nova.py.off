@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""nova — send a command to the running daemon.
+
+  nova.py "ouvre firefox dans le workspace 5"
+  nova.py --new "on repart de zéro"
+  nova.py --bench "quelle heure il est"
+
+Stdlib only, so anything on the machine can talk to Nova without a venv.
+"""
+from __future__ import annotations
+
+import json
+import socket
+import sys
+from pathlib import Path
+
+SOCKET = Path.home() / ".local/state/nova/novad.sock"
+
+
+def ask(text: str, new: bool = False, timeout: float = 180.0) -> dict:
+    if not SOCKET.exists():
+        return {"error": "novad is not running (systemctl --user start novad)"}
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.settimeout(timeout)
+    try:
+        s.connect(str(SOCKET))
+        s.sendall((json.dumps({"text": text, "new": new}) + "\n").encode())
+        chunks = []
+        while not chunks or not chunks[-1].endswith(b"\n"):
+            chunk = s.recv(65536)
+            if not chunk:
+                break
+            chunks.append(chunk)
+    except (OSError, socket.timeout) as exc:
+        return {"error": f"novad unreachable: {exc}"}
+    finally:
+        s.close()
+    try:
+        return json.loads(b"".join(chunks).decode())
+    except json.JSONDecodeError:
+        return {"error": "malformed reply from novad"}
+
+
+def main() -> int:
+    args = sys.argv[1:]
+    bench = "--bench" in args
+    new = "--new" in args
+    text = " ".join(a for a in args if not a.startswith("--"))
+    if not text:
+        print("usage: nova.py [--new] [--bench] <command>", file=sys.stderr)
+        return 2
+    out = ask(text, new=new)
+    if out.get("error"):
+        print(out["error"], file=sys.stderr)
+        return 1
+    print(out.get("reply", ""))
+    if bench:
+        print(f"  · {out.get('elapsed')}s, {out.get('tokens')} tokens",
+              file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

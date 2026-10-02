@@ -1,0 +1,522 @@
+#!/usr/bin/env python3
+"""novad — Nova's agent daemon.
+
+Holds the MCP servers open and answers commands over a unix socket.
+
+Why a daemon: the tool servers are separate processes, and spawning six of
+them per command would cost more than the model call itself. They start once,
+here, and stay warm. The conversation lives here too, so a follow-up ("et
+dans le workspace 5 ?") lands in the same chat.
+
+  socket: ~/.local/state/nova/novad.sock
+  request:  {"text": "...", "new": false}\\n
+  response: {"reply": "...", "elapsed": 1.2, "tokens": 812}\\n
+"""
+from __future__ import annotations
+
+import asyncio
+import json
+import logging
+import os
+import sys
+import re
+import time
+import urllib.error
+import urllib.request
+from contextlib import AsyncExitStack
+from pathlib import Path
+
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+CONFIG = Path.home() / ".config/nova"
+SECRETS = CONFIG / "secrets.env"
+SERVERS_FILE = CONFIG / "mcp.json"
+
+STATE = Path.home() / ".local/state/nova"
+SOCKET = STATE / "novad.sock"
+SESSION_FILE = STATE / "session.json"
+ARCHIVE = STATE / "history"
+SESSION_IDLE_SECONDS = 3600      # a chat ends after 1 h without a message
+# Two different numbers, and conflating them lost history: KEPT is what the
+# conversation remembers and what gets archived when it expires, SENT is how
+# much of it is replayed to the model on each call. Truncating storage to the
+# prompt budget meant an hour-long conversation archived only its last few
+# exchanges.
+TURNS_KEPT = 200
+TURNS_SENT = 6
+
+MODEL = os.environ.get("NOVA_MODEL", "llama-3.3-70b-versatile")
+API_URL = "https://api.groq.com/openai/v1/chat/completions"
+MAX_STEPS = 6
+
+IDENTITY = """You are Nova ✨, the assistant living on Thomas's Arch Linux \
+(EndeavourOS) + Hyprland desktop. Calm, precise, briefly witty.
+
+Language: he speaks French and English, often mixed. Always answer in the \
+language he used.
+
+Your reply is delivered to him automatically — as a notification, and read \
+aloud when he asked for that. So: one or two short sentences, plain text, no \
+markdown, and never call the notify tool for your own reply (that would \
+duplicate it). notify is only for standalone alerts he asked you to raise.
+
+Hard rules:
+- Work in the background. Never switch his visible workspace and never steal \
+focus, unless he explicitly asks to be taken there.
+- Never open a window just to run something — run_command is the default. \
+Open a terminal only when he asks for one or wants to watch something run.
+- To open or start ANY application, use launch_app. Never a shell command for \
+that: run_command cannot place a window on a workspace and cannot avoid \
+stealing focus. Never launch a different app than the one asked for; if you \
+cannot resolve the name (voice transcripts mangle them — "anti-graffiti" is \
+Antigravity), say what you understood and ask.
+- Verify instead of assuming: a command has an exit code, a launched app \
+appears in list_windows. If something failed, diagnose it once or twice \
+yourself (wrong case, plural, missing folder) and then say what you found. \
+Never report a success you did not check.
+- A question is not permission to change anything. "What is playing?" is \
+answered by reading the state, never by starting playback.
+- Prefer the one tool that answers the request. Do not invent shell commands \
+for something a tool already does, and do not chain guesses: if a tool says \
+it failed, say so rather than trying a different route three times.
+- Ask before anything destructive.
+"""
+
+
+def log_setup() -> None:
+    # force=True: importing the MCP SDK installs a root handler, which makes a
+    # plain basicConfig a silent no-op — every log line disappears.
+    logging.basicConfig(level=logging.INFO, force=True,
+                        format="%(asctime)s %(levelname)s %(message)s")
+
+
+log = logging.getLogger("novad")
+
+
+# ------------------------------------------------------------------ llm
+def api_key() -> str:
+    key = os.environ.get("GROQ_API_KEY")
+    if key:
+        return key
+    for line in SECRETS.read_text().splitlines():
+        if line.startswith("GROQ_API_KEY="):
+            return line.split("=", 1)[1].strip()
+    raise RuntimeError("GROQ_API_KEY not found")
+
+
+# Every model carries its own per-minute token budget, so the way to stop
+# waiting is to move to the next one rather than to sleep.
+#
+# gpt-oss-120b is deliberately NOT first: groq/compound runs on it, and a web
+# search there burns thousands of tokens reading pages. Sharing that budget
+# with tool selection meant three searches in a row failing on 429 and costing
+# 31 s. Leaving it to compound is worth more than its slightly better tool
+# picking.
+# Free-tier budgets, which are metered per minute AND per day:
+#   qwen3.6-27b     8K/min  200K/day
+#   gpt-oss-120b    8K/min  200K/day   (also what groq/compound runs on)
+#   gpt-oss-20b     8K/min  200K/day   (kept for phrasing, hence last here)
+#   llama-3.3-70b  12K/min  100K/day   (best per minute, WORST per day)
+# Ordering by the per-minute figure put llama-3.3 first and it was the first to
+# die — a day's worth of commands empties its 100K long before the others.
+#
+# What actually decides the order is cost per call, not the budget: qwen spends
+# 3783 tokens on a request gpt-oss-120b answers in 2246, so it burns through
+# its 8K/min in two calls. gpt-oss-120b leads despite sharing its budget with
+# compound; the "two failures and stop" rule keeps that collision cheap.
+TOOL_MODELS = [MODEL, "qwen/qwen3.6-27b", "llama-3.3-70b-versatile",
+               "openai/gpt-oss-20b"]
+# model -> (when we last heard, tokens left in that per-minute window)
+_quota: dict[str, tuple[float, int]] = {}
+# model -> monotonic time before which it is pointless to try again. Groq
+# meters per minute AND per day; a daily limit that has run out cannot be
+# waited out in the same way, so the two need different expiries.
+_blocked: dict[str, float] = {}
+
+
+def _pick_model(need: int = 3000) -> str:
+    """First model with room to spare, skipping any we know is blocked."""
+    now, mono = time.time(), time.monotonic()
+    for model in TOOL_MODELS:
+        if mono < _blocked.get(model, 0.0):
+            continue
+        seen, left = _quota.get(model, (0.0, 0))
+        if now - seen > 60 or left >= need:
+            return model
+    # Everything is throttled; the least-recently-blocked one is the best bet.
+    return min(TOOL_MODELS, key=lambda m: _blocked.get(m, 0.0))
+
+
+def _chat_once(messages: list[dict], tools: list[dict],
+               model: str | None = None) -> dict:
+    model = model or MODEL
+    body = json.dumps({"model": model, "messages": messages,
+                       "tools": tools, "temperature": 0.2,
+                       "max_tokens": 600}).encode()
+    req = urllib.request.Request(
+        API_URL, data=body,
+        headers={"Authorization": f"Bearer {api_key()}",
+                 "Content-Type": "application/json",
+                 # default python-urllib UA gets 403'd by Cloudflare (1010)
+                 "User-Agent": "nova-agent/0.2"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            left = r.headers.get("x-ratelimit-remaining-tokens")
+            data = json.load(r)
+    except urllib.error.HTTPError as e:
+        detail = e.read().decode()[:400]
+        if e.code == 429:
+            _quota[model] = (time.time(), 0)
+            # Believe the server about how long to stay away. A per-day limit
+            # says "59m30s" and there is no point coming back before that;
+            # treating it like a per-minute limit means hammering a dead model.
+            m = _RETRY_AFTER.search(detail)
+            wait = float(m.group(1)) if m else 60.0
+            _blocked[model] = time.monotonic() + wait
+            log.warning("%s throttled for %.0fs (%s)", model, wait,
+                        "per day" if "TPD" in detail else "per minute")
+        raise RuntimeError(f"LLM error {e.code}: {detail}") from None
+    if left is not None and left.isdigit():
+        _quota[model] = (time.time(), int(left))
+    return data
+
+
+_RETRY_AFTER = re.compile(r"try again in ([\d.]+)s")
+
+
+def _chat_sync(messages: list[dict], tools: list[dict],
+               model: str | None = None) -> dict:
+    """One model call, retrying the two failures that are worth retrying.
+
+    429: the free tier is 12000 tokens/minute and the reply says how long to
+    wait — waiting a second beats failing the whole command.
+    400 tool_use_failed: llama occasionally emits a malformed call; asked
+    again it usually gets it right.
+    """
+    for attempt in range(3):
+        try:
+            return _chat_once(messages, tools, model)
+        except RuntimeError as exc:
+            detail = str(exc)
+            if "LLM error 429" in detail and attempt < 2:
+                # Being throttled is now a reason to change model, not to wait:
+                # _chat_once has just recorded this one as empty, so _pick_model
+                # will hand back a different one.
+                if tools:
+                    nxt = _pick_model()
+                    if nxt != model:
+                        log.info("quota reached on %s — switching to %s",
+                                 model, nxt)
+                        model = nxt
+                        continue
+                m = _RETRY_AFTER.search(detail)
+                time.sleep(min(float(m.group(1)) + 0.3 if m else 2.0, 20.0))
+                continue
+            if "tool_use_failed" in detail and attempt < 2:
+                time.sleep(0.2)
+                continue
+            raise
+    raise RuntimeError("LLM unavailable after retries")
+
+
+async def chat(messages: list[dict], tools: list[dict],
+               model: str | None = None) -> dict:
+    return await asyncio.to_thread(_chat_sync, messages, tools, model)
+
+
+# -------------------------------------------------------------- session
+def load_session() -> list[dict]:
+    """Continue the current chat, or start a new one if it went quiet for an
+    hour. Expired chats are archived, never dropped."""
+    if not SESSION_FILE.exists():
+        return []
+    try:
+        data = json.loads(SESSION_FILE.read_text())
+    except (json.JSONDecodeError, OSError):
+        return []
+    if time.time() - data.get("updated", 0) > SESSION_IDLE_SECONDS:
+        ARCHIVE.mkdir(parents=True, exist_ok=True)
+        stamp = time.strftime("%Y%m%d-%H%M%S",
+                              time.localtime(data.get("started", 0)))
+        (ARCHIVE / f"{stamp}.json").write_text(
+            json.dumps(data, ensure_ascii=False))
+        return []
+    return data.get("messages", [])
+
+
+def save_session(messages: list[dict]) -> None:
+    STATE.mkdir(parents=True, exist_ok=True)
+    prev = {}
+    if SESSION_FILE.exists():
+        try:
+            prev = json.loads(SESSION_FILE.read_text())
+        except (json.JSONDecodeError, OSError):
+            prev = {}
+    # keep only user/assistant text turns — tool traffic would bloat the prompt
+    trimmed = [m for m in messages
+               if m.get("role") in ("user", "assistant") and m.get("content")]
+    now = time.time()
+    SESSION_FILE.write_text(json.dumps({
+        "started": prev.get("started", now) if prev.get("messages") else now,
+        "updated": now,
+        "messages": trimmed[-TURNS_KEPT:],
+    }, ensure_ascii=False))
+
+
+# ------------------------------------------------------------------ mcp
+class Tools:
+    """The MCP servers, kept open, presented to the model as one flat tool
+    list. Tool names are `server__tool` so two servers can both have a
+    `status` without colliding.
+
+    Not every server is in that list from the start. Groq's free tier allows
+    12000 tokens per minute and the full set of schemas costs ~6000 of them,
+    so a two-step turn would blow the budget. Servers declaring a `skill` in
+    mcp.json stay hidden until that skill is loaded — the model reads the
+    procedure and gains the matching tools in the same step.
+    """
+
+    def __init__(self) -> None:
+        self.sessions: dict[str, ClientSession] = {}
+        self.owner: dict[str, tuple[str, str]] = {}
+        self.by_server: dict[str, list[dict]] = {}
+        self.gate: dict[str, str] = {}          # server -> skill that unlocks it
+        self.active: set[str] = set()
+        self._stack = AsyncExitStack()
+
+    @property
+    def schemas(self) -> list[dict]:
+        return [s for name, group in self.by_server.items()
+                if name not in self.gate or name in self.active
+                for s in group]
+
+    def unlock_for_skill(self, skill: str) -> str | None:
+        """Activate the server gated behind `skill`, if any."""
+        for server, gate in self.gate.items():
+            if gate == skill and server not in self.active:
+                self.active.add(server)
+                return server
+        return None
+
+    async def start(self, servers: dict[str, dict]) -> None:
+        for name, spec in servers.items():
+            params = StdioServerParameters(
+                command=os.path.expanduser(spec["command"]),
+                args=[os.path.expanduser(a) for a in spec.get("args", [])],
+                env={**os.environ, **spec.get("env", {})})
+            try:
+                read, write = await self._stack.enter_async_context(
+                    stdio_client(params))
+                session = await self._stack.enter_async_context(
+                    ClientSession(read, write))
+                await session.initialize()
+                listing = await session.list_tools()
+                self.sessions[name] = session
+                if spec.get("skill"):
+                    self.gate[name] = spec["skill"]
+                self.by_server[name] = [{
+                    "type": "function",
+                    "function": {
+                        "name": f"{name}__{tool.name}",
+                        "description": (tool.description or "").strip(),
+                        "parameters": tool.input_schema or
+                                      {"type": "object", "properties": {}},
+                    },
+                } for tool in listing.tools]
+                for tool in listing.tools:
+                    self.owner[f"{name}__{tool.name}"] = (name, tool.name)
+            except Exception as exc:                          # noqa: BLE001
+                # Must cover the schema building too: an exception escaping
+                # here leaves the stdio task groups un-exited, and the process
+                # then hangs in asyncio shutdown with nothing logged at all.
+                log.error("MCP server %r failed to start: %s", name, exc)
+                continue
+            log.info("MCP %s: %d tools", name, len(listing.tools))
+
+    async def call(self, flat_name: str, args: dict) -> str:
+        if flat_name not in self.owner:
+            return f"FAILED: unknown tool {flat_name}"
+        server, tool = self.owner[flat_name]
+        try:
+            result = await self.sessions[server].call_tool(tool, args)
+        except Exception as exc:                              # noqa: BLE001
+            return f"FAILED: {exc}"
+        parts = [c.text for c in result.content if getattr(c, "text", None)]
+        text = "\n".join(parts).strip()
+        if result.is_error:
+            return f"FAILED: {text[:600]}"
+        return text[:2000] or "done"
+
+    async def close(self) -> None:
+        await self._stack.aclose()
+
+
+# ----------------------------------------------------------------- loop
+async def run_turn(tools: Tools, user_text: str, skills_index: str,
+                   remember: bool = True) -> dict:
+    # Gated servers unlock per turn, not for the process lifetime — otherwise
+    # one music request would keep those schemas in every later prompt.
+    tools.active.clear()
+    system = IDENTITY
+    if skills_index:
+        system += ("\nSkills — load one with skills__load_skill BEFORE doing "
+                   "that kind of task; loading it also gives you the tools "
+                   "for it:\n" + skills_index)
+    # The whole conversation is kept and archived; only its tail is replayed to
+    # the model, because every replayed turn is paid for on every call.
+    history = load_session() if remember else []
+    messages = [{"role": "system", "content": system}, *history[-TURNS_SENT:],
+                {"role": "user", "content": user_text}]
+
+    tokens = 0
+    t0 = time.monotonic()
+    done: dict[tuple[str, str], str] = {}
+    failures: dict[str, int] = {}
+
+    # The tools are offered on every call. Withholding them after the first
+    # successful one saved ~1700 tokens a turn and broke multi-step requests
+    # three different ways: the API rejects the request outright, or the model
+    # gives up ("7 windows are open, I cannot get the time"), or — worst — it
+    # fabricates ("il est 12:34" at 23:51). Throughput comes from rotating
+    # across models instead; that cannot invent an answer.
+    for _ in range(MAX_STEPS):
+        t_llm = time.monotonic()
+        resp = await chat(messages, tools.schemas, _pick_model())
+        # Report the model the API answered with, not the one we asked for:
+        # a retry may have switched underneath us.
+        log.info("llm %.2fs (%s tokens, %s)", time.monotonic() - t_llm,
+                 resp.get("usage", {}).get("total_tokens"),
+                 resp.get("model"))
+        tokens += resp.get("usage", {}).get("total_tokens", 0)
+        msg = resp["choices"][0]["message"]
+        messages.append({k: v for k, v in msg.items()
+                         if k in ("role", "content", "tool_calls")})
+        calls = msg.get("tool_calls") or []
+        if not calls:
+            reply = (msg.get("content") or "").strip()
+            if remember:
+                save_session(messages)
+            return {"reply": reply, "elapsed": round(time.monotonic() - t0, 2),
+                    "tokens": tokens}
+        for tc in calls:
+            name = tc["function"]["name"]
+            try:
+                args = json.loads(tc["function"]["arguments"] or "{}") or {}
+            except json.JSONDecodeError:
+                args = {}
+            sig = (name, json.dumps(args, sort_keys=True))
+            if failures.get(name, 0) >= 2:
+                # Rewording the query does not refill a quota. Two failures of
+                # the same tool means the route is closed, not that the phrasing
+                # was wrong — it once retried a weather search three times for
+                # 31 s before giving up.
+                result = (f"{name} has already failed twice. Do not call it "
+                          "again; tell the user it is unavailable right now.")
+            elif sig in done:
+                # Small models retry a tool when its result reads ambiguously —
+                # that is how "two terminals opened" used to happen.
+                result = ("ALREADY DONE — this exact call already succeeded: "
+                          f"{done[sig]}. Do not repeat it; answer now.")
+            else:
+                t_tool = time.monotonic()
+                result = await tools.call(name, args)
+                log.info("tool %s took %.2fs", name, time.monotonic() - t_tool)
+                if result.startswith("FAILED"):
+                    failures[name] = failures.get(name, 0) + 1
+                if name == "skills__load_skill":
+                    unlocked = tools.unlock_for_skill(args.get("name", ""))
+                    if unlocked:
+                        result += (f"\n\n(The {unlocked} tools are now "
+                                   "available to you.)")
+                done[sig] = result
+            log.info("tool %s(%s) -> %s", name, args, result[:100].replace("\n", " "))
+            messages.append({"role": "tool", "tool_call_id": tc["id"],
+                             "content": result})
+            # Once a tool has done its job, the next call only has to phrase
+
+    return {"reply": "", "elapsed": round(time.monotonic() - t0, 2),
+            "tokens": tokens, "error": f"gave up after {MAX_STEPS} steps"}
+
+
+# --------------------------------------------------------------- server
+async def main() -> int:
+    log_setup()
+    if not SERVERS_FILE.exists():
+        log.error("no MCP server config at %s", SERVERS_FILE)
+        return 1
+    servers = json.loads(SERVERS_FILE.read_text())["mcpServers"]
+
+    tools = Tools()
+    await tools.start(servers)
+    if not tools.schemas:
+        log.error("no tools available — every MCP server failed to start")
+        return 1
+
+    skills_index = ""
+    if "skills" in tools.sessions:
+        listing = await tools.call("skills__list_skills", {})
+        if not listing.startswith("FAILED"):
+            # Mark the skills that carry tools with them. Without this the
+            # model answers "no music player is running" from a shell command
+            # instead of loading the skill that would have given it the real
+            # Apple Music tools.
+            unlocks = {skill: server for server, skill in tools.gate.items()}
+            skills_index = "\n".join(
+                line + (f"  [REQUIRED for anything {unlocks[name]}-related: "
+                        f"loading it gives you the {unlocks[name]} tools, "
+                        "which you do not otherwise have]"
+                        if (name := line.split(":", 1)[0].strip()) in unlocks
+                        else "")
+                for line in listing.splitlines())
+    log.info("%d tools ready, %d skills", len(tools.schemas),
+             len(skills_index.splitlines()))
+
+    lock = asyncio.Lock()
+
+    async def handle(reader: asyncio.StreamReader,
+                     writer: asyncio.StreamWriter) -> None:
+        try:
+            line = await reader.readline()
+            if not line:
+                return
+            req = json.loads(line)
+            if req.get("new"):
+                SESSION_FILE.write_text(json.dumps({"updated": 0,
+                                                    "messages": []}))
+            # One turn at a time: two overlapping turns would interleave tool
+            # calls on the same desktop and corrupt each other's session.
+            async with lock:
+                try:
+                    out = await run_turn(tools, req.get("text", ""),
+                                         skills_index,
+                                         remember=req.get("remember", True))
+                except Exception as exc:                      # noqa: BLE001
+                    log.exception("turn failed")
+                    out = {"reply": "", "error": str(exc)[:300]}
+            writer.write((json.dumps(out, ensure_ascii=False) + "\n").encode())
+            await writer.drain()
+        except (json.JSONDecodeError, ConnectionResetError) as exc:
+            log.warning("bad request: %s", exc)
+        finally:
+            writer.close()
+
+    STATE.mkdir(parents=True, exist_ok=True)
+    SOCKET.unlink(missing_ok=True)
+    server = await asyncio.start_unix_server(handle, str(SOCKET))
+    SOCKET.chmod(0o600)
+    log.info("listening on %s", SOCKET)
+    try:
+        async with server:
+            await server.serve_forever()
+    finally:
+        await tools.close()
+        SOCKET.unlink(missing_ok=True)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(asyncio.run(main()))
+    except KeyboardInterrupt:
+        sys.exit(0)

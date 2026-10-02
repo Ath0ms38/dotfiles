@@ -23,6 +23,7 @@
   --vscode-orange: {{colors.secondary.default.hex}};
   --minecraft-green: {{colors.green.default.hex}};
   --steam-blue: {{colors.blue.default.hex}};
+  --sidra-red: {{colors.red.default.hex}};
 
   /* Text colors */
   --text-light: {{colors.on_background.default.hex}};

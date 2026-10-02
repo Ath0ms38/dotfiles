@@ -395,11 +395,14 @@ class PlayerSmall(CenterBox):
             child=Label(label=icons.disc),
         )
 
-        # Track label
+        # Track label. Capped and ellipsized: titles range from "Untitled" to a
+        # full YouTube description, and the notch is sized by its content.
         self.track_label = Label(
             name="ax-compact-mpris-label",
             label="Nothing Playing",
             h_align="center",
+            ellipsization="end",
+            max_chars_width=28,
         )
 
         # Play/pause button

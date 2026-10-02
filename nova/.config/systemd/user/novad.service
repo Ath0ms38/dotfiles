@@ -1,0 +1,16 @@
+[Unit]
+Description=Nova agent daemon (MCP tool servers + LLM loop)
+After=graphical-session.target
+
+[Service]
+EnvironmentFile=-%h/.config/nova/nova.env
+Type=simple
+ExecStart=%h/.local/share/nova/venv/bin/python %h/.config/nova/novad.py
+Restart=on-failure
+RestartSec=5
+# The MCP servers are children; kill the whole group or they linger.
+KillMode=control-group
+TimeoutStopSec=10
+
+[Install]
+WantedBy=default.target

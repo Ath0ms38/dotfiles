@@ -385,6 +385,7 @@ class AppVolumeSlider(Box):
             "chromium": icons.chromium,
             "chrome": icons.chromium,
             "spotify": icons.spotify,
+            "sidra": "󰝚",
             "discord": "󰙯",
             "steam": "󰊠",
             "vlc": "󰕼",

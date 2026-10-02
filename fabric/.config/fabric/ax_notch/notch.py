@@ -133,6 +133,11 @@ class AxNotch(WaylandWindow):
                 self.player_small,
             ],
         )
+        # A homogeneous stack (GTK's default) sizes itself to its *largest*
+        # child, so the hidden player would stretch the closed notch to the
+        # width of whatever track is loaded — a long title made it enormous.
+        # Size to the visible child only.
+        self.compact_stack.set_homogeneous(False)
         self.compact_stack.set_visible_child(self.user_label)
 
         # Wrap in clickable event box

@@ -9,7 +9,7 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 
 # Stow packages to link into $HOME (ags is legacy — fabric replaced it)
-STOW_PACKAGES=(fabric fastfetch hyprland kitty matugen rofi starship swaync zsh)
+STOW_PACKAGES=(fabric fastfetch hyprland kitty matugen nova rofi starship swaync zsh)
 
 PACMAN_PACKAGES=(
     # Hyprland ecosystem
@@ -20,11 +20,15 @@ PACMAN_PACKAGES=(
     eza bat ripgrep fd fzf jq stow git fastfetch
     # Python toolchain (fabric bar runs in a uv-managed venv)
     uv python gobject-introspection cairo pkgconf base-devel
+    # Node.js (OpenClaw agent)
+    nodejs npm
     # Desktop services
     swaync rofi cliphist wl-clipboard brightnessctl playerctl
     pipewire wireplumber networkmanager
     # Screenshots
     hyprshot grim slurp
+    # Video wallpapers: mpvpaper backend + first-frame extraction for matugen
+    ffmpeg
     # Apps
     nautilus firefox
     # Login screen (SDDM + theme runtime deps for QML/video backgrounds)
@@ -35,8 +39,8 @@ PACMAN_PACKAGES=(
 
 AUR_PACKAGES=(
     matugen-git      # wallpaper -> color scheme generator
-    kando-bin        # radial menu (ctrl+space)
     hyprshot-gui-git # screenshot GUI (super+shift+s)
+    mpvpaper         # video wallpapers on the background layer
 )
 
 msg() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }

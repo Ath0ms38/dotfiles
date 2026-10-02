@@ -31,6 +31,9 @@ The main configuration file that imports all modular files using `source` statem
 - Preloads wallpapers and sets default wallpaper
 - IPC settings for dynamic wallpaper changes
 - Splash screen configuration
+- **Generated**: rewritten by `~/.config/matugen/set-wallpaper.sh` on every
+  wallpaper change, and unused while a video wallpaper is up (mpvpaper takes
+  over — see the theming section of the root README)
 
 ### `conf/monitors.conf`
 - Monitor settings and display configuration

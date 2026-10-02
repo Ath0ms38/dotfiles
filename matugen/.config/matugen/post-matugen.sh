@@ -1,33 +1,31 @@
 #!/bin/bash
-# Post-matugen hook script - handles all app reloads
+# Post-matugen hook script - applies the wallpaper and reloads all apps
 # Usage: post-matugen.sh <image_path>
+#
+# <image_path> is always an image (matugen cannot read video). When it matches
+# the still recorded by set-wallpaper.sh, the wallpaper to display is the
+# source from that state — possibly an .mp4 handled by mpvpaper.
 
-IMAGE="$1"
-HYPRPAPER_CONF="$HOME/.config/hypr/hyprpaper.conf"
+source "$HOME/.config/matugen/wallpaper-lib.sh"
+
+IMAGE="$(realpath "${1:-}" 2>/dev/null || printf '%s' "${1:-}")"
 
 echo "Post-matugen: Updating wallpaper and reloading apps..."
 
-# 1. Update hyprpaper.conf and restart hyprpaper
+# 1. Apply the wallpaper (hyprpaper for images, mpvpaper for videos)
 if [ -n "$IMAGE" ]; then
-    cat > "$HYPRPAPER_CONF" << EOF
-# Wallpaper for all monitors (set by matugen)
-wallpaper {
-    monitor =
-    path = $IMAGE
-    fit_mode = cover
-}
+    SOURCE="$(wall_state source || true)"
+    STILL="$(wall_state still || true)"
 
-# Misc options
-ipc = true
-splash = false
-splash_offset = 20
-splash_opacity = 0.8
-EOF
+    # Direct `matugen image foo.png` run (rofi "Reload theme", scripts, ...):
+    # no pending state, the image is the wallpaper.
+    if [ -z "$SOURCE" ] || [ "$STILL" != "$IMAGE" ]; then
+        SOURCE="$IMAGE"
+        STILL="$IMAGE"
+    fi
 
-    pkill hyprpaper
-    sleep 0.2
-    hyprpaper &
-    echo "Wallpaper updated: $IMAGE"
+    wall_apply "$SOURCE" "$STILL"
+    echo "Wallpaper updated: $SOURCE"
 fi
 
 # 2. Reload Hyprland

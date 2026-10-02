@@ -14,7 +14,7 @@ from gi.repository import Gtk
 
 from services.config import get_config
 from services.workspace_manager import WorkspaceManagerService
-from notch.indicators import BatteryIndicator, PowerProfileButton, ClipboardButton
+from notch.indicators import BatteryIndicator, PowerProfileButton, ClipboardButton, VpnButton
 
 
 class SpecialWorkspaceButton(Button):
@@ -157,6 +157,7 @@ class CompactBar(CenterBox):
             spacing=8,
             children=[
                 ClipboardButton(),
+                VpnButton(),
                 PowerProfileButton(),
                 BatteryIndicator(),
                 self._build_notification_button(),
